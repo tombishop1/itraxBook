@@ -1,0 +1,13 @@
+# Data Structure {#intro}
+
+The Itrax core scanner is a multi-sensor device, with seperate data outputs for different measurements and uses. They are described in the following sections. Note that your data may not contain all of these objects, depending on the exact scanner, configuration, or data repository you use. 
+
+## Metadata
+
+## XRF Data
+
+## Optical Images
+
+## Radiographic Images
+
+## Magnetic Susceptability 

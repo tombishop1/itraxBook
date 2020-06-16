@@ -1,0 +1,33 @@
+# Importing Data {#importing}
+
+All of the Itrax data is in either text-format or "tagged image format" (`*.tiff`). Although this means it is easily read by the various import functions available in `R`, it still needs considerable cleaning and wrangling to get it to a point where it is useable. 
+
+## Metadata
+
+The scan data file `document.txt` can be read using `itraxR::itrax_meta()`. This is considerably easier than attempting to read it in a text editor, although this is possible.
+
+## XRF Data
+
+### Processed Data
+
+This process is integrated, along with some other functionality, in `itraxR::itrax_import()`. 
+
+### Joining XRF Data
+
+### Raw Data
+
+Sometimes it is useful to work with raw data rather than the calculated intensity data from the `Q-Spec` software. In this case, the raw data can be read directly from the individual files in the relevant directory. For individual measurements this is fairly trivial, although it must be considered that the data output is not calibrated to an energy and the data are in counts, not intensities. If the entire scan is read, some mechanism to iterate through the individual data files, adding them to a structured data object with relevant metadata (positions, for example) is required. 
+
+## Optical Images
+
+In order to make the images useable for plotting beside other data, they need to be cropped to the scanned area and referenced to the `position` or a `depth` variable. Images in `R` are read in as a matrix with 3 dimensions (length, width, and the three colours). 
+
+To begin with the start and end positions of the scan need to be established; this usually involves parsing the metadata file (e.g. `itraxR::itrax_meta()[]`), although in some circumstances they can be obtained from another data source (e.g. `range(myData[,"Position"])`). These then need to be mapped onto individual pixel values using the known size of a single pixel. Once this has been calculated, it is trvial to then subset the part of the image required. 
+
+## Radiographic Images
+
+The workflow for manipulating the processed radiographic images (`*.tiff`) is very similar to that for the optical images, the main difference being the matrix only has two dimensions (length and width) as the image is greyscale. However, if there is a desire to manipulate the raw data from the radiographic image, some further work is required because the "pixel" is not square, but rectangular. That is to say the length of the pixel differs from its width. On the core scanner a single pixel has a width across the core of 20 micrometers, but has a variable coverage along the core (usually between 50 and 200 micrometers). The processed image downscales the pixel width to match the pixel length in order to force square pixels, losing some resolution along the way.
+
+## Magnetic Susceptability 
+
+Magnetic susceptability files are easily parsed using standard tools. 

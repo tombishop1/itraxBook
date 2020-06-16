@@ -1,0 +1,10 @@
+# Tidying Data
+
+In the functionality provided by `itraxR`, the need for data cleaning is much reduced. However, you may still encounter poor quality data that needs removing from subsequent analysis. This can be broadly defined as:
+
+- Data at the start and end of the the core, where a volume of core material is "missing".
+- Measurements where the optical configuration is out of position (marked as `validity == 0`), often due to holes or stones in the core.
+- Areas of the core with low total counts.
+- Individual measurements that are statistical outliers.
+
+The easiest way to do this is using a `tidyverse` style sequence of pipes that set the observations of faulty data as `NA`. 

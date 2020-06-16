@@ -1,0 +1,9 @@
+# Multivariate Methods
+
+## Correlation Coefficients
+
+## Unconstrained Cluster Analysis
+
+## Constrained Cluster Analaysis
+
+## Principle Components Analysis
