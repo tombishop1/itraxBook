@@ -1,10 +1,20 @@
 # Importing Data {#importing}
 
-All of the Itrax data is in either text-format or "tagged image format" (`*.tiff`). Although this means it is easily read by the various import functions available in `R`, it still needs considerable cleaning and wrangling to get it to a point where it is useable. 
+All of the Itrax data is in either text-format or "tagged image format" (`*.tiff`). Although this means it is easily read by the various import functions available in `R`, it still needs considerable cleaning and wrangling to get it to a point where it is useable. A number of convienience functions are provided in the package `itraxR`.
+
+```{r include=FALSE}
+library(itraxR)
+```
+
 
 ## Metadata
 
 The scan data file `document.txt` can be read using `itraxR::itrax_meta()`. This is considerably easier than attempting to read it in a text editor, although this is possible.
+
+```{r}
+example(itrax_meta)
+```
+
 
 ## XRF Data
 

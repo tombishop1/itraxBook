@@ -52,6 +52,68 @@
 
 
 
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -138,10 +200,39 @@
             <section class="normal" id="section-">
 <div id="importing" class="section level1">
 <h1><span class="header-section-number">Chapter 2</span> Importing Data</h1>
-<p>All of the Itrax data is in either text-format or “tagged image format” (<code>*.tiff</code>). Although this means it is easily read by the various import functions available in <code>R</code>, it still needs considerable cleaning and wrangling to get it to a point where it is useable.</p>
+<p>All of the Itrax data is in either text-format or “tagged image format” (<code>*.tiff</code>). Although this means it is easily read by the various import functions available in <code>R</code>, it still needs considerable cleaning and wrangling to get it to a point where it is useable. A number of convienience functions are provided in the package <code>itraxR</code>.</p>
 <div id="metadata-1" class="section level2">
 <h2><span class="header-section-number">2.1</span> Metadata</h2>
 <p>The scan data file <code>document.txt</code> can be read using <code>itraxR::itrax_meta()</code>. This is considerably easier than attempting to read it in a text editor, although this is possible.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">example</span>(itrax_meta)</a></code></pre></div>
+<pre><code>## 
+## itrx_m&gt; itrax_meta(system.file(&quot;extdata&quot;, &quot;document.txt&quot;, package = &quot;itraxR&quot;))
+##                   Parameter     Value       Unit
+## 1               Sample name WV17-2-D1        str
+## 2              Section name WV17-2-D1        str
+## 3           Aquisition date 24/1/2017 dd/mm/yyyy
+## 4             Operator name       THB        str
+## 5                      Tube        Mo    element
+## 6          Start coordinate      27.3         mm
+## 7           Stop coordinate    1064.3         mm
+## 8                 Step size      2000    microns
+## 9             Optical Start       0.1         mm
+## 10              Optical End    1102.9         mm
+## 11        Optical step size     0.047         mm
+## 12             Rad. voltage        60         kV
+## 13             Rad. current        40         mA
+## 14            Rad. exposure       450         ms
+## 15 line camera signal level    571116   at 25 ms
+## 16                      XRF        ON     ON/OFF
+## 17              XRF voltage        30         kV
+## 18              XRF current        55         mA
+## 19            XRF exp. time        10    seconds
+## 20        Start temperature        26      \xb0C
+## 21         Stop temperature        27      \xb0C
+## 22           Start humidity        22          %
+## 23            Stop humidity        21          %
+## 24             Start vacuum     -96.0        kPa
+## 25              Stop vacuum     -96.2        kPa</code></pre>
 </div>
 <div id="xrf-data-1" class="section level2">
 <h2><span class="header-section-number">2.2</span> XRF Data</h2>
@@ -160,7 +251,7 @@
 <div id="optical-images-1" class="section level2">
 <h2><span class="header-section-number">2.3</span> Optical Images</h2>
 <p>In order to make the images useable for plotting beside other data, they need to be cropped to the scanned area and referenced to the <code>position</code> or a <code>depth</code> variable. Images in <code>R</code> are read in as a matrix with 3 dimensions (length, width, and the three colours).</p>
-<p>To begin with the start and end positions of the scan need to be established; this usually involves parsing the metadata file (e.g. <code>itraxR::itrax_meta()[]</code>), although in some circumstances they can be obtained from another data source (e.g. <code>range(myData[,"Position"])</code>). These then need to be mapped onto individual pixel values using the known size of a single pixel. Once this has been calculated, it is trvial to then subset the part of the image required.</p>
+<p>To begin with the start and end positions of the scan need to be established; this usually involves parsing the metadata file (e.g. <code>itraxR::itrax_meta()[]</code>), although in some circumstances they can be obtained from another data source (e.g. <code>range(myData[,&quot;Position&quot;])</code>). These then need to be mapped onto individual pixel values using the known size of a single pixel. Once this has been calculated, it is trvial to then subset the part of the image required.</p>
 </div>
 <div id="radiographic-images-1" class="section level2">
 <h2><span class="header-section-number">2.4</span> Radiographic Images</h2>
