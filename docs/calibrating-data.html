@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 7 Calibrating Data | Using Itrax Data in R</title>
+  <meta name="description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
+  <meta name="generator" content="bookdown 0.19 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 7 Calibrating Data | Using Itrax Data in R" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 7 Calibrating Data | Using Itrax Data in R" />
+  
+  <meta name="twitter:description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
+  
+
+<meta name="author" content="Thomas Bishop" />
+
+
+<meta name="date" content="2020-06-16" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="multivariate-methods.html"/>
+<link rel="next" href="transforming-data-1.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Using Itrax Data in R</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a><ul>
+<li class="chapter" data-level="0.1" data-path="index.html"><a href="index.html#why-did-i-write-this-book"><i class="fa fa-check"></i><b>0.1</b> Why did I write this book?</a></li>
+<li class="chapter" data-level="0.2" data-path="index.html"><a href="index.html#prerequisites"><i class="fa fa-check"></i><b>0.2</b> Prerequisites</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Data Structure</a><ul>
+<li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#metadata"><i class="fa fa-check"></i><b>1.1</b> Metadata</a></li>
+<li class="chapter" data-level="1.2" data-path="intro.html"><a href="intro.html#xrf-data"><i class="fa fa-check"></i><b>1.2</b> XRF Data</a></li>
+<li class="chapter" data-level="1.3" data-path="intro.html"><a href="intro.html#optical-images"><i class="fa fa-check"></i><b>1.3</b> Optical Images</a></li>
+<li class="chapter" data-level="1.4" data-path="intro.html"><a href="intro.html#radiographic-images"><i class="fa fa-check"></i><b>1.4</b> Radiographic Images</a></li>
+<li class="chapter" data-level="1.5" data-path="intro.html"><a href="intro.html#magnetic-susceptability"><i class="fa fa-check"></i><b>1.5</b> Magnetic Susceptability</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="importing.html"><a href="importing.html"><i class="fa fa-check"></i><b>2</b> Importing Data</a><ul>
+<li class="chapter" data-level="2.1" data-path="importing.html"><a href="importing.html#metadata-1"><i class="fa fa-check"></i><b>2.1</b> Metadata</a></li>
+<li class="chapter" data-level="2.2" data-path="importing.html"><a href="importing.html#xrf-data-1"><i class="fa fa-check"></i><b>2.2</b> XRF Data</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="importing.html"><a href="importing.html#processed-data"><i class="fa fa-check"></i><b>2.2.1</b> Processed Data</a></li>
+<li class="chapter" data-level="2.2.2" data-path="importing.html"><a href="importing.html#joining-xrf-data"><i class="fa fa-check"></i><b>2.2.2</b> Joining XRF Data</a></li>
+<li class="chapter" data-level="2.2.3" data-path="importing.html"><a href="importing.html#raw-data"><i class="fa fa-check"></i><b>2.2.3</b> Raw Data</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="importing.html"><a href="importing.html#optical-images-1"><i class="fa fa-check"></i><b>2.3</b> Optical Images</a></li>
+<li class="chapter" data-level="2.4" data-path="importing.html"><a href="importing.html#radiographic-images-1"><i class="fa fa-check"></i><b>2.4</b> Radiographic Images</a></li>
+<li class="chapter" data-level="2.5" data-path="importing.html"><a href="importing.html#magnetic-susceptability-1"><i class="fa fa-check"></i><b>2.5</b> Magnetic Susceptability</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="tidying-data.html"><a href="tidying-data.html"><i class="fa fa-check"></i><b>3</b> Tidying Data</a></li>
+<li class="chapter" data-level="4" data-path="plotting.html"><a href="plotting.html"><i class="fa fa-check"></i><b>4</b> Plotting</a><ul>
+<li class="chapter" data-level="4.1" data-path="plotting.html"><a href="plotting.html#plotting-xrf-data"><i class="fa fa-check"></i><b>4.1</b> Plotting XRF Data</a></li>
+<li class="chapter" data-level="4.2" data-path="plotting.html"><a href="plotting.html#plotting-images"><i class="fa fa-check"></i><b>4.2</b> Plotting Images</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="transforming-data.html"><a href="transforming-data.html"><i class="fa fa-check"></i><b>5</b> Transforming Data</a><ul>
+<li class="chapter" data-level="5.1" data-path="transforming-data.html"><a href="transforming-data.html#ratios-and-normalisation"><i class="fa fa-check"></i><b>5.1</b> Ratios and Normalisation</a></li>
+<li class="chapter" data-level="5.2" data-path="transforming-data.html"><a href="transforming-data.html#preparing-data-for-multivariate-data-analysis"><i class="fa fa-check"></i><b>5.2</b> Preparing Data for Multivariate Data Analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="multivariate-methods.html"><a href="multivariate-methods.html"><i class="fa fa-check"></i><b>6</b> Multivariate Methods</a><ul>
+<li class="chapter" data-level="6.1" data-path="multivariate-methods.html"><a href="multivariate-methods.html#correlation-coefficients"><i class="fa fa-check"></i><b>6.1</b> Correlation Coefficients</a></li>
+<li class="chapter" data-level="6.2" data-path="multivariate-methods.html"><a href="multivariate-methods.html#unconstrained-cluster-analysis"><i class="fa fa-check"></i><b>6.2</b> Unconstrained Cluster Analysis</a></li>
+<li class="chapter" data-level="6.3" data-path="multivariate-methods.html"><a href="multivariate-methods.html#constrained-cluster-analaysis"><i class="fa fa-check"></i><b>6.3</b> Constrained Cluster Analaysis</a></li>
+<li class="chapter" data-level="6.4" data-path="multivariate-methods.html"><a href="multivariate-methods.html#principle-components-analysis"><i class="fa fa-check"></i><b>6.4</b> Principle Components Analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="calibrating-data.html"><a href="calibrating-data.html"><i class="fa fa-check"></i><b>7</b> Calibrating Data</a><ul>
+<li class="chapter" data-level="7.1" data-path="calibrating-data.html"><a href="calibrating-data.html#suitable-methods"><i class="fa fa-check"></i><b>7.1</b> Suitable Methods</a></li>
+<li class="chapter" data-level="7.2" data-path="calibrating-data.html"><a href="calibrating-data.html#linear-methods"><i class="fa fa-check"></i><b>7.2</b> Linear Methods</a></li>
+<li class="chapter" data-level="7.3" data-path="calibrating-data.html"><a href="calibrating-data.html#log-ratio-methods"><i class="fa fa-check"></i><b>7.3</b> Log-Ratio Methods</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="transforming-data-1.html"><a href="transforming-data-1.html"><i class="fa fa-check"></i><b>8</b> Transforming Data</a><ul>
+<li class="chapter" data-level="8.1" data-path="transforming-data-1.html"><a href="transforming-data-1.html#ratios-and-normalisation-1"><i class="fa fa-check"></i><b>8.1</b> Ratios and Normalisation</a></li>
+<li class="chapter" data-level="8.2" data-path="transforming-data-1.html"><a href="transforming-data-1.html#preparing-data-for-multivariate-data-analysis-1"><i class="fa fa-check"></i><b>8.2</b> Preparing Data for Multivariate Data Analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Using Itrax Data in R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="calibrating-data" class="section level1">
+<h1><span class="header-section-number">Chapter 7</span> Calibrating Data</h1>
+<div id="suitable-methods" class="section level2">
+<h2><span class="header-section-number">7.1</span> Suitable Methods</h2>
+</div>
+<div id="linear-methods" class="section level2">
+<h2><span class="header-section-number">7.2</span> Linear Methods</h2>
+</div>
+<div id="log-ratio-methods" class="section level2">
+<h2><span class="header-section-number">7.3</span> Log-Ratio Methods</h2>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="multivariate-methods.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="transforming-data-1.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["itraxBook.pdf", "itraxBook.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
