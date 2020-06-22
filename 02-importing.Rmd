@@ -1,5 +1,6 @@
 # Importing Data {#importing}
 
+<<<<<<< HEAD
 All of the Itrax data is in either text-format or "tagged image format" (`*.tif`). Although this means it is easily read by the various import functions available in `R`, it still needs considerable cleaning and wrangling to get it to a point where it is useable for most analyses. There are three possible approaches to this task:
 
 1. Use existing functions published in the `itraxR` package available from [github.com/tombishop1](https://github.com/tombishop1/itraxR). These are at an early stage and functionality might be broken, but are largely convenience functions for wrangling and analysing Itrax data. 
@@ -7,10 +8,23 @@ All of the Itrax data is in either text-format or "tagged image format" (`*.tif`
 3. Work in the `tidyverse` family of packages and style. For data wrangling tasks, this approach can result in simpler and more resiliant code. 
 
 In this guide examples will be given mostly using the `tidyverse`, and reference will be made to the convenience functions in `itraxR`. 
+=======
+All of the Itrax data is in either text-format or "tagged image format" (`*.tiff`). Although this means it is easily read by the various import functions available in `R`, it still needs considerable cleaning and wrangling to get it to a point where it is useable. A number of convienience functions are provided in the package `itraxR`.
+
+```{r include=FALSE}
+library(itraxR)
+```
+
+>>>>>>> 48d80c75e5272ceb7e9b5341d617b4eaec0466b7
 
 ## Metadata
 
 The scan data file `document.txt` can be parsed using `itraxR::itrax_meta()`. 
+
+```{r}
+example(itrax_meta)
+```
+
 
 ## XRF Data
 This is the data most commonly used in analysis and it can be quickly imported using `itraxR::itrax_import()`. If you'd like more control over the import process, a typical `Tidyverse` workflow would consist of reading the file (they are tab-delimited), removing variables that are not of interest, and correctly labelling data that should be `NA`. You may also wish to assign a coring depth information at this stage. 
