@@ -1,18 +1,27 @@
 # Importing Data {#importing}
 
-All of the Itrax data is in either text-format or "tagged image format" (`*.tiff`). Although this means it is easily read by the various import functions available in `R`, it still needs considerable cleaning and wrangling to get it to a point where it is useable. 
+All of the Itrax data is in either text-format or "tagged image format" (`*.tif`). Although this means it is easily read by the various import functions available in `R`, it still needs considerable cleaning and wrangling to get it to a point where it is useable for most analyses. There are three possible approaches to this task:
+
+1. Use existing functions published in the `itraxR` package available from [github.com/tombishop1](https://github.com/tombishop1/itraxR). These are at an early stage and functionality might be broken, but are largely convenience functions for wrangling and analysing Itrax data. 
+2. Work in base `R` to wrangle the data. This is perfectly achievable, and much of the current `itraxR` functionality was written this way.
+3. Work in the `tidyverse` family of packages and style. For data wrangling tasks, this approach can result in simpler and more resiliant code. 
+
+In this guide examples will be given mostly using the `tidyverse`, and reference will be made to the convenience functions in `itraxR`. 
 
 ## Metadata
 
-The scan data file `document.txt` can be read using `itraxR::itrax_meta()`. This is considerably easier than attempting to read it in a text editor, although this is possible.
+The scan data file `document.txt` can be parsed using `itraxR::itrax_meta()`. 
 
 ## XRF Data
+This is the data most commonly used in analysis and it can be quickly imported using `itraxR::itrax_import()`. If you'd like more control over the import process, a typical `Tidyverse` workflow would consist of reading the file (they are tab-delimited), removing variables that are not of interest, and correctly labelling data that should be `NA`. You may also wish to assign a coring depth information at this stage. 
 
 ### Processed Data
 
 This process is integrated, along with some other functionality, in `itraxR::itrax_import()`. 
 
 ### Joining XRF Data
+
+This process can be simplified using `itraxR::itrax_join()`. 
 
 ### Raw Data
 
@@ -26,8 +35,6 @@ To begin with the start and end positions of the scan need to be established; th
 
 ## Radiographic Images
 
-The workflow for manipulating the processed radiographic images (`*.tiff`) is very similar to that for the optical images, the main difference being the matrix only has two dimensions (length and width) as the image is greyscale. However, if there is a desire to manipulate the raw data from the radiographic image, some further work is required because the "pixel" is not square, but rectangular. That is to say the length of the pixel differs from its width. On the core scanner a single pixel has a width across the core of 20 micrometers, but has a variable coverage along the core (usually between 50 and 200 micrometers). The processed image downscales the pixel width to match the pixel length in order to force square pixels, losing some resolution along the way.
+The workflow for manipulating the processed radiographic images (`*.tif`) is very similar to that for the optical images, the main difference being the matrix only has two dimensions (length and width) as the image is greyscale. However, if there is a desire to manipulate the raw data from the radiographic image, some further work is required because the "pixel" is not square, but rectangular. That is to say the length of the pixel differs from its width. On the core scanner a single pixel has a width across the core of 20 micrometers, but has a variable coverage along the core (usually between 50 and 200 micrometers). The processed image downscales the pixel width to match the pixel length in order to force square pixels, losing some resolution along the way.
 
 ## Magnetic Susceptability 
-
-Magnetic susceptability files are easily parsed using standard tools. 

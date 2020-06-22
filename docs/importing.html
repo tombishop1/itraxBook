@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2020-06-16" />
+<meta name="date" content="2020-06-22" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -138,19 +138,27 @@
             <section class="normal" id="section-">
 <div id="importing" class="section level1">
 <h1><span class="header-section-number">Chapter 2</span> Importing Data</h1>
-<p>All of the Itrax data is in either text-format or “tagged image format” (<code>*.tiff</code>). Although this means it is easily read by the various import functions available in <code>R</code>, it still needs considerable cleaning and wrangling to get it to a point where it is useable.</p>
+<p>All of the Itrax data is in either text-format or “tagged image format” (<code>*.tif</code>). Although this means it is easily read by the various import functions available in <code>R</code>, it still needs considerable cleaning and wrangling to get it to a point where it is useable for most analyses. There are three possible approaches to this task:</p>
+<ol style="list-style-type: decimal">
+<li>Use existing functions published in the <code>itraxR</code> package available from <a href="https://github.com/tombishop1/itraxR">github.com/tombishop1</a>. These are at an early stage and functionality might be broken, but are largely convenience functions for wrangling and analysing Itrax data.</li>
+<li>Work in base <code>R</code> to wrangle the data. This is perfectly achievable, and much of the current <code>itraxR</code> functionality was written this way.</li>
+<li>Work in the <code>tidyverse</code> family of packages and style. For data wrangling tasks, this approach can result in simpler and more resiliant code.</li>
+</ol>
+<p>In this guide examples will be given mostly using the <code>tidyverse</code>, and reference will be made to the convenience functions in <code>itraxR</code>.</p>
 <div id="metadata-1" class="section level2">
 <h2><span class="header-section-number">2.1</span> Metadata</h2>
-<p>The scan data file <code>document.txt</code> can be read using <code>itraxR::itrax_meta()</code>. This is considerably easier than attempting to read it in a text editor, although this is possible.</p>
+<p>The scan data file <code>document.txt</code> can be parsed using <code>itraxR::itrax_meta()</code>.</p>
 </div>
 <div id="xrf-data-1" class="section level2">
 <h2><span class="header-section-number">2.2</span> XRF Data</h2>
+<p>This is the data most commonly used in analysis and it can be quickly imported using <code>itraxR::itrax_import()</code>. If you’d like more control over the import process, a typical <code>Tidyverse</code> workflow would consist of reading the file (they are tab-delimited), removing variables that are not of interest, and correctly labelling data that should be <code>NA</code>. You may also wish to assign a coring depth information at this stage.</p>
 <div id="processed-data" class="section level3">
 <h3><span class="header-section-number">2.2.1</span> Processed Data</h3>
 <p>This process is integrated, along with some other functionality, in <code>itraxR::itrax_import()</code>.</p>
 </div>
 <div id="joining-xrf-data" class="section level3">
 <h3><span class="header-section-number">2.2.2</span> Joining XRF Data</h3>
+<p>This process can be simplified using <code>itraxR::itrax_join()</code>.</p>
 </div>
 <div id="raw-data" class="section level3">
 <h3><span class="header-section-number">2.2.3</span> Raw Data</h3>
@@ -164,11 +172,10 @@
 </div>
 <div id="radiographic-images-1" class="section level2">
 <h2><span class="header-section-number">2.4</span> Radiographic Images</h2>
-<p>The workflow for manipulating the processed radiographic images (<code>*.tiff</code>) is very similar to that for the optical images, the main difference being the matrix only has two dimensions (length and width) as the image is greyscale. However, if there is a desire to manipulate the raw data from the radiographic image, some further work is required because the “pixel” is not square, but rectangular. That is to say the length of the pixel differs from its width. On the core scanner a single pixel has a width across the core of 20 micrometers, but has a variable coverage along the core (usually between 50 and 200 micrometers). The processed image downscales the pixel width to match the pixel length in order to force square pixels, losing some resolution along the way.</p>
+<p>The workflow for manipulating the processed radiographic images (<code>*.tif</code>) is very similar to that for the optical images, the main difference being the matrix only has two dimensions (length and width) as the image is greyscale. However, if there is a desire to manipulate the raw data from the radiographic image, some further work is required because the “pixel” is not square, but rectangular. That is to say the length of the pixel differs from its width. On the core scanner a single pixel has a width across the core of 20 micrometers, but has a variable coverage along the core (usually between 50 and 200 micrometers). The processed image downscales the pixel width to match the pixel length in order to force square pixels, losing some resolution along the way.</p>
 </div>
 <div id="magnetic-susceptability-1" class="section level2">
 <h2><span class="header-section-number">2.5</span> Magnetic Susceptability</h2>
-<p>Magnetic susceptability files are easily parsed using standard tools.</p>
 
 </div>
 </div>

@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2020-06-16" />
+<meta name="date" content="2020-06-22" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -138,21 +138,34 @@
             <section class="normal" id="section-">
 <div id="intro" class="section level1">
 <h1><span class="header-section-number">Chapter 1</span> Data Structure</h1>
-<p>The Itrax core scanner is a multi-sensor device, with seperate data outputs for different measurements and uses. They are described in the following sections. Note that your data may not contain all of these objects, depending on the exact scanner, configuration, or data repository you use.</p>
+<p>The Itrax core scanner is a multi-sensor device, with seperate data outputs for different measurements and uses. They are described in the following sections. Note that your data may not contain all of these objects, depending on the exact scanner, configuration, or data repository you use. The folder structure may vary between operators, but typically there will be a folder for each scan section, and each will contain the data described in the following sections.</p>
+<p>Note that where radiographs and XRF data have been aquired using different step-sizes (measurement intervals), the operator will create seperate scan sections (folders) for the x-radiograph and XRF measurement. This is because a scan section can only have a single fixed step-size. For example, it is not uncommon for users to require an step-size of 200 micrometers for the x-radiograph, but only 1 millimeter for the XRF measurement.</p>
 <div id="metadata" class="section level2">
 <h2><span class="header-section-number">1.1</span> Metadata</h2>
+<p>Every scan section has a <code>document.txt</code> file that contains information about the parameters of the scan. For example, it contains the current and voltage settings used for the x-ray tube, the step size, and the start and stop positions of the scan. The file can be opened using any text editor, or can be easily parsed in <code>R</code> using <code>itraxR::itrax_meta()</code>. Sometimes this information is required to process other parts of the data, and as such it is an important part of the overall data package.</p>
 </div>
 <div id="xrf-data" class="section level2">
 <h2><span class="header-section-number">1.2</span> XRF Data</h2>
+<p>The XRF data can be split into two groups — “raw” and “processed” data. The raw data is contained in a seperate folder called <code>XRF data</code>, and consists of a single file, beginning with <code>L000000.spe</code> and incrementing sequentially. This file can be read using a text editor and is tab-delimited. The first part is a header, containing metadata information. The second part is a table of all the channels of the detector and the corresponding count for each channel. Increasing channel numbers represent increasing energy, but some thought needs to be given to calibrating channels into an energy — this step is usually performed using specialist software. In addition, a file called <code>sumspectra.spe</code> is often included in the root directory; this is simply the sum of all the <code>*.spe</code> files in the <code>XRF data</code> directory, and is sometimes useful in processing the data.</p>
+<p>Processed data comes from the <code>Q-Spec</code> software (Cox Analytical Systems, Sweden) provided with the machine. Its function is to process the spectral data files (<code>*.spe</code>) into peak-areas for each element of interest by fitting a model to the data. The model needs some user input and intervention to optimise it, and the quality of the model can be assessed using a number of diagnostic parameters, the most important being the RMSE. The <code>Q-Spec</code> software can also perform some calibration of the data, although this is a less typical use-case. Often the operator will include a file that contains all of the settings used by <code>Q-Spec</code> to translate the raw data files into the peak area outfile file — this file will have the extension <code>*.dfl</code> and will often simply be called <code>settings.dfl</code>.</p>
+<p>It comes in the form of a table, with a single row for each measurement step, and a column for parameters including individual element peak areas in counts (n) or intensities (n/mA). The data files commonly have names like <code>result.txt</code> or <code>Results.txt</code>, but may have been subsequently renamed.</p>
 </div>
 <div id="optical-images" class="section level2">
 <h2><span class="header-section-number">1.3</span> Optical Images</h2>
+<p>The scanner collects good quality optical images that have consistent lighting and because they are line-scan images, they do not suffer from optical distortions. Medium resolution images are usually included in all scan section folders (typically <code>optical.tif</code>), and optional high-resolution images are often included by operators elsewhere. High resolution images are typically supplied as both 8-bit and 16-bit images, and are usually hundreds of megabytes in size.</p>
+<p>Although the brightness of the lighting in the scanner is adjustable, images sometimes need to be brightened and/or have the contrast adjusted. This can be performed in desktop publishing software (e.g. <code>Adobe Photoshop</code>, <code>Corel Photo-Draw</code>), but it is easiest to use the open-source scientific image analysis software <code>imageJ</code> (NIH, USA).</p>
+<p>By including an appropriate colour reference card in the scan the image can be calibrated, although it is often desirable to increase the contrast to elucidate features of the core.</p>
+<p>The photograph will of the entire length of the bed scanned, rather than cropped to the limits of an individual scan section. If multiple scan sections are placed on the bed and are scanned together, it will include all of the scanned sections. The image needs to be cropped using the metadata for the relevant scan section; this process is covered in later chapters.</p>
 </div>
 <div id="radiographic-images" class="section level2">
 <h2><span class="header-section-number">1.4</span> Radiographic Images</h2>
+<p>The scanner has an x-radiographic line array capable of producing good-quality x-radiographs of the cores. The scan data can be split into two parts — “raw” and “processed” data. The raw data (usually <code>radiograph.raw</code>) is a tab-delimited text file containing a matrix of greyscale values. Each column represents a single step (measurement interval), and each row represents a single pixel on the line array. The pixel spacing is around 20 microns.</p>
+<p>The processed image (<code>radiograph.tif</code>) has a lower resolution than the raw data. This is because the pixels must be square, and so the pixels are down-sampled to fit with the step-size of the scan. Thus, if the step-size was 200 micrometers, each pixel will be 200 x 200 micrometers, whereas the raw data will have rectangular pixels with dimensions of 20 x 200 micrometers.</p>
+<p>Like the optical image, the radiograph often requires contrast and brightness adjustments, and these are easiest to perform in <code>imageJ</code>. With the inclusion of a suitable density standard, some relative or, where “u-channels” are used, absolute density calibration can be performed using these data.</p>
 </div>
 <div id="magnetic-susceptability" class="section level2">
 <h2><span class="header-section-number">1.5</span> Magnetic Susceptability</h2>
+<p>Some scanners include a Bartington MS2E surface sensor.</p>
 
 </div>
 </div>
