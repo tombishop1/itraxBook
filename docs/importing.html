@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2020-06-22" />
+<meta name="date" content="2020-06-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -50,6 +50,14 @@
 
 
 
+<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<script src="libs/d3-3.3.8/d3.min.js"></script>
+<script src="libs/dagre-0.4.0/dagre-d3.min.js"></script>
+<link href="libs/mermaid-0.3.0/dist/mermaid.css" rel="stylesheet" />
+<script src="libs/mermaid-0.3.0/dist/mermaid.slim.min.js"></script>
+<link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
+<script src="libs/chromatography-0.1/chromatography.js"></script>
+<script src="libs/DiagrammeR-binding-1.0.6.1/DiagrammeR.js"></script>
 
 
 <style type="text/css">
@@ -69,7 +77,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -200,23 +208,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="importing" class="section level1">
 <h1><span class="header-section-number">Chapter 2</span> Importing Data</h1>
-<<<<<<< HEAD
 <p>All of the Itrax data is in either text-format or “tagged image format” (<code>*.tif</code>). Although this means it is easily read by the various import functions available in <code>R</code>, it still needs considerable cleaning and wrangling to get it to a point where it is useable for most analyses. There are three possible approaches to this task:</p>
 <ol style="list-style-type: decimal">
-<li>Use existing functions published in the <code>itraxR</code> package available from <a href="https://github.com/tombishop1/itraxR">github.com/tombishop1</a>. These are at an early stage and functionality might be broken, but are largely convenience functions for wrangling and analysing Itrax data.</li>
-<li>Work in base <code>R</code> to wrangle the data. This is perfectly achievable, and much of the current <code>itraxR</code> functionality was written this way.</li>
-<li>Work in the <code>tidyverse</code> family of packages and style. For data wrangling tasks, this approach can result in simpler and more resiliant code.</li>
+<li><p>Use existing functions published in the <code>itraxR</code> package available from <a href="https://github.com/tombishop1/itraxR">github.com/tombishop1</a>. These are at an early stage and functionality might be broken, but are largely convenience functions for wrangling and analysing Itrax data.</p></li>
+<li><p>Work in base <code>R</code> to wrangle the data. This is perfectly achievable, and much of the current <code>itraxR</code> functionality was written this way.</p></li>
+<li><p>Work in the <code>tidyverse</code> family of packages and style. For data wrangling tasks, this approach can result in simpler and more resiliant code.</p></li>
 </ol>
 <p>In this guide examples will be given mostly using the <code>tidyverse</code>, and reference will be made to the convenience functions in <code>itraxR</code>.</p>
-<div id="metadata-1" class="section level2">
-<h2><span class="header-section-number">2.1</span> Metadata</h2>
-<p>The scan data file <code>document.txt</code> can be parsed using <code>itraxR::itrax_meta()</code>.</p>
-=======
 <p>All of the Itrax data is in either text-format or “tagged image format” (<code>*.tiff</code>). Although this means it is easily read by the various import functions available in <code>R</code>, it still needs considerable cleaning and wrangling to get it to a point where it is useable. A number of convienience functions are provided in the package <code>itraxR</code>.</p>
 <div id="metadata-1" class="section level2">
 <h2><span class="header-section-number">2.1</span> Metadata</h2>
-<p>The scan data file <code>document.txt</code> can be read using <code>itraxR::itrax_meta()</code>. This is considerably easier than attempting to read it in a text editor, although this is possible.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">example</span>(itrax_meta)</a></code></pre></div>
+<p>The scan data file <code>document.txt</code> can be parsed using <code>itraxR::itrax_meta()</code>. The output is a dataframe from which the individual components can be easily accessed through subsetting functions, for example <code>as.numeric(itrax_meta()[6:7, 2])</code> ould return a numeric vector of the start and end position of a scan.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(itraxR)</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">example</span>(itrax_meta)</a></code></pre></div>
 <pre><code>## 
 ## itrx_m&gt; itrax_meta(system.file(&quot;extdata&quot;, &quot;document.txt&quot;, package = &quot;itraxR&quot;))
 ##                   Parameter     Value       Unit
@@ -239,20 +243,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 17              XRF voltage        30         kV
 ## 18              XRF current        55         mA
 ## 19            XRF exp. time        10    seconds
-## 20        Start temperature        26      \xb0C
-## 21         Stop temperature        27      \xb0C
+## 20        Start temperature        26         °C
+## 21         Stop temperature        27         °C
 ## 22           Start humidity        22          %
 ## 23            Stop humidity        21          %
 ## 24             Start vacuum     -96.0        kPa
 ## 25              Stop vacuum     -96.2        kPa</code></pre>
->>>>>>> 48d80c75e5272ceb7e9b5341d617b4eaec0466b7
 </div>
 <div id="xrf-data-1" class="section level2">
 <h2><span class="header-section-number">2.2</span> XRF Data</h2>
-<p>This is the data most commonly used in analysis and it can be quickly imported using <code>itraxR::itrax_import()</code>. If you’d like more control over the import process, a typical <code>Tidyverse</code> workflow would consist of reading the file (they are tab-delimited), removing variables that are not of interest, and correctly labelling data that should be <code>NA</code>. You may also wish to assign a coring depth information at this stage.</p>
 <div id="processed-data" class="section level3">
 <h3><span class="header-section-number">2.2.1</span> Processed Data</h3>
-<p>This process is integrated, along with some other functionality, in <code>itraxR::itrax_import()</code>.</p>
+<p>This is the data most commonly used in analysis and it can be quickly imported using <code>itraxR::itrax_import()</code>. If you’d like more control over the import process, a typical <code>Tidyverse</code> workflow would consist of reading the file (they are tab-delimited), removing variables that are not of interest, and correctly labelling data that should be <code>NA</code>. You may also wish to assign a coring depth information at this stage.</p>
+<div id="htmlwidget-e198d3b76721e8890adc" style="width:100%;height:100%;" class="DiagrammeR html-widget"></div>
+<script type="application/json" data-for="htmlwidget-e198d3b76721e8890adc">{"x":{"diagram":"graph LR;\n    import[read data file] --> select[select variables of interest] \n    select --> na[label bad data as NA];\n    na -->|optional| depth[add coring depth/age]\n    "},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="joining-xrf-data" class="section level3">
 <h3><span class="header-section-number">2.2.2</span> Joining XRF Data</h3>
@@ -266,7 +270,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="optical-images-1" class="section level2">
 <h2><span class="header-section-number">2.3</span> Optical Images</h2>
 <p>In order to make the images useable for plotting beside other data, they need to be cropped to the scanned area and referenced to the <code>position</code> or a <code>depth</code> variable. Images in <code>R</code> are read in as a matrix with 3 dimensions (length, width, and the three colours).</p>
-<p>To begin with the start and end positions of the scan need to be established; this usually involves parsing the metadata file (e.g. <code>itraxR::itrax_meta()[]</code>), although in some circumstances they can be obtained from another data source (e.g. <code>range(myData[,&quot;Position&quot;])</code>). These then need to be mapped onto individual pixel values using the known size of a single pixel. Once this has been calculated, it is trvial to then subset the part of the image required.</p>
+<p>To begin with the start and end positions of the scan need to be established; this usually involves parsing the metadata file (e.g. <code>itraxR::itrax_meta()[]</code>), although in some circumstances they can be obtained from another data source (e.g. <code>range(myData[,"Position"])</code>). These then need to be mapped onto individual pixel values using the known size of a single pixel. Once this has been calculated, it is trvial to then subset the part of the image required.</p>
 </div>
 <div id="radiographic-images-1" class="section level2">
 <h2><span class="header-section-number">2.4</span> Radiographic Images</h2>
