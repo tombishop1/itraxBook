@@ -4,7 +4,6 @@ All of the Itrax data is in either text-format or "tagged image format" (`*.tif`
 
 1. Use existing functions published in the `itraxR` package available from [github.com/tombishop1](https://github.com/tombishop1/itraxR). These are at an early stage and functionality might be broken, but are largely convenience functions for wrangling and analysing Itrax data. 
 2. Work in base `R` to wrangle the data. This is perfectly achievable, and much of the current `itraxR` functionality was written this way.
-
 3. Work in the `tidyverse` family of packages and style. For data wrangling tasks, this approach can result in simpler and more resiliant code. 
 
 In this guide examples will be given mostly using the `tidyverse`, and reference will be made to the convenience functions in `itraxR`. 
@@ -41,9 +40,80 @@ DiagrammeR(diagram = "graph LR;
     height = '100%', width = '100%')
 ```
 
+Firstly, we need to load the packages we will use, and define a list of elements and other names of variables we might expect to find in the files.
+
+```
+library(tidyverse)
+library(janitor)
+
+elements <- c( "H", "He",
+               "Li", "Be", "B" , "C" , "N", "O", "F" , "Ne",
+               "Na", "Mg", "Al", "Si", "P", "S", "Cl", # "Ar",
+               "K", "Ca", "Sc", "Ti", "V", "Cr", "Mn", "Fe", "Co", "Ni", "Cu", "Zn", "Ga", "Ge", "As", "Se", "Br", "Kr",
+               "Rb", "Sr", "Y", "Zr", "Nb", "Mo", "Tc", "Ru", "Rh", "Pd", "Ag", "Cd", "In", "Sn", "Sb", "Te", "I", "Xe",
+               "Cs", "Ba",
+               "La", "Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm", "Yb",
+               "Lu", "Hf", "Ta", "W", "Re", "Os", "Ir", "Pt", "Au", "Hg", "Tl", "Pb", "Bi", "Po", "At", "Rn",
+               "Fr", "Ra",
+               "Ac", "Th", "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es", "Fm", "Md", "No",
+               "Lr", "Unq", "Unp", "Unh", "Uns", "Uno", "Une", "Unn" )
+others <- c( "position (mm)", "sample.surface", "MSE", "cps", "validity", "Mo inc", "Mo coh", "Cr inc", "Cr coh" )
+```
+
+Secondly, we import the file, remove empty rows and columns, and change the data type of the validity flag. 
+
+```
+df <- read_tsv("results.txt", skip = 2) %>% 
+  remove_empty() %>% 
+  mutate(validity = as.logical(validity))
+```
+
+Next we can select only the variables we need. The code below leaves anything that is a chemical element or in our list of other useful parameters, but you can change these depending on your needs. 
+
+```
+df <- df %>% select(any_of(c(elements, others)))
+```
+
+If you have coring depth information, you could add it now. A simple calculation can be made using the `position` variable (demonstrated below, here assuming the top of the core is at a depth of 400 mm), or a more advanced calculation as you require. It is also possible to add ages derived from an age/depth model now. The final line re-orders the variables so the `depth` variable is the first. 
+
+```
+df <- df %>% rename(position = `position (mm)`) %>% 
+  mutate(depth = position - min(position) + 400) %>% 
+  select(depth, everything())
+```
+
+Finally, a quirk of the formatting of data where `validity == FALSE` needs to be addressed. These cells have a value of 0, but they could be confused with truely `0` value cells that have `validity == TRUE`. The solution is to convert them to `NA` as follows. Note that for metadata variables (`depth`, `sample.surface` etc. the measurements are still valid, so should not be set to `NA`). 
+
+```
+df <- full_join(df %>% filter(validity == TRUE), 
+                df %>% filter(validity == FALSE) %>% select(any_of(c(elements, "position"))) %>% na_if(0)) %>% 
+  arrange(position) %>%
+  mutate(depth = df$depth,
+         validity = df$validity,
+         cps = df$cps,
+         MSE = df$MSE)
+```
+
+Finally, you may wish to do some quality control. The deletion criteria will be more fully discussed in the next chapter, but it is often the case that the first and last few measurements are of poor quality. The code below removes the first and last 10 mm of measurements, however depending on your workflow you may wish to simply flag it in some way. 
+
+```
+df <- df %>% filter(depth > min(depth) + 10 & depth < max(depth) - 10)
+```
+
 ### Joining XRF Data
 
-This process can be simplified using `itraxR::itrax_join()`. 
+Ofen a core (sometimes referred to as a drive) is comprised of a sequence of individual sections, which may or may not be overlapping. Often we will want to integrate them into a continuous dataset for analytical purposes. When joining cores that do not overlap, this process is trivial --- the data is simply appended in order of depth, and a new column is added with the identity of the original core section. 
+
+Where overlapping cores are present, there can be multiple measurements at a single depth (on different cores). In these cases not only will the individual measurements need to be re-ordered by depth, but an additional variable should be created that can be used in combination or alone tp uniquely identify each measurement. The code below does this by creating an additional variable called `label`, with the name of the original core given in the named list. 
+
+```
+mylist <- list(core1 = core1, core2 = core2)
+df <- lapply(names(mylist), function(i) within(mylist[[i]], {label <- i})) %>% 
+  bind_rows() %>% 
+  arrange(depth)
+```
+
+This process can be simplified using `itraxR::itrax_join()`.
 
 ### Raw Data
 
@@ -55,8 +125,25 @@ In order to make the images useable for plotting beside other data, they need to
 
 To begin with the start and end positions of the scan need to be established; this usually involves parsing the metadata file (e.g. `itraxR::itrax_meta()[]`), although in some circumstances they can be obtained from another data source (e.g. `range(myData[,"Position"])`). These then need to be mapped onto individual pixel values using the known size of a single pixel. Once this has been calculated, it is trvial to then subset the part of the image required. 
 
+```
+library(itraxR)
+library(tiff)
+
+image <- readTIFF("optical.tif")
+meta <- itrax_meta("document.txt")
+
+image_depth <- rev(seq(from = as.numeric(meta[9, 2]),
+                   to = as.numeric(meta[10, 2]),
+                   length.out = dim(image)[2]))
+
+image <- image[ , which(image_depth > as.numeric(meta[6, 2]) & image_depth < as.numeric(meta[7, 2])) , ]
+
+```
+
 ## Radiographic Images
 
 The workflow for manipulating the processed radiographic images (`*.tif`) is very similar to that for the optical images, the main difference being the matrix only has two dimensions (length and width) as the image is greyscale. However, if there is a desire to manipulate the raw data from the radiographic image, some further work is required because the "pixel" is not square, but rectangular. That is to say the length of the pixel differs from its width. On the core scanner a single pixel has a width across the core of 20 micrometers, but has a variable coverage along the core (usually between 50 and 200 micrometers). The processed image downscales the pixel width to match the pixel length in order to force square pixels, losing some resolution along the way.
+
+In addition, it should be noted that unlike the optical images that always begin from `position == 0`, the radiographic images have defined start and end points just like an XRF scan, the parameters of which can be accessed from the `document.txt` metadata file (or by using `itrax_meta()`). 
 
 ## Magnetic Susceptability 

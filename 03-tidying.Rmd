@@ -8,3 +8,4 @@ In the functionality provided by `itraxR`, the need for data cleaning is much re
 - Individual measurements that are statistical outliers.
 
 The easiest way to do this is using a `tidyverse` style sequence of pipes that set the observations of faulty data as `NA`. 
+

@@ -1,5 +1,58 @@
 # Plotting
+There are a number of plotting options included in base `R` and some paleoenvironmental packages like `analouge`, but here we will use `ggplot2` and compatible packages. 
 
 ## Plotting XRF Data
+For simple biplots, `ggplot2` provides the following solution.
+
+```
+ggplot(data = na.omit(df), mapping = aes(x = depth, y = Mo.coh/Mo.inc)) +
+  geom_line(aes(color = label)) + 
+  coord_flip() +
+  scale_x_reverse() +
+  labs(x = "Depth [mm]",color = "Core") +
+  theme_classic() +
+  theme(legend.position = "none")
+```
+
+Where a traditional stratigraphic plot is desired, the `tidypaleo` package provides useful functionality for producting these. However, the data does need to converted to long-form from the existing table. In this way `tidypaleo::facet_geochem_gridh` works in a way similar to `ggplot::facet_wrap` but has been creates a stratigraphic plot.
+
+```
+library(tidypaleo)
+df %>% 
+  mutate(`coh/inc` = Mo.coh/Mo.inc) %>%
+  select(Fe, Ti, `coh/inc`, Mn, depth, label) %>% 
+  pivot_longer(!c("depth", "label"), names_to = "elements", values_to = "peakarea") %>% 
+  drop_na() %>%
+  mutate(elements = factor(elements, levels = c("Fe", "Mn", "Ti", "coh/inc"))) %>%
+
+  ggplot(aes(x = peakarea, y = depth)) +
+    geom_lineh(aes(color = label)) +
+    scale_y_reverse() +
+    facet_geochem_gridh(vars(elements)) +
+    labs(x = "peak area", y = "Depth [mm]") +
+    theme_paleo() +
+    theme(legend.position = "none")
+```
 
 ## Plotting Images
+Once an image file has been imported, the image can be integrated into `ggplot` code using the workflow below. 
+
+```
+library(tidyverse)
+library(grid)
+
+ggplot() +
+  annotation_custom(rasterGrob(image2, 
+                               width = unit(1, "npc"),
+                               height = unit(1, "npc"))) +
+  xlab("") +
+  ylab("Position [mm]") +
+  ylim(as.numeric(meta[6:7, 2]))
+```
+
+If the image needs to be rotated, the `aperm()` function needs to be used, followed by reversing the image. 
+
+```
+image2 <- aperm(image, c(2,1,3))
+image2 <- image2[c(dim(image2)[1]: 1), , ]
+```
