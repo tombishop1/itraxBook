@@ -6,7 +6,7 @@ It is worth mentioning some general issues around the robustness of multivariate
 
 ## Correlation Coefficients
 
-The Pearson's R correlation coefficient is occasionally used 
+The Pearson's R correlation coefficient is occasionally used to study the relationships between individual elements. 
 
 ## Unconstrained Cluster Analysis
 
