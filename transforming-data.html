@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 8 Transforming Data | Using Itrax Data in R</title>
+  <title>Chapter 5 Transforming Data | Using Itrax Data in R</title>
   <meta name="description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
   <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 8 Transforming Data | Using Itrax Data in R" />
+  <meta property="og:title" content="Chapter 5 Transforming Data | Using Itrax Data in R" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 8 Transforming Data | Using Itrax Data in R" />
+  <meta name="twitter:title" content="Chapter 5 Transforming Data | Using Itrax Data in R" />
   
   <meta name="twitter:description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="calibrating-data.html"/>
-<link rel="next" href="references.html"/>
+<link rel="prev" href="plotting.html"/>
+<link rel="next" href="multivariate-methods.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -161,9 +161,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.1" data-path="plotting.html"><a href="plotting.html#plotting-xrf-data"><i class="fa fa-check"></i><b>4.1</b> Plotting XRF Data</a></li>
 <li class="chapter" data-level="4.2" data-path="plotting.html"><a href="plotting.html#plotting-images"><i class="fa fa-check"></i><b>4.2</b> Plotting Images</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="transform-data.html"><a href="transform-data.html"><i class="fa fa-check"></i><b>5</b> Transform Data</a><ul>
-<li class="chapter" data-level="5.1" data-path="transform-data.html"><a href="transform-data.html#ratios-and-normalisation"><i class="fa fa-check"></i><b>5.1</b> Ratios and Normalisation</a></li>
-<li class="chapter" data-level="5.2" data-path="transform-data.html"><a href="transform-data.html#preparing-data-for-multivariate-data-analysis"><i class="fa fa-check"></i><b>5.2</b> Preparing Data for Multivariate Data Analysis</a></li>
+<li class="chapter" data-level="5" data-path="transforming-data.html"><a href="transforming-data.html"><i class="fa fa-check"></i><b>5</b> Transforming Data</a><ul>
+<li class="chapter" data-level="5.1" data-path="transforming-data.html"><a href="transforming-data.html#ratios-and-normalisation"><i class="fa fa-check"></i><b>5.1</b> Ratios and Normalisation</a></li>
+<li class="chapter" data-level="5.2" data-path="transforming-data.html"><a href="transforming-data.html#preparing-data-for-multivariate-data-analysis"><i class="fa fa-check"></i><b>5.2</b> Preparing Data for Multivariate Data Analysis</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="multivariate-methods.html"><a href="multivariate-methods.html"><i class="fa fa-check"></i><b>6</b> Multivariate Methods</a><ul>
 <li class="chapter" data-level="6.1" data-path="multivariate-methods.html"><a href="multivariate-methods.html#correlation-coefficients"><i class="fa fa-check"></i><b>6.1</b> Correlation Coefficients</a></li>
@@ -176,10 +176,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.2" data-path="calibrating-data.html"><a href="calibrating-data.html#linear-methods"><i class="fa fa-check"></i><b>7.2</b> Linear Methods</a></li>
 <li class="chapter" data-level="7.3" data-path="calibrating-data.html"><a href="calibrating-data.html#log-ratio-methods"><i class="fa fa-check"></i><b>7.3</b> Log-Ratio Methods</a></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="transforming-data.html"><a href="transforming-data.html"><i class="fa fa-check"></i><b>8</b> Transforming Data</a><ul>
-<li class="chapter" data-level="8.1" data-path="transform-data.html"><a href="transform-data.html#ratios-and-normalisation"><i class="fa fa-check"></i><b>8.1</b> Ratios and Normalisation</a></li>
-<li class="chapter" data-level="8.2" data-path="transform-data.html"><a href="transform-data.html#preparing-data-for-multivariate-data-analysis"><i class="fa fa-check"></i><b>8.2</b> Preparing Data for Multivariate Data Analysis</a></li>
-</ul></li>
+<li class="chapter" data-level="8" data-path="exporting-data.html"><a href="exporting-data.html"><i class="fa fa-check"></i><b>8</b> Exporting Data</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -202,12 +199,33 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
             <section class="normal" id="section-">
 <div id="transforming-data" class="section level1">
-<h1><span class="header-section-number">Chapter 8</span> Transforming Data</h1>
+<h1><span class="header-section-number">Chapter 5</span> Transforming Data</h1>
+<p>The XRF data typically reported from the Itrax core scanner come from the spectral processing software Q-Spec. The output is usually in the form of an intensity, which is a dimensionless metric derived from the size of the spectral peak for a particular element, above the background Bremsstralung radiation, sometimes normalised for the tube current and/or counting time.</p>
 <div id="ratios-and-normalisation" class="section level2">
-<h2><span class="header-section-number">8.1</span> Ratios and Normalisation</h2>
+<h2><span class="header-section-number">5.1</span> Ratios and Normalisation</h2>
+<p>These data are compositional, and represent the changes in the relative proportions of all components of the matrix, measured and un-measured. As such it is likely the data will need transforming for certain types of multivariate analysis. As previously mentioned, these data are dimensionless, and as such do not represent a quantity, but are directly related to the absolute amount of a particular element in the matrix. It is often the case that ratios of elements are used to represent changes in composition — this is sometimes referred to as normalisation, or normalising one element against another.</p>
+<p>It is trivial to calculate element ratios, to the extent that these can often simply be calculated where they are required rather than saving them to memory. For example, if a plot of the Compton divided by the Rayleigh scatter was desired, there is no need to save the computed value to a new variable (e.g. <code>coh_inc &lt;- df$Mo.coh/df$Mo.inc</code> ) — simply define the calculation during plotting.</p>
 </div>
 <div id="preparing-data-for-multivariate-data-analysis" class="section level2">
-<h2><span class="header-section-number">8.2</span> Preparing Data for Multivariate Data Analysis</h2>
+<h2><span class="header-section-number">5.2</span> Preparing Data for Multivariate Data Analysis</h2>
+<p>Where multivariate methods (cluster analysis, principle components analysis, correlation matricies) are required, it is usually necessary to transform data. This is because the statistical assumptions that underlie these methods are often not met when dealing with compositional data like that from an XRF core-scanner. There is no “right” or ideal way to deal with these issues, but a common method is to use a form of log transformation. Here we use a centered log transformation, which cannot be performed on zero values.</p>
+<pre><code>df %&gt;% chemometrics::clr(df)</code></pre>
+<p>There are a number of possible solutions to this problem of zero values, none ideal, but the most common are to add an arbitary number to the entirity of the data, or to replace zero values with a very small number, perhaps the limit of precision or the limit of detection. In the example shown, the limit of precision for the peak area intensity is used (<code>0.001</code>).</p>
+<pre><code>input[input == 0] &lt;- 0.001</code></pre>
+<p>A final solution may be to exclude zero values from any subsequent analysis, although not all methods tolerate <code>NA</code> in the data. Where there are many zero values for a particular variable, the variable may not provide good data and could be excluded.</p>
+<pre><code>df %&gt;% na_if(0)</code></pre>
+<p>In most multivariate analyses there are a number of variables which have high signal-to-noise ratios or otheriwse only add noise to multivariate methods. In these cases, they might be excluded from multivariate methods. The selection of variables for inclusion is a matter for the analyst. It goes without saying that variables that are not part of the composition (that is, anything that is not an element) must be removed from the data used for multivariate analysis.</p>
+<pre><code>df %&gt;% select(-any_of(c(&quot;Mg&quot;, &quot;Co&quot;, &quot;Mo&quot;))</code></pre>
+<p>Finally, in order to correctly identify the measurements to their original data source, it is necessary to use row names that uniquely identify observations. For single scans this is not usually an issue — the <code>depth</code> or <code>position</code> variable can be used. However, where a dataset is a composition of multiple cores, you may find that there are multiple observations for a particular depth where cores overlap. In the example shown we create a unique name for each observation by concatating the name of the core as recorded in the <code>label</code> column of a core sequence joined using <code>itraxR::itrax_join()</code> with the corresponding <code>depth</code> variable, but the code could be modified to suit a different workflow.</p>
+<pre><code>rowlabels &lt;- str_c(df$label, df$depth, sep = &quot;_&quot;)
+input &lt;- df %&gt;% select(any_of(elements)) 
+input &lt;- input %&gt;% select(-any_of(c(&quot;Mg&quot;, &quot;Co&quot;, &quot;Mo&quot;)))
+input[input == 0] &lt;- 0.001
+
+library(chemometrics)
+input &lt;- clr(input)
+
+row.names(input) &lt;- rowlabels</code></pre>
 
 </div>
 </div>
@@ -216,8 +234,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="calibrating-data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="plotting.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="multivariate-methods.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
