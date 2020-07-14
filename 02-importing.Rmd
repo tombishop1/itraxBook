@@ -20,8 +20,8 @@ All of the Itrax data is in either text-format or "tagged image format" (`*.tiff
 The scan data file `document.txt` can be parsed using `itraxR::itrax_meta()`. The output is a dataframe from which the individual components can be easily accessed through subsetting functions, for example `as.numeric(itrax_meta()[6:7, 2])` ould return a numeric vector of the start and end position of a scan.
 
 ```{r importing_metadata}
-library(itraxR)
-example(itrax_meta)
+#library(itraxR)
+#example(itrax_meta)
 ```
 
 ## XRF Data
