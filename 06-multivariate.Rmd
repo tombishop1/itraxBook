@@ -1,6 +1,12 @@
 # Multivariate Methods
 
+Input data often needs extensive preparation if useful results are to be obtained --- transformation, dealing with zero values, and `NA` values. 
+
+It is worth mentioning some general issues around the robustness of multivariate analysis. 
+
 ## Correlation Coefficients
+
+The Pearson's R correlation coefficient is occasionally used 
 
 ## Unconstrained Cluster Analysis
 

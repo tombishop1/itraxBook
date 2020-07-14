@@ -5,14 +5,32 @@ The XRF data typically reported from the Itrax core scanner come from the spectr
 
 These data are compositional, and represent the changes in the relative proportions of all components of the matrix, measured and un-measured. As such it is likely the data will need transforming for certain types of multivariate analysis. As previously mentioned, these data are dimensionless, and as such do not represent a quantity, but are directly related to the absolute amount of a particular element in the matrix. It is often the case that ratios of elements are used to represent changes in composition --- this is sometimes referred to as normalisation, or normalising one element against another. 
 
-It is trivial to calculate element ratios, to the extent that these can often simply be calculated where they are required rather than saving them to memory. For example, if a plot of the Compton divided by the Rayleigh scatter was desired, there is no need to save the computed value to a new variable (e.g. `coh_inc <- df$Mo.coh/df$Mo.inc` ) --- simply define the calculatio during plotting.
+It is trivial to calculate element ratios, to the extent that these can often simply be calculated where they are required rather than saving them to memory. For example, if a plot of the Compton divided by the Rayleigh scatter was desired, there is no need to save the computed value to a new variable (e.g. `coh_inc <- df$Mo.coh/df$Mo.inc` ) --- simply define the calculation during plotting.
 
 ## Preparing Data for Multivariate Data Analysis
 Where multivariate methods (cluster analysis, principle components analysis, correlation matricies) are required, it is usually necessary to transform data. This is because the statistical assumptions that underlie these methods are often not met when dealing with compositional data like that from an XRF core-scanner. There is no "right" or ideal way to deal with these issues, but a common method is to use a form of log transformation. Here we use a centered log transformation, which cannot be performed on zero values. 
 
+```
+df %>% chemometrics::clr(df)
+```
+
 There are a number of possible solutions to this problem of zero values, none ideal, but the most common are to add an arbitary number to the entirity of the data, or to replace zero values with a very small number, perhaps the limit of precision or the limit of detection. In the example shown, the limit of precision for the peak area intensity is used (`0.001`). 
 
+```
+input[input == 0] <- 0.001
+```
+
+A final solution may be to exclude zero values from any subsequent analysis, although not all methods tolerate `NA` in the data. Where there are many zero values for a particular variable, the variable may not provide good data and could be excluded. 
+
+```
+df %>% na_if(0)
+```
+
 In most multivariate analyses there are a number of variables which have high signal-to-noise ratios or otheriwse only add noise to multivariate methods. In these cases, they might be excluded from multivariate methods. The selection of variables for inclusion is a matter for the analyst. It goes without saying that variables that are not part of the composition (that is, anything that is not an element) must be removed from the data used for multivariate analysis.
+
+```
+df %>% select(-any_of(c("Mg", "Co", "Mo"))
+```
 
 Finally, in order to correctly identify the measurements to their original data source, it is necessary to use row names that uniquely identify observations. For single scans this is not usually an issue --- the `depth` or `position` variable can be used. However, where a dataset is a composition of multiple cores, you may find that there are multiple observations for a particular depth where cores overlap. In the example shown we create a unique name for each observation by concatating the name of the core as recorded in the `label` column of a core sequence joined using `itraxR::itrax_join()` with the corresponding `depth` variable, but the code could be modified to suit a different workflow. 
 
