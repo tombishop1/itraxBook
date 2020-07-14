@@ -1,3 +1,8 @@
+# from https://bookdown.org/yihui/blogdown/github-pages.html
+# and https://ropenscilabs.github.io/actions_sandbox/websites-using-pkgdown-bookdown-and-blogdown.html#ghpages-setup
+# and https://docs.github.com/en/github/working-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site#choosing-a-publishing-source
+# and https://bookdown.org/yihui/bookdown/github.html
+
 on:
   push:
      branches:
@@ -44,8 +49,6 @@ jobs:
      - name: Deploy to GitHub Pages
        uses: Cecilapp/GitHub-Pages-deploy@master
        env:
-          EMAIL: ${{ secrets.EMAIL }}               # must be a verified email
+          EMAIL: ${{ secrets.EMAIL }}  # must be a verified email
           GH_TOKEN: ${{ secrets.PAT }} # https://github.com/settings/tokens
-          BUILD_DIR: _book/                     # "_site/" by default
-    
- 
+          BUILD_DIR: _book/            # "_site/" by default

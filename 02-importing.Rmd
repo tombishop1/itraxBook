@@ -31,13 +31,13 @@ The scan data file `document.txt` can be parsed using `itraxR::itrax_meta()`. Th
 This is the data most commonly used in analysis and it can be quickly imported using `itraxR::itrax_import()`. If you'd like more control over the import process, a typical `Tidyverse` workflow would consist of reading the file (they are tab-delimited), removing variables that are not of interest, and correctly labelling data that should be `NA`. You may also wish to assign a coring depth information at this stage.
 
 ```{r importing_processed_flow, echo=FALSE}
-library(DiagrammeR)
-DiagrammeR(diagram = "graph LR;
-    import[read data file] --> select[select variables of interest] 
-    select --> na[label bad data as NA];
-    na -->|optional| depth[add coring depth/age]
-    ",
-    height = '100%', width = '100%')
+#library(DiagrammeR)
+#DiagrammeR(diagram = "graph LR;
+#    import[read data file] --> select[select variables of interest] 
+#    select --> na[label bad data as NA];
+#    na -->|optional| depth[add coring depth/age]
+#    ",
+#    height = '100%', width = '100%')
 ```
 
 Firstly, we need to load the packages we will use, and define a list of elements and other names of variables we might expect to find in the files.
