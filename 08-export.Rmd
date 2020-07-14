@@ -1,5 +1,1 @@
-# Transforming Data
-
-## Ratios and Normalisation
-
-## Preparing Data for Multivariate Data Analysis
+# Exporting Data
