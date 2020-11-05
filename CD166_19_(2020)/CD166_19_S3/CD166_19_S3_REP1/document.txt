@@ -1,0 +1,22 @@
+Base path:	Sample name:	Section name	User ID
+C:\Data\CD166_19_(2020)\CD166_19_S3	CD166_19_S3	CD166_19_S3_REP1	MC
+Year	Month	Day	Time
+2020	09	24	00
+Voltage	55	kV	
+Current	50	mA	
+Exposure time	0	ms	
+line camera signal level	322731	at 25 ms	
+Step size	1000	microns	
+XRF	ON		
+XRF exp. time	15	seconds	
+Start coordinate	29.8	Stop coordinate	179.8
+XRF voltage and current	30	  	30
+Tube	Mo		
+Optical Start	0.8	Optical End	1591.3
+Step size	0.188	microns	
+Start temperature		°C	
+Start humidity		%	
+Start vacuum	-94.4	kPa	
+Stop temperature		°C	
+Stop humidity		%	
+Stop vacuum	-94.4	kPa	
