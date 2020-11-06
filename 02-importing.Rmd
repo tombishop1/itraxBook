@@ -4,31 +4,38 @@ All of the Itrax data is in either text-format or "tagged image format" (`*.tif`
 
 1. Use existing functions published in the `itraxR` package available from [github.com/tombishop1](https://github.com/tombishop1/itraxR). These are at an early stage and functionality might be broken, but are largely convenience functions for wrangling and analysing Itrax data. 
 2. Work in base `R` to wrangle the data. This is perfectly achievable, and much of the current `itraxR` functionality was written this way.
-3. Work in the `tidyverse` family of packages and style. For data wrangling tasks, this approach can result in simpler and more resiliant code. 
+3. Work in the `tidyverse` family of packages and style. For data wrangling tasks, this approach can result in simpler and more resilient code. 
 
 In this guide examples will be given mostly using the `tidyverse`, and reference will be made to the convenience functions in `itraxR`. 
 
-All of the Itrax data is in either text-format or "tagged image format" (`*.tiff`). Although this means it is easily read by the various import functions available in `R`, it still needs considerable cleaning and wrangling to get it to a point where it is useable. A number of convienience functions are provided in the package `itraxR`.
+All of the Itrax data is in either text-format or "tagged image format" (`*.tiff`). Although this means it is easily read by the various import functions available in `R`, it still needs considerable cleaning and wrangling to get it to a point where it is useable. A number of convenience functions are provided in the package `itraxR`.
 
-```{r importing_init, include=FALSE}
-
+```{r setup, include=FALSE, echo=FALSE}
+require("knitr")
+opts_knit$set(root.dir = "CD166_19_(2020)/")
 ```
-
 
 ## Metadata
 
-The scan data file `document.txt` can be parsed using `itraxR::itrax_meta()`. The output is a dataframe from which the individual components can be easily accessed through subsetting functions, for example `as.numeric(itrax_meta()[6:7, 2])` ould return a numeric vector of the start and end position of a scan.
+The scan data file `document.txt` can be quickly parsed using `itraxR::itrax_meta()`. The output is a dataframe from which the individual components can be easily accessed through subsetting functions, for example `as.numeric(itrax_meta()[6:7, 2])` would return a numeric vector of the start and end position of a scan.
 
 ```{r importing_metadata}
-#library(itraxR)
-#example(itrax_meta)
+library(itraxR)
+itrax_meta("CD166_19_S1/CD166_19_S1/document.txt")
 ```
 
 ## XRF Data
 
 ### Processed Data
 
-This is the data most commonly used in analysis and it can be quickly imported using `itraxR::itrax_import()`. If you'd like more control over the import process, a typical `Tidyverse` workflow would consist of reading the file (they are tab-delimited), removing variables that are not of interest, and correctly labelling data that should be `NA`. You may also wish to assign a coring depth information at this stage.
+This is the data most commonly used in analysis and it can be quickly imported using `itraxR::itrax_import()`. Note that, like for the example data, it is possible to have more than one processed data file. Typically cores have at least two, one created at the time of the scan based on settings for a single point near the top of the sequence, and another from a holistic re-analysis of the sequence. 
+
+```{r proc_data}
+CD166_19_S1 <- itrax_import("CD166_19_S1/CD166_19_S1/Results.txt", depth = 0)
+head(CD166_19_S1)
+```
+
+If you'd like more control over the import process, a typical `Tidyverse` workflow would consist of reading the file (they are tab-delimited), removing variables that are not of interest, and correctly labelling data that should be `NA`. You may also wish to assign a coring depth information at this stage.
 
 ```{r importing_processed_flow, echo=FALSE}
 #library(DiagrammeR)
@@ -102,9 +109,9 @@ df <- df %>% filter(depth > min(depth) + 10 & depth < max(depth) - 10)
 
 ### Joining XRF Data
 
-Ofen a core (sometimes referred to as a drive) is comprised of a sequence of individual sections, which may or may not be overlapping. Often we will want to integrate them into a continuous dataset for analytical purposes. When joining cores that do not overlap, this process is trivial --- the data is simply appended in order of depth, and a new column is added with the identity of the original core section. 
+Ofen a core (sometimes referred to as a drive) is comprised of a sequence of individual sections, which may or may not be overlapping. Often we will want to integrate them into a continuous dataset for analytical purposes. When joining cores that do not overlap, this process is trivial --- the data might simply appended in order of depth, and a new column is added with the identity of the original core section. 
 
-Where overlapping cores are present, there can be multiple measurements at a single depth (on different cores). In these cases not only will the individual measurements need to be re-ordered by depth, but an additional variable should be created that can be used in combination or alone tp uniquely identify each measurement. The code below does this by creating an additional variable called `label`, with the name of the original core given in the named list. 
+Where overlapping cores are present, there can be multiple measurements at a single depth (on different cores). In these cases not only will the individual measurements need to be re-ordered by depth, but an additional variable should be created that can be used in combination or alone to uniquely identify each measurement. The code below does this by creating an additional variable called `label`, with the name of the original core given in the named list. 
 
 ```
 mylist <- list(core1 = core1, core2 = core2)
@@ -113,7 +120,17 @@ df <- lapply(names(mylist), function(i) within(mylist[[i]], {label <- i})) %>%
   arrange(depth)
 ```
 
-This process can be simplified using `itraxR::itrax_join()`.
+This process can be simplified using `itraxR::itrax_join()`, for example:
+
+```{r itrax_join}
+# import the core sections
+CD166_19_S1 <- itrax_import("CD166_19_S1/CD166_19_S1/Results.txt", depth_top = 0)
+CD166_19_S2 <- itrax_import("CD166_19_S2/CD166_19_S2/Results.txt", depth_top = max(CD166_19_S1$depth))
+CD166_19_S3 <- itrax_import("CD166_19_S3/CD166_19_S3/Results.txt", depth_top = max(CD166_19_S2$depth))
+#join them together
+CD166_19 <- itrax_join(list(S1 = CD166_19_S1, S2 = CD166_19_S2, S3 = CD166_19_S3))
+str(CD166_19)
+```
 
 ### Raw Data
 
@@ -121,7 +138,7 @@ Sometimes it is useful to work with raw data rather than the calculated intensit
 
 ## Optical Images
 
-In order to make the images useable for plotting beside other data, they need to be cropped to the scanned area and referenced to the `position` or a `depth` variable. Images in `R` are read in as a matrix with 3 dimensions (length, width, and the three colours). 
+In order to make the images usable for plotting beside other data, they need to be cropped to the scanned area and referenced to the `position` or a `depth` variable. Images in `R` are read in as a matrix with 3 dimensions (length, width, and the three colours). 
 
 To begin with the start and end positions of the scan need to be established; this usually involves parsing the metadata file (e.g. `itraxR::itrax_meta()[]`), although in some circumstances they can be obtained from another data source (e.g. `range(myData[,"Position"])`). These then need to be mapped onto individual pixel values using the known size of a single pixel. Once this has been calculated, it is trvial to then subset the part of the image required. 
 
