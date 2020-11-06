@@ -4,7 +4,7 @@ author: "Thomas Bishop"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 documentclass: book
-#bibliography: [biblio.bib]
+bibliography: [biblio.bib]
 biblio-style: apalike
 link-citations: yes
 description: "This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R."
@@ -16,4 +16,4 @@ description: "This book is a guide to importing, tidying, manipulating and analy
 During the COVID-19 pandemic in 2020 it became necessary to formalise (or at least, organise) the support offered to students using the Itrax core scanner at The University of Manchester Geography Laboratories so they could be offered online. This led to an unexpectedly popular series of seminars. When these came to an end, we decided it would be useful to summarise our seminars into a reference guide that could be updated over time. This is that guide.  
 
 ## Prerequisites
-This guide assumes a basic knowledge of `R` and the `tidyverse`, including data types, assignments, and pipes. It also assumes a background knowledge of the core scanner and the nature of the data it produces. Some of the sections on data analysis assume some knowledge of compositional data analysis. 
+This guide assumes a basic knowledge of `R` and the `tidyverse`, including data types, assignments, and pipes. It also assumes a background knowledge of the core scanner @Croudace2019 and the nature of the data it produces. Some of the sections on data analysis assume some knowledge of compositional data analysis. 
