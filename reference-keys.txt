@@ -1,5 +1,6 @@
 why-did-i-write-this-book
 prerequisites
+example-data
 intro
 metadata
 xrf-data

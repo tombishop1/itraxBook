@@ -139,6 +139,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a><ul>
 <li class="chapter" data-level="0.1" data-path="index.html"><a href="index.html#why-did-i-write-this-book"><i class="fa fa-check"></i><b>0.1</b> Why did I write this book?</a></li>
 <li class="chapter" data-level="0.2" data-path="index.html"><a href="index.html#prerequisites"><i class="fa fa-check"></i><b>0.2</b> Prerequisites</a></li>
+<li class="chapter" data-level="0.3" data-path="index.html"><a href="index.html#example-data"><i class="fa fa-check"></i><b>0.3</b> Example Data</a></li>
 </ul></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Data Structure</a><ul>
 <li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#metadata"><i class="fa fa-check"></i><b>1.1</b> Metadata</a></li>
@@ -206,21 +207,71 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ol style="list-style-type: decimal">
 <li>Use existing functions published in the <code>itraxR</code> package available from <a href="https://github.com/tombishop1/itraxR">github.com/tombishop1</a>. These are at an early stage and functionality might be broken, but are largely convenience functions for wrangling and analysing Itrax data.</li>
 <li>Work in base <code>R</code> to wrangle the data. This is perfectly achievable, and much of the current <code>itraxR</code> functionality was written this way.</li>
-<li>Work in the <code>tidyverse</code> family of packages and style. For data wrangling tasks, this approach can result in simpler and more resiliant code.</li>
+<li>Work in the <code>tidyverse</code> family of packages and style. For data wrangling tasks, this approach can result in simpler and more resilient code.</li>
 </ol>
 <p>In this guide examples will be given mostly using the <code>tidyverse</code>, and reference will be made to the convenience functions in <code>itraxR</code>.</p>
-<p>All of the Itrax data is in either text-format or “tagged image format” (<code>*.tiff</code>). Although this means it is easily read by the various import functions available in <code>R</code>, it still needs considerable cleaning and wrangling to get it to a point where it is useable. A number of convienience functions are provided in the package <code>itraxR</code>.</p>
+<p>All of the Itrax data is in either text-format or “tagged image format” (<code>*.tiff</code>). Although this means it is easily read by the various import functions available in <code>R</code>, it still needs considerable cleaning and wrangling to get it to a point where it is useable. A number of convenience functions are provided in the package <code>itraxR</code>.</p>
 <div id="metadata-1" class="section level2">
 <h2><span class="header-section-number">2.1</span> Metadata</h2>
-<p>The scan data file <code>document.txt</code> can be parsed using <code>itraxR::itrax_meta()</code>. The output is a dataframe from which the individual components can be easily accessed through subsetting functions, for example <code>as.numeric(itrax_meta()[6:7, 2])</code> ould return a numeric vector of the start and end position of a scan.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="importing.html#cb1-1"></a><span class="co">#library(itraxR)</span></span>
-<span id="cb1-2"><a href="importing.html#cb1-2"></a><span class="co">#example(itrax_meta)</span></span></code></pre></div>
+<p>The scan data file <code>document.txt</code> can be quickly parsed using <code>itraxR::itrax_meta()</code>. The output is a dataframe from which the individual components can be easily accessed through subsetting functions, for example <code>as.numeric(itrax_meta()[6:7, 2])</code> would return a numeric vector of the start and end position of a scan.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="importing.html#cb1-1"></a><span class="kw">library</span>(itraxR)</span>
+<span id="cb1-2"><a href="importing.html#cb1-2"></a><span class="kw">itrax_meta</span>(<span class="st">&quot;CD166_19_S1/CD166_19_S1/document.txt&quot;</span>)</span></code></pre></div>
+<pre><code>##                   Parameter       Value       Unit
+## 1               Sample name CD166_19_S1        str
+## 2              Section name CD166_19_S1        str
+## 3           Aquisition date   22/9/2020 dd/mm/yyyy
+## 4             Operator name          MC        str
+## 5                      Tube          Mo    element
+## 6          Start coordinate        31.5         mm
+## 7           Stop coordinate      1314.1         mm
+## 8                 Step size        1000    microns
+## 9             Optical Start         0.5         mm
+## 10              Optical End      1401.3         mm
+## 11        Optical step size       0.188         mm
+## 12             Rad. voltage          55         kV
+## 13             Rad. current          50         mA
+## 14            Rad. exposure           0         ms
+## 15 line camera signal level      323154   at 25 ms
+## 16                      XRF          ON     ON/OFF
+## 17              XRF voltage          30         kV
+## 18              XRF current          30         mA
+## 19            XRF exp. time          15    seconds
+## 20        Start temperature                  \xb0C
+## 21         Stop temperature                  \xb0C
+## 22           Start humidity                      %
+## 23            Stop humidity                      %
+## 24             Start vacuum       -95.0        kPa
+## 25              Stop vacuum       -94.8        kPa</code></pre>
 </div>
 <div id="xrf-data-1" class="section level2">
 <h2><span class="header-section-number">2.2</span> XRF Data</h2>
 <div id="processed-data" class="section level3">
 <h3><span class="header-section-number">2.2.1</span> Processed Data</h3>
-<p>This is the data most commonly used in analysis and it can be quickly imported using <code>itraxR::itrax_import()</code>. If you’d like more control over the import process, a typical <code>Tidyverse</code> workflow would consist of reading the file (they are tab-delimited), removing variables that are not of interest, and correctly labelling data that should be <code>NA</code>. You may also wish to assign a coring depth information at this stage.</p>
+<p>This is the data most commonly used in analysis and it can be quickly imported using <code>itraxR::itrax_import()</code>. Note that, like for the example data, it is possible to have more than one processed data file. Typically cores have at least two, one created at the time of the scan based on settings for a single point near the top of the sequence, and another from a holistic re-analysis of the sequence.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="importing.html#cb3-1"></a>CD166_<span class="dv">19</span>_S1 &lt;-<span class="st"> </span><span class="kw">itrax_import</span>(<span class="st">&quot;CD166_19_S1/CD166_19_S1/Results.txt&quot;</span>, <span class="dt">depth =</span> <span class="dv">0</span>)</span>
+<span id="cb3-2"><a href="importing.html#cb3-2"></a><span class="kw">head</span>(CD166_<span class="dv">19</span>_S1)</span></code></pre></div>
+<pre><code>##   position sample.surface validity   cps  MSE Al  Si P  S   Cl    K     Ca  Sc
+## 0    31.54           6.38     TRUE 22415 1.26 41 177 0  0  726 1412  59965  19
+## 1    32.54           6.39     TRUE 34525 1.41 76 275 0 10 1318 2565 112734   0
+## 2    33.54           6.42     TRUE 38370 1.57 57 306 0  0 1513 2628 144287  14
+## 3    34.54           6.42     TRUE 39796 1.55 74 330 0 32 1470 2378 162938   0
+## 4    35.54           6.43     TRUE 40022 1.41 26 206 0 21 1312 2265 153194   0
+## 5    36.54           6.44     TRUE 41973 1.41 53 233 0 37 1740 2947 135879 106
+##     Ti  V  Cr  Mn    Fe  Ni  Cu  Zn Ga Ge  Br  Rb    Sr   Y  Zr Pd Cd  I Cs  Ba
+## 0  804 26 220 231 19786  54 117 184  0  0 331 175  5817  60 305  0  9 30  0  35
+## 1 1661 51 258 508 35168 123 277 205  4  0 491 329  8306  15 255 31 13 38  0  63
+## 2 1806 88 326 559 36494 104 230 268 48 40 605  76  9181 140 322 78 34 48  0  48
+## 3 2121 22 301 483 35952 134 150 123  0 43 550 295  9644 119 280 75 55 80  0  25
+## 4 2031 75 306 485 35512 144 206 239  0  0 609 313  9940 107 475 66 24 67  0  60
+## 5 1826 89 440 738 44303 166 276 240  0  0 659 304 10287 180 160 31 34 23  0 132
+##   Nd Sm  Yb  Ta    W  Pb  Bi Mo.inc Mo.coh depth
+## 0 12  0 166 546 1151  22   0  20427   6812     0
+## 1 17 43 144 789 1992  77  72  26323   8799     1
+## 2 67 46 282 776 2019   0 136  26778   9117     2
+## 3 44 39 158 703 2016  13 199  26550   9303     3
+## 4 75 64 218 794 2160 152 134  28310   9886     4
+## 5 42 36 163 919 2344  54 157  31356  10140     5</code></pre>
+<p>If you’d like more control over the import process, a typical <code>Tidyverse</code> workflow would consist of reading the file (they are tab-delimited), removing variables that are not of interest, and correctly labelling data that should be <code>NA</code>. You may also wish to assign a coring depth information at this stage.</p>
 <p>Firstly, we need to load the packages we will use, and define a list of elements and other names of variables we might expect to find in the files.</p>
 <pre><code>library(tidyverse)
 library(janitor)
@@ -260,13 +311,74 @@ others &lt;- c( &quot;position (mm)&quot;, &quot;sample.surface&quot;, &quot;MSE
 </div>
 <div id="joining-xrf-data" class="section level3">
 <h3><span class="header-section-number">2.2.2</span> Joining XRF Data</h3>
-<p>Ofen a core (sometimes referred to as a drive) is comprised of a sequence of individual sections, which may or may not be overlapping. Often we will want to integrate them into a continuous dataset for analytical purposes. When joining cores that do not overlap, this process is trivial — the data is simply appended in order of depth, and a new column is added with the identity of the original core section.</p>
-<p>Where overlapping cores are present, there can be multiple measurements at a single depth (on different cores). In these cases not only will the individual measurements need to be re-ordered by depth, but an additional variable should be created that can be used in combination or alone tp uniquely identify each measurement. The code below does this by creating an additional variable called <code>label</code>, with the name of the original core given in the named list.</p>
+<p>Ofen a core (sometimes referred to as a drive) is comprised of a sequence of individual sections, which may or may not be overlapping. Often we will want to integrate them into a continuous dataset for analytical purposes. When joining cores that do not overlap, this process is trivial — the data might simply appended in order of depth, and a new column is added with the identity of the original core section.</p>
+<p>Where overlapping cores are present, there can be multiple measurements at a single depth (on different cores). In these cases not only will the individual measurements need to be re-ordered by depth, but an additional variable should be created that can be used in combination or alone to uniquely identify each measurement. The code below does this by creating an additional variable called <code>label</code>, with the name of the original core given in the named list.</p>
 <pre><code>mylist &lt;- list(core1 = core1, core2 = core2)
 df &lt;- lapply(names(mylist), function(i) within(mylist[[i]], {label &lt;- i})) %&gt;% 
   bind_rows() %&gt;% 
   arrange(depth)</code></pre>
-<p>This process can be simplified using <code>itraxR::itrax_join()</code>.</p>
+<p>This process can be simplified using <code>itraxR::itrax_join()</code>, for example:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="importing.html#cb12-1"></a><span class="co"># import the core sections</span></span>
+<span id="cb12-2"><a href="importing.html#cb12-2"></a>CD166_<span class="dv">19</span>_S1 &lt;-<span class="st"> </span><span class="kw">itrax_import</span>(<span class="st">&quot;CD166_19_S1/CD166_19_S1/Results.txt&quot;</span>, <span class="dt">depth_top =</span> <span class="dv">0</span>)</span>
+<span id="cb12-3"><a href="importing.html#cb12-3"></a>CD166_<span class="dv">19</span>_S2 &lt;-<span class="st"> </span><span class="kw">itrax_import</span>(<span class="st">&quot;CD166_19_S2/CD166_19_S2/Results.txt&quot;</span>, <span class="dt">depth_top =</span> <span class="kw">max</span>(CD166_<span class="dv">19</span>_S1<span class="op">$</span>depth))</span>
+<span id="cb12-4"><a href="importing.html#cb12-4"></a>CD166_<span class="dv">19</span>_S3 &lt;-<span class="st"> </span><span class="kw">itrax_import</span>(<span class="st">&quot;CD166_19_S3/CD166_19_S3/Results.txt&quot;</span>, <span class="dt">depth_top =</span> <span class="kw">max</span>(CD166_<span class="dv">19</span>_S2<span class="op">$</span>depth))</span>
+<span id="cb12-5"><a href="importing.html#cb12-5"></a><span class="co">#join them together</span></span>
+<span id="cb12-6"><a href="importing.html#cb12-6"></a>CD166_<span class="dv">19</span> &lt;-<span class="st"> </span><span class="kw">itrax_join</span>(<span class="kw">list</span>(<span class="dt">S1 =</span> CD166_<span class="dv">19</span>_S1, <span class="dt">S2 =</span> CD166_<span class="dv">19</span>_S2, <span class="dt">S3 =</span> CD166_<span class="dv">19</span>_S3))</span></code></pre></div>
+<pre><code>## Loading required package: dplyr</code></pre>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="importing.html#cb17-1"></a><span class="kw">str</span>(CD166_<span class="dv">19</span>)</span></code></pre></div>
+<pre><code>## &#39;data.frame&#39;:    4212 obs. of  44 variables:
+##  $ position      : num  31.5 32.5 33.5 34.5 35.5 ...
+##  $ sample.surface: num  6.38 6.39 6.42 6.42 6.43 6.44 6.46 6.47 6.48 6.49 ...
+##  $ validity      : logi  TRUE TRUE TRUE TRUE TRUE TRUE ...
+##  $ cps           : int  22415 34525 38370 39796 40022 41973 41268 40977 41104 41408 ...
+##  $ MSE           : num  1.26 1.41 1.57 1.55 1.41 1.41 1.36 1.52 1.38 1.58 ...
+##  $ Al            : int  41 76 57 74 26 53 27 72 78 69 ...
+##  $ Si            : int  177 275 306 330 206 233 347 337 346 403 ...
+##  $ P             : int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ S             : int  0 10 0 32 21 37 28 59 19 44 ...
+##  $ Cl            : int  726 1318 1513 1470 1312 1740 1576 1605 1559 1503 ...
+##  $ K             : int  1412 2565 2628 2378 2265 2947 3179 3376 3193 3220 ...
+##  $ Ca            : int  59965 112734 144287 162938 153194 135879 132183 134094 138570 145762 ...
+##  $ Sc            : int  19 0 14 0 0 106 14 0 46 0 ...
+##  $ Ti            : int  804 1661 1806 2121 2031 1826 1923 2059 2443 2701 ...
+##  $ V             : int  26 51 88 22 75 89 107 0 71 23 ...
+##  $ Cr            : int  220 258 326 301 306 440 401 440 407 449 ...
+##  $ Mn            : int  231 508 559 483 485 738 792 799 868 794 ...
+##  $ Fe            : int  19786 35168 36494 35952 35512 44303 45283 45694 46506 47859 ...
+##  $ Ni            : int  54 123 104 134 144 166 151 125 157 180 ...
+##  $ Cu            : int  117 277 230 150 206 276 250 217 178 191 ...
+##  $ Zn            : int  184 205 268 123 239 240 294 284 238 230 ...
+##  $ Ga            : int  0 4 48 0 0 0 40 8 22 26 ...
+##  $ Ge            : int  0 0 40 43 0 0 48 115 100 80 ...
+##  $ Br            : int  331 491 605 550 609 659 709 583 582 635 ...
+##  $ Rb            : int  175 329 76 295 313 304 318 337 323 223 ...
+##  $ Sr            : int  5817 8306 9181 9644 9940 10287 9917 9931 9897 9209 ...
+##  $ Y             : int  60 15 140 119 107 180 106 52 77 112 ...
+##  $ Zr            : int  305 255 322 280 475 160 312 319 319 552 ...
+##  $ Pd            : int  0 31 78 75 66 31 72 31 54 58 ...
+##  $ Cd            : int  9 13 34 55 24 34 28 56 62 96 ...
+##  $ I             : int  30 38 48 80 67 23 58 30 53 93 ...
+##  $ Cs            : int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ Ba            : int  35 63 48 25 60 132 93 172 108 108 ...
+##  $ Nd            : int  12 17 67 44 75 42 97 92 68 56 ...
+##  $ Sm            : int  0 43 46 39 64 36 12 24 69 68 ...
+##  $ Yb            : int  166 144 282 158 218 163 184 248 166 188 ...
+##  $ Ta            : int  546 789 776 703 794 919 852 926 840 847 ...
+##  $ W             : int  1151 1992 2019 2016 2160 2344 2336 2243 2267 2185 ...
+##  $ Pb            : int  22 77 0 13 152 54 54 75 111 78 ...
+##  $ Bi            : int  0 72 136 199 134 157 182 151 185 116 ...
+##  $ Mo.inc        : int  20427 26323 26778 26550 28310 31356 30631 29040 29104 27932 ...
+##  $ Mo.coh        : int  6812 8799 9117 9303 9886 10140 9968 9973 9701 9751 ...
+##  $ depth         : num  0 1 2 3 4 5 6 7 8 9 ...
+##  $ label         : chr  &quot;S1&quot; &quot;S1&quot; &quot;S1&quot; &quot;S1&quot; ...</code></pre>
 </div>
 <div id="raw-data" class="section level3">
 <h3><span class="header-section-number">2.2.3</span> Raw Data</h3>
@@ -275,7 +387,7 @@ df &lt;- lapply(names(mylist), function(i) within(mylist[[i]], {label &lt;- i}))
 </div>
 <div id="optical-images-1" class="section level2">
 <h2><span class="header-section-number">2.3</span> Optical Images</h2>
-<p>In order to make the images useable for plotting beside other data, they need to be cropped to the scanned area and referenced to the <code>position</code> or a <code>depth</code> variable. Images in <code>R</code> are read in as a matrix with 3 dimensions (length, width, and the three colours).</p>
+<p>In order to make the images usable for plotting beside other data, they need to be cropped to the scanned area and referenced to the <code>position</code> or a <code>depth</code> variable. Images in <code>R</code> are read in as a matrix with 3 dimensions (length, width, and the three colours).</p>
 <p>To begin with the start and end positions of the scan need to be established; this usually involves parsing the metadata file (e.g. <code>itraxR::itrax_meta()[]</code>), although in some circumstances they can be obtained from another data source (e.g. <code>range(myData[,"Position"])</code>). These then need to be mapped onto individual pixel values using the known size of a single pixel. Once this has been calculated, it is trvial to then subset the part of the image required.</p>
 <pre><code>library(itraxR)
 library(tiff)
