@@ -53,6 +53,8 @@
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
 <link href="libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
 
 <style type="text/css">
@@ -249,364 +251,910 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>This is the data most commonly used in analysis and it can be quickly imported using <code>itraxR::itrax_import()</code>. Note that, like for the example data, it is possible to have more than one processed data file. Typically cores have at least two, one created at the time of the scan based on settings for a single point near the top of the sequence, and another from a holistic re-analysis of the sequence.</p>
 <pre class="proc_data"><code>CD166_19_S1 &lt;- itrax_import(&quot;CD166_19_S1/CD166_19_S1/Results.txt&quot;, depth = 0)
 head(CD166_19_S1)</code></pre>
-<table style="width:100%;">
-<colgroup>
-<col width="3%" />
-<col width="2%" />
-<col width="3%" />
-<col width="4%" />
-<col width="1%" />
-<col width="2%" />
-<col width="1%" />
-<col width="1%" />
-<col width="2%" />
-<col width="2%" />
-<col width="3%" />
-<col width="2%" />
-<col width="2%" />
-<col width="2%" />
-<col width="2%" />
-<col width="2%" />
-<col width="3%" />
-<col width="2%" />
-<col width="2%" />
-<col width="2%" />
-<col width="1%" />
-<col width="1%" />
-<col width="2%" />
-<col width="2%" />
-<col width="3%" />
-<col width="2%" />
-<col width="2%" />
-<col width="1%" />
-<col width="1%" />
-<col width="1%" />
-<col width="1%" />
-<col width="2%" />
-<col width="1%" />
-<col width="1%" />
-<col width="2%" />
-<col width="2%" />
-<col width="2%" />
-<col width="2%" />
-<col width="2%" />
-<col width="3%" />
-<col width="3%" />
-<col width="4%" />
-</colgroup>
+<div style="border: 1px solid #ddd; padding: 5px; overflow-x: scroll; width:100%; ">
+<table>
 <thead>
-<tr class="header">
-<th align="right">depth</th>
-<th align="right">MSE</th>
-<th align="right">cps</th>
-<th align="left">validity</th>
-<th align="right">Al</th>
-<th align="right">Si</th>
-<th align="right">P</th>
-<th align="right">S</th>
-<th align="right">Cl</th>
-<th align="right">K</th>
-<th align="right">Ca</th>
-<th align="right">Sc</th>
-<th align="right">Ti</th>
-<th align="right">V</th>
-<th align="right">Cr</th>
-<th align="right">Mn</th>
-<th align="right">Fe</th>
-<th align="right">Ni</th>
-<th align="right">Cu</th>
-<th align="right">Zn</th>
-<th align="right">Ga</th>
-<th align="right">Ge</th>
-<th align="right">Br</th>
-<th align="right">Rb</th>
-<th align="right">Sr</th>
-<th align="right">Y</th>
-<th align="right">Zr</th>
-<th align="right">Pd</th>
-<th align="right">Cd</th>
-<th align="right">I</th>
-<th align="right">Cs</th>
-<th align="right">Ba</th>
-<th align="right">Nd</th>
-<th align="right">Sm</th>
-<th align="right">Yb</th>
-<th align="right">Ta</th>
-<th align="right">W</th>
-<th align="right">Pb</th>
-<th align="right">Bi</th>
-<th align="right">Mo inc</th>
-<th align="right">Mo coh</th>
-<th align="right">position</th>
+<tr>
+<th style="text-align:right;">
+depth
+</th>
+<th style="text-align:right;">
+MSE
+</th>
+<th style="text-align:right;">
+cps
+</th>
+<th style="text-align:left;">
+validity
+</th>
+<th style="text-align:right;">
+Al
+</th>
+<th style="text-align:right;">
+Si
+</th>
+<th style="text-align:right;">
+P
+</th>
+<th style="text-align:right;">
+S
+</th>
+<th style="text-align:right;">
+Cl
+</th>
+<th style="text-align:right;">
+K
+</th>
+<th style="text-align:right;">
+Ca
+</th>
+<th style="text-align:right;">
+Sc
+</th>
+<th style="text-align:right;">
+Ti
+</th>
+<th style="text-align:right;">
+V
+</th>
+<th style="text-align:right;">
+Cr
+</th>
+<th style="text-align:right;">
+Mn
+</th>
+<th style="text-align:right;">
+Fe
+</th>
+<th style="text-align:right;">
+Ni
+</th>
+<th style="text-align:right;">
+Cu
+</th>
+<th style="text-align:right;">
+Zn
+</th>
+<th style="text-align:right;">
+Ga
+</th>
+<th style="text-align:right;">
+Ge
+</th>
+<th style="text-align:right;">
+Br
+</th>
+<th style="text-align:right;">
+Rb
+</th>
+<th style="text-align:right;">
+Sr
+</th>
+<th style="text-align:right;">
+Y
+</th>
+<th style="text-align:right;">
+Zr
+</th>
+<th style="text-align:right;">
+Pd
+</th>
+<th style="text-align:right;">
+Cd
+</th>
+<th style="text-align:right;">
+I
+</th>
+<th style="text-align:right;">
+Cs
+</th>
+<th style="text-align:right;">
+Ba
+</th>
+<th style="text-align:right;">
+Nd
+</th>
+<th style="text-align:right;">
+Sm
+</th>
+<th style="text-align:right;">
+Yb
+</th>
+<th style="text-align:right;">
+Ta
+</th>
+<th style="text-align:right;">
+W
+</th>
+<th style="text-align:right;">
+Pb
+</th>
+<th style="text-align:right;">
+Bi
+</th>
+<th style="text-align:right;">
+Mo inc
+</th>
+<th style="text-align:right;">
+Mo coh
+</th>
+<th style="text-align:right;">
+position
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="right">1</td>
-<td align="right">1.41</td>
-<td align="right">34525</td>
-<td align="left">TRUE</td>
-<td align="right">76</td>
-<td align="right">275</td>
-<td align="right">0</td>
-<td align="right">10</td>
-<td align="right">1318</td>
-<td align="right">2565</td>
-<td align="right">112734</td>
-<td align="right">0</td>
-<td align="right">1661</td>
-<td align="right">51</td>
-<td align="right">258</td>
-<td align="right">508</td>
-<td align="right">35168</td>
-<td align="right">123</td>
-<td align="right">277</td>
-<td align="right">205</td>
-<td align="right">4</td>
-<td align="right">0</td>
-<td align="right">491</td>
-<td align="right">329</td>
-<td align="right">8306</td>
-<td align="right">15</td>
-<td align="right">255</td>
-<td align="right">31</td>
-<td align="right">13</td>
-<td align="right">38</td>
-<td align="right">0</td>
-<td align="right">63</td>
-<td align="right">17</td>
-<td align="right">43</td>
-<td align="right">144</td>
-<td align="right">789</td>
-<td align="right">1992</td>
-<td align="right">77</td>
-<td align="right">72</td>
-<td align="right">26323</td>
-<td align="right">8799</td>
-<td align="right">32.54</td>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1.41
+</td>
+<td style="text-align:right;">
+34525
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+<td style="text-align:right;">
+76
+</td>
+<td style="text-align:right;">
+275
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+1318
+</td>
+<td style="text-align:right;">
+2565
+</td>
+<td style="text-align:right;">
+112734
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1661
+</td>
+<td style="text-align:right;">
+51
+</td>
+<td style="text-align:right;">
+258
+</td>
+<td style="text-align:right;">
+508
+</td>
+<td style="text-align:right;">
+35168
+</td>
+<td style="text-align:right;">
+123
+</td>
+<td style="text-align:right;">
+277
+</td>
+<td style="text-align:right;">
+205
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+491
+</td>
+<td style="text-align:right;">
+329
+</td>
+<td style="text-align:right;">
+8306
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+255
+</td>
+<td style="text-align:right;">
+31
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:right;">
+38
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+63
+</td>
+<td style="text-align:right;">
+17
+</td>
+<td style="text-align:right;">
+43
+</td>
+<td style="text-align:right;">
+144
+</td>
+<td style="text-align:right;">
+789
+</td>
+<td style="text-align:right;">
+1992
+</td>
+<td style="text-align:right;">
+77
+</td>
+<td style="text-align:right;">
+72
+</td>
+<td style="text-align:right;">
+26323
+</td>
+<td style="text-align:right;">
+8799
+</td>
+<td style="text-align:right;">
+32.54
+</td>
 </tr>
-<tr class="even">
-<td align="right">2</td>
-<td align="right">1.57</td>
-<td align="right">38370</td>
-<td align="left">TRUE</td>
-<td align="right">57</td>
-<td align="right">306</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">1513</td>
-<td align="right">2628</td>
-<td align="right">144287</td>
-<td align="right">14</td>
-<td align="right">1806</td>
-<td align="right">88</td>
-<td align="right">326</td>
-<td align="right">559</td>
-<td align="right">36494</td>
-<td align="right">104</td>
-<td align="right">230</td>
-<td align="right">268</td>
-<td align="right">48</td>
-<td align="right">40</td>
-<td align="right">605</td>
-<td align="right">76</td>
-<td align="right">9181</td>
-<td align="right">140</td>
-<td align="right">322</td>
-<td align="right">78</td>
-<td align="right">34</td>
-<td align="right">48</td>
-<td align="right">0</td>
-<td align="right">48</td>
-<td align="right">67</td>
-<td align="right">46</td>
-<td align="right">282</td>
-<td align="right">776</td>
-<td align="right">2019</td>
-<td align="right">0</td>
-<td align="right">136</td>
-<td align="right">26778</td>
-<td align="right">9117</td>
-<td align="right">33.54</td>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+1.57
+</td>
+<td style="text-align:right;">
+38370
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+<td style="text-align:right;">
+57
+</td>
+<td style="text-align:right;">
+306
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1513
+</td>
+<td style="text-align:right;">
+2628
+</td>
+<td style="text-align:right;">
+144287
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+1806
+</td>
+<td style="text-align:right;">
+88
+</td>
+<td style="text-align:right;">
+326
+</td>
+<td style="text-align:right;">
+559
+</td>
+<td style="text-align:right;">
+36494
+</td>
+<td style="text-align:right;">
+104
+</td>
+<td style="text-align:right;">
+230
+</td>
+<td style="text-align:right;">
+268
+</td>
+<td style="text-align:right;">
+48
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+605
+</td>
+<td style="text-align:right;">
+76
+</td>
+<td style="text-align:right;">
+9181
+</td>
+<td style="text-align:right;">
+140
+</td>
+<td style="text-align:right;">
+322
+</td>
+<td style="text-align:right;">
+78
+</td>
+<td style="text-align:right;">
+34
+</td>
+<td style="text-align:right;">
+48
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+48
+</td>
+<td style="text-align:right;">
+67
+</td>
+<td style="text-align:right;">
+46
+</td>
+<td style="text-align:right;">
+282
+</td>
+<td style="text-align:right;">
+776
+</td>
+<td style="text-align:right;">
+2019
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+136
+</td>
+<td style="text-align:right;">
+26778
+</td>
+<td style="text-align:right;">
+9117
+</td>
+<td style="text-align:right;">
+33.54
+</td>
 </tr>
-<tr class="odd">
-<td align="right">3</td>
-<td align="right">1.55</td>
-<td align="right">39796</td>
-<td align="left">TRUE</td>
-<td align="right">74</td>
-<td align="right">330</td>
-<td align="right">0</td>
-<td align="right">32</td>
-<td align="right">1470</td>
-<td align="right">2378</td>
-<td align="right">162938</td>
-<td align="right">0</td>
-<td align="right">2121</td>
-<td align="right">22</td>
-<td align="right">301</td>
-<td align="right">483</td>
-<td align="right">35952</td>
-<td align="right">134</td>
-<td align="right">150</td>
-<td align="right">123</td>
-<td align="right">0</td>
-<td align="right">43</td>
-<td align="right">550</td>
-<td align="right">295</td>
-<td align="right">9644</td>
-<td align="right">119</td>
-<td align="right">280</td>
-<td align="right">75</td>
-<td align="right">55</td>
-<td align="right">80</td>
-<td align="right">0</td>
-<td align="right">25</td>
-<td align="right">44</td>
-<td align="right">39</td>
-<td align="right">158</td>
-<td align="right">703</td>
-<td align="right">2016</td>
-<td align="right">13</td>
-<td align="right">199</td>
-<td align="right">26550</td>
-<td align="right">9303</td>
-<td align="right">34.54</td>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+1.55
+</td>
+<td style="text-align:right;">
+39796
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+<td style="text-align:right;">
+74
+</td>
+<td style="text-align:right;">
+330
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+32
+</td>
+<td style="text-align:right;">
+1470
+</td>
+<td style="text-align:right;">
+2378
+</td>
+<td style="text-align:right;">
+162938
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2121
+</td>
+<td style="text-align:right;">
+22
+</td>
+<td style="text-align:right;">
+301
+</td>
+<td style="text-align:right;">
+483
+</td>
+<td style="text-align:right;">
+35952
+</td>
+<td style="text-align:right;">
+134
+</td>
+<td style="text-align:right;">
+150
+</td>
+<td style="text-align:right;">
+123
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+43
+</td>
+<td style="text-align:right;">
+550
+</td>
+<td style="text-align:right;">
+295
+</td>
+<td style="text-align:right;">
+9644
+</td>
+<td style="text-align:right;">
+119
+</td>
+<td style="text-align:right;">
+280
+</td>
+<td style="text-align:right;">
+75
+</td>
+<td style="text-align:right;">
+55
+</td>
+<td style="text-align:right;">
+80
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+25
+</td>
+<td style="text-align:right;">
+44
+</td>
+<td style="text-align:right;">
+39
+</td>
+<td style="text-align:right;">
+158
+</td>
+<td style="text-align:right;">
+703
+</td>
+<td style="text-align:right;">
+2016
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:right;">
+199
+</td>
+<td style="text-align:right;">
+26550
+</td>
+<td style="text-align:right;">
+9303
+</td>
+<td style="text-align:right;">
+34.54
+</td>
 </tr>
-<tr class="even">
-<td align="right">4</td>
-<td align="right">1.41</td>
-<td align="right">40022</td>
-<td align="left">TRUE</td>
-<td align="right">26</td>
-<td align="right">206</td>
-<td align="right">0</td>
-<td align="right">21</td>
-<td align="right">1312</td>
-<td align="right">2265</td>
-<td align="right">153194</td>
-<td align="right">0</td>
-<td align="right">2031</td>
-<td align="right">75</td>
-<td align="right">306</td>
-<td align="right">485</td>
-<td align="right">35512</td>
-<td align="right">144</td>
-<td align="right">206</td>
-<td align="right">239</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">609</td>
-<td align="right">313</td>
-<td align="right">9940</td>
-<td align="right">107</td>
-<td align="right">475</td>
-<td align="right">66</td>
-<td align="right">24</td>
-<td align="right">67</td>
-<td align="right">0</td>
-<td align="right">60</td>
-<td align="right">75</td>
-<td align="right">64</td>
-<td align="right">218</td>
-<td align="right">794</td>
-<td align="right">2160</td>
-<td align="right">152</td>
-<td align="right">134</td>
-<td align="right">28310</td>
-<td align="right">9886</td>
-<td align="right">35.54</td>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+1.41
+</td>
+<td style="text-align:right;">
+40022
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+<td style="text-align:right;">
+26
+</td>
+<td style="text-align:right;">
+206
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+21
+</td>
+<td style="text-align:right;">
+1312
+</td>
+<td style="text-align:right;">
+2265
+</td>
+<td style="text-align:right;">
+153194
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2031
+</td>
+<td style="text-align:right;">
+75
+</td>
+<td style="text-align:right;">
+306
+</td>
+<td style="text-align:right;">
+485
+</td>
+<td style="text-align:right;">
+35512
+</td>
+<td style="text-align:right;">
+144
+</td>
+<td style="text-align:right;">
+206
+</td>
+<td style="text-align:right;">
+239
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+609
+</td>
+<td style="text-align:right;">
+313
+</td>
+<td style="text-align:right;">
+9940
+</td>
+<td style="text-align:right;">
+107
+</td>
+<td style="text-align:right;">
+475
+</td>
+<td style="text-align:right;">
+66
+</td>
+<td style="text-align:right;">
+24
+</td>
+<td style="text-align:right;">
+67
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+60
+</td>
+<td style="text-align:right;">
+75
+</td>
+<td style="text-align:right;">
+64
+</td>
+<td style="text-align:right;">
+218
+</td>
+<td style="text-align:right;">
+794
+</td>
+<td style="text-align:right;">
+2160
+</td>
+<td style="text-align:right;">
+152
+</td>
+<td style="text-align:right;">
+134
+</td>
+<td style="text-align:right;">
+28310
+</td>
+<td style="text-align:right;">
+9886
+</td>
+<td style="text-align:right;">
+35.54
+</td>
 </tr>
-<tr class="odd">
-<td align="right">5</td>
-<td align="right">1.41</td>
-<td align="right">41973</td>
-<td align="left">TRUE</td>
-<td align="right">53</td>
-<td align="right">233</td>
-<td align="right">0</td>
-<td align="right">37</td>
-<td align="right">1740</td>
-<td align="right">2947</td>
-<td align="right">135879</td>
-<td align="right">106</td>
-<td align="right">1826</td>
-<td align="right">89</td>
-<td align="right">440</td>
-<td align="right">738</td>
-<td align="right">44303</td>
-<td align="right">166</td>
-<td align="right">276</td>
-<td align="right">240</td>
-<td align="right">0</td>
-<td align="right">0</td>
-<td align="right">659</td>
-<td align="right">304</td>
-<td align="right">10287</td>
-<td align="right">180</td>
-<td align="right">160</td>
-<td align="right">31</td>
-<td align="right">34</td>
-<td align="right">23</td>
-<td align="right">0</td>
-<td align="right">132</td>
-<td align="right">42</td>
-<td align="right">36</td>
-<td align="right">163</td>
-<td align="right">919</td>
-<td align="right">2344</td>
-<td align="right">54</td>
-<td align="right">157</td>
-<td align="right">31356</td>
-<td align="right">10140</td>
-<td align="right">36.54</td>
+<tr>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+1.41
+</td>
+<td style="text-align:right;">
+41973
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+<td style="text-align:right;">
+53
+</td>
+<td style="text-align:right;">
+233
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+37
+</td>
+<td style="text-align:right;">
+1740
+</td>
+<td style="text-align:right;">
+2947
+</td>
+<td style="text-align:right;">
+135879
+</td>
+<td style="text-align:right;">
+106
+</td>
+<td style="text-align:right;">
+1826
+</td>
+<td style="text-align:right;">
+89
+</td>
+<td style="text-align:right;">
+440
+</td>
+<td style="text-align:right;">
+738
+</td>
+<td style="text-align:right;">
+44303
+</td>
+<td style="text-align:right;">
+166
+</td>
+<td style="text-align:right;">
+276
+</td>
+<td style="text-align:right;">
+240
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+659
+</td>
+<td style="text-align:right;">
+304
+</td>
+<td style="text-align:right;">
+10287
+</td>
+<td style="text-align:right;">
+180
+</td>
+<td style="text-align:right;">
+160
+</td>
+<td style="text-align:right;">
+31
+</td>
+<td style="text-align:right;">
+34
+</td>
+<td style="text-align:right;">
+23
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+132
+</td>
+<td style="text-align:right;">
+42
+</td>
+<td style="text-align:right;">
+36
+</td>
+<td style="text-align:right;">
+163
+</td>
+<td style="text-align:right;">
+919
+</td>
+<td style="text-align:right;">
+2344
+</td>
+<td style="text-align:right;">
+54
+</td>
+<td style="text-align:right;">
+157
+</td>
+<td style="text-align:right;">
+31356
+</td>
+<td style="text-align:right;">
+10140
+</td>
+<td style="text-align:right;">
+36.54
+</td>
 </tr>
-<tr class="even">
-<td align="right">6</td>
-<td align="right">1.36</td>
-<td align="right">41268</td>
-<td align="left">TRUE</td>
-<td align="right">27</td>
-<td align="right">347</td>
-<td align="right">0</td>
-<td align="right">28</td>
-<td align="right">1576</td>
-<td align="right">3179</td>
-<td align="right">132183</td>
-<td align="right">14</td>
-<td align="right">1923</td>
-<td align="right">107</td>
-<td align="right">401</td>
-<td align="right">792</td>
-<td align="right">45283</td>
-<td align="right">151</td>
-<td align="right">250</td>
-<td align="right">294</td>
-<td align="right">40</td>
-<td align="right">48</td>
-<td align="right">709</td>
-<td align="right">318</td>
-<td align="right">9917</td>
-<td align="right">106</td>
-<td align="right">312</td>
-<td align="right">72</td>
-<td align="right">28</td>
-<td align="right">58</td>
-<td align="right">0</td>
-<td align="right">93</td>
-<td align="right">97</td>
-<td align="right">12</td>
-<td align="right">184</td>
-<td align="right">852</td>
-<td align="right">2336</td>
-<td align="right">54</td>
-<td align="right">182</td>
-<td align="right">30631</td>
-<td align="right">9968</td>
-<td align="right">37.54</td>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+1.36
+</td>
+<td style="text-align:right;">
+41268
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+<td style="text-align:right;">
+27
+</td>
+<td style="text-align:right;">
+347
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+28
+</td>
+<td style="text-align:right;">
+1576
+</td>
+<td style="text-align:right;">
+3179
+</td>
+<td style="text-align:right;">
+132183
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:right;">
+1923
+</td>
+<td style="text-align:right;">
+107
+</td>
+<td style="text-align:right;">
+401
+</td>
+<td style="text-align:right;">
+792
+</td>
+<td style="text-align:right;">
+45283
+</td>
+<td style="text-align:right;">
+151
+</td>
+<td style="text-align:right;">
+250
+</td>
+<td style="text-align:right;">
+294
+</td>
+<td style="text-align:right;">
+40
+</td>
+<td style="text-align:right;">
+48
+</td>
+<td style="text-align:right;">
+709
+</td>
+<td style="text-align:right;">
+318
+</td>
+<td style="text-align:right;">
+9917
+</td>
+<td style="text-align:right;">
+106
+</td>
+<td style="text-align:right;">
+312
+</td>
+<td style="text-align:right;">
+72
+</td>
+<td style="text-align:right;">
+28
+</td>
+<td style="text-align:right;">
+58
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+93
+</td>
+<td style="text-align:right;">
+97
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+184
+</td>
+<td style="text-align:right;">
+852
+</td>
+<td style="text-align:right;">
+2336
+</td>
+<td style="text-align:right;">
+54
+</td>
+<td style="text-align:right;">
+182
+</td>
+<td style="text-align:right;">
+30631
+</td>
+<td style="text-align:right;">
+9968
+</td>
+<td style="text-align:right;">
+37.54
+</td>
 </tr>
 </tbody>
 </table>
+</div>
 <p>If you’d like more control over the import process, a typical <code>Tidyverse</code> workflow would consist of reading the file (they are tab-delimited), removing variables that are not of interest, and correctly labelling data that should be <code>NA</code>. You may also wish to assign a coring depth information at this stage.</p>
 <p>Firstly, we need to load the packages we will use, and define a list of elements and other names of variables we might expect to find in the files.</p>
 <pre><code>library(tidyverse)
