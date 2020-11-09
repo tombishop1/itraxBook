@@ -16,6 +16,7 @@ opts_knit$set(root.dir = "CD166_19_(2020)/")
 install.packages("remotes")
 remotes::install_github("tombishop1/itraxR")
 library(itraxR)
+library(tidyverse)
 ```
 
 ## Metadata
@@ -142,7 +143,7 @@ Sometimes it is useful to work with raw data rather than the calculated intensit
 
 In order to make the images usable for plotting beside other data, they need to be cropped to the scanned area and referenced to the `position` or a `depth` variable. Images in `R` are read in as a matrix with 3 dimensions (length, width, and the three colours). 
 
-To begin with the start and end positions of the scan need to be established; this usually involves parsing the metadata file (e.g. `itraxR::itrax_meta()[]`), although in some circumstances they can be obtained from another data source (e.g. `range(myData[,"Position"])`). These then need to be mapped onto individual pixel values using the known size of a single pixel. Once this has been calculated, it is trvial to then subset the part of the image required. 
+To begin with the start and end positions of the scan need to be established; this usually involves parsing the metadata file (e.g. `itraxR::itrax_meta()[]`), although in some circumstances they can be obtained from another data source (e.g. `range(myData[,"Position"])`). These then need to be mapped onto individual pixel values using the known size of a single pixel. Once this has been calculated, it is trivial to then subset the part of the image required. 
 
 ```
 library(itraxR)
