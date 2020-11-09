@@ -4,10 +4,11 @@ author: "Thomas Bishop"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 documentclass: book
-bibliography: [biblio.bib]
+bibliography: biblio.bib
 biblio-style: apalike
 link-citations: yes
-description: "This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R."
+description: This book is a guide to importing, tidying, manipulating and analysing
+  Itrax core scanner data in R.
 ---
 
 # Preface {-}
