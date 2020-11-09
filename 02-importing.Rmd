@@ -2,17 +2,15 @@
 
 All of the Itrax data is in either text-format or "tagged image format" (`*.tif`). Although this means it is easily read by the various import functions available in `R`, it still needs considerable cleaning and wrangling to get it to a point where it is useable for most analyses. There are three possible approaches to this task:
 
-1. Use existing functions published in the `itraxR` package available from [github.com/tombishop1](https://github.com/tombishop1/itraxR). These are at an early stage and functionality might be broken, but are largely convenience functions for wrangling and analysing Itrax data. 
-2. Work in base `R` to wrangle the data. This is perfectly achievable, and much of the current `itraxR` functionality was written this way.
+1. Use existing functions published in the `itraxR` package available from [github.com/tombishop1/itraxR](https://github.com/tombishop1/itraxR). These are at an early stage and functionality might be broken, but are largely convenience functions for wrangling and analysing Itrax data. It is easy to install the package directly from Github using `remotes::install_github("tombishop1/itraxR")`. 
+2. Work in base `R` to wrangle the data. This is perfectly achievable, and much of the current `itraxR` functionality was originally written this way.
 3. Work in the `tidyverse` family of packages and style. For data wrangling tasks, this approach can result in simpler and more resilient code. 
 
 In this guide examples will be given mostly using the `tidyverse`, and reference will be made to the convenience functions in `itraxR`. 
 
-All of the Itrax data is in either text-format or "tagged image format" (`*.tiff`). Although this means it is easily read by the various import functions available in `R`, it still needs considerable cleaning and wrangling to get it to a point where it is useable. A number of convenience functions are provided in the package `itraxR`.
-
 ## Metadata
 
-The scan data file `document.txt` can be quickly parsed using `itraxR::itrax_meta()`. The output is a dataframe from which the individual components can be easily accessed through subsetting functions, for example `as.numeric(itrax_meta()[6:7, 2])` would return a numeric vector of the start and end position of a scan.
+The scan data file `document.txt` can be quickly parsed using `itraxR::itrax_meta()`. The output is a dataframe from which the individual components can be easily accessed through subsetting functions, for example `as.numeric(itrax_meta()[6:7, 2])` would return a numeric vector of the start and end position of a scan. The file is tab-delimited, but the formatting is not consistent and will need considerable re-organising and tidying to get it all usable. 
 
 ```{r importing_metadata}
 itrax_meta("CD166_19_S1/CD166_19_S1/document.txt")
@@ -164,3 +162,7 @@ The workflow for manipulating the processed radiographic images (`*.tif`) is ver
 In addition, it should be noted that unlike the optical images that always begin from `position == 0`, the radiographic images have defined start and end points just like an XRF scan, the parameters of which can be accessed from the `document.txt` metadata file (or by using `itrax_meta()`). 
 
 ## Magnetic Susceptability 
+
+## Importing Everything
+
+Given the structured nature of individual core section scans, it might be helpful to import everything into a single data object. 
