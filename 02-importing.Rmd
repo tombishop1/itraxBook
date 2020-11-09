@@ -24,10 +24,11 @@ if (!require("itraxR", character.only = TRUE)) {
 # now check dependencies
 ## First specify the packages of interest
 # these are the dependencies for:
+# the document - kableExtra, DiagrammeR
 # itrax_import - readr, janitor, dplyr
 # itrax_join   - dplyr
 # itrax_meta   - none 
-packages = c("janitor", "dplyr", "readr", "kableExtra")
+packages = c("janitor", "dplyr", "readr", "kableExtra", "DiagrammeR")
 
 ## Now load or install & load all those CRAN packages
 package.check <- lapply(
@@ -39,6 +40,7 @@ package.check <- lapply(
     }
   }
 )
+rm(package.check, packages)
 
 ```
 
@@ -56,10 +58,11 @@ itrax_meta("CD166_19_S1/CD166_19_S1/document.txt")
 
 This is the data most commonly used in analysis and it can be quickly imported using `itraxR::itrax_import()`. Note that, like for the example data, it is possible to have more than one processed data file. Typically cores have at least two, one created at the time of the scan based on settings for a single point near the top of the sequence, and another from a holistic re-analysis of the sequence. 
 
-```{proc_data}
+```
 CD166_19_S1 <- itrax_import("CD166_19_S1/CD166_19_S1/Results.txt", depth = 0)
 head(CD166_19_S1)
 ```
+
 ```{r proc_data_table, echo=FALSE, message=FALSE, warning=FALSE, results='asis'}
 CD166_19_S1 <- itrax_import("CD166_19_S1/CD166_19_S1/Results.txt", depth = 0)
 kable(head(CD166_19_S1)) %>% scroll_box(width = "100%")
@@ -69,12 +72,12 @@ If you'd like more control over the import process, a typical `Tidyverse` workfl
 
 ```{r importing_processed_flow, echo=FALSE}
 #library(DiagrammeR)
-#DiagrammeR(diagram = "graph LR;
-#    import[read data file] --> select[select variables of interest] 
-#    select --> na[label bad data as NA];
-#    na -->|optional| depth[add coring depth/age]
-#    ",
-#    height = '100%', width = '100%')
+DiagrammeR(diagram = "graph LR;
+    import[read data file] --> select[select variables of interest] 
+    select --> na[label bad data as NA];
+    na -->|optional| depth[add coring depth/age]
+    ",
+    height = '100%', width = '100%')
 ```
 
 Firstly, we need to load the packages we will use, and define a list of elements and other names of variables we might expect to find in the files.
