@@ -23,7 +23,7 @@ if (!require("itraxR", character.only = TRUE)) {
 
 # now check dependencies
 ## First specify the packages of interest
-packages = c("janitor", "dplyr")
+packages = c("janitor", "dplyr", "readr")
 
 ## Now load or install&load all
 package.check <- lapply(
