@@ -27,7 +27,7 @@ if (!require("itraxR", character.only = TRUE)) {
 # itrax_import - readr, janitor, dplyr
 # itrax_join   - dplyr
 # itrax_meta   - none 
-packages = c("janitor", "dplyr", "readr")
+packages = c("janitor", "dplyr", "readr", "kableExtra")
 
 ## Now load or install & load all those CRAN packages
 package.check <- lapply(
@@ -60,9 +60,9 @@ This is the data most commonly used in analysis and it can be quickly imported u
 CD166_19_S1 <- itrax_import("CD166_19_S1/CD166_19_S1/Results.txt", depth = 0)
 head(CD166_19_S1)
 ```
-```{r proc_data_table, echo=FALSE, message=FALSE, warning=FALSE, results="asis"}
+```{r proc_data_table, echo=FALSE, message=FALSE, warning=FALSE, results='asis'}
 CD166_19_S1 <- itrax_import("CD166_19_S1/CD166_19_S1/Results.txt", depth = 0)
-kable(head(CD166_19_S1))
+kable(head(CD166_19_S1)) %>% scroll_box(width = "100%")
 ```
 
 If you'd like more control over the import process, a typical `Tidyverse` workflow would consist of reading the file (they are tab-delimited), removing variables that are not of interest, and correctly labelling data that should be `NA`. You may also wish to assign a coring depth information at this stage.
