@@ -10,40 +10,6 @@ In this guide examples will be given mostly using the `tidyverse`, and reference
 
 All of the Itrax data is in either text-format or "tagged image format" (`*.tiff`). Although this means it is easily read by the various import functions available in `R`, it still needs considerable cleaning and wrangling to get it to a point where it is useable. A number of convenience functions are provided in the package `itraxR`.
 
-```{r setup, include=FALSE, echo=FALSE}
-require("knitr")
-opts_knit$set(root.dir = "CD166_19_(2020)/")
-
-# check if itraxR is installed, if not, install
-if (!require("itraxR", character.only = TRUE)) {
-  install.packages("remotes")
-  remotes::install_github("tombishop1/itraxR")
-  library(itraxR)
-}
-
-# now check dependencies
-## First specify the packages of interest
-# these are the dependencies for:
-# the document - kableExtra, DiagrammeR
-# itrax_import - readr, janitor, dplyr
-# itrax_join   - dplyr
-# itrax_meta   - none 
-packages = c("janitor", "dplyr", "readr", "kableExtra", "DiagrammeR")
-
-## Now load or install & load all those CRAN packages
-package.check <- lapply(
-  packages,
-  FUN = function(x) {
-    if (!require(x, character.only = TRUE)) {
-      install.packages(x, dependencies = TRUE, repos = "http://cran.uk.r-project.org")
-      library(x, character.only = TRUE)
-    }
-  }
-)
-rm(package.check, packages)
-
-```
-
 ## Metadata
 
 The scan data file `document.txt` can be quickly parsed using `itraxR::itrax_meta()`. The output is a dataframe from which the individual components can be easily accessed through subsetting functions, for example `as.numeric(itrax_meta()[6:7, 2])` would return a numeric vector of the start and end position of a scan.
@@ -71,19 +37,20 @@ kable(head(CD166_19_S1)) %>% scroll_box(width = "100%")
 If you'd like more control over the import process, a typical `Tidyverse` workflow would consist of reading the file (they are tab-delimited), removing variables that are not of interest, and correctly labelling data that should be `NA`. You may also wish to assign a coring depth information at this stage.
 
 ```{r importing_processed_flow, echo=FALSE}
-#library(DiagrammeR)
 DiagrammeR(diagram = "graph LR;
     import[read data file] --> select[select variables of interest] 
     select --> na[label bad data as NA];
     na -->|optional| depth[add coring depth/age]
     ",
-    height = '100%', width = '100%')
+    height = '100%', width = '100%'
+    )
 ```
 
 Firstly, we need to load the packages we will use, and define a list of elements and other names of variables we might expect to find in the files.
 
 ```
-library(tidyverse)
+library(readr)
+library(dplyr)
 library(janitor)
 
 elements <- c( "H", "He",
