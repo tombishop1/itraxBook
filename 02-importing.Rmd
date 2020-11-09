@@ -13,10 +13,29 @@ All of the Itrax data is in either text-format or "tagged image format" (`*.tiff
 ```{r setup, include=FALSE, echo=FALSE}
 require("knitr")
 opts_knit$set(root.dir = "CD166_19_(2020)/")
-install.packages("remotes")
-remotes::install_github("tombishop1/itraxR")
-library(itraxR)
-library(tidyverse)
+
+# check if itraxR is installed, if not, install
+if (!require("itraxR", character.only = TRUE)) {
+  install.packages("remotes")
+  remotes::install_github("tombishop1/itraxR")
+  library(itraxR)
+}
+
+# now check dependencies
+## First specify the packages of interest
+packages = c("janitor", "dplyr")
+
+## Now load or install&load all
+package.check <- lapply(
+  packages,
+  FUN = function(x) {
+    if (!require(x, character.only = TRUE)) {
+      install.packages(x, dependencies = TRUE, repos = "http://cran.uk.r-project.org")
+      library(x, character.only = TRUE)
+    }
+  }
+)
+
 ```
 
 ## Metadata
