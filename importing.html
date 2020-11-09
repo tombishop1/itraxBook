@@ -1164,8 +1164,8 @@ TRUE
 </table>
 </div>
 <p>If you’d like more control over the import process, a typical <code>Tidyverse</code> workflow would consist of reading the file (they are tab-delimited), removing variables that are not of interest, and correctly labelling data that should be <code>NA</code>. You may also wish to assign a coring depth information at this stage.</p>
-<div id="htmlwidget-e1c589d2faac7df21f6f" style="width:100%;height:100%;" class="DiagrammeR html-widget"></div>
-<script type="application/json" data-for="htmlwidget-e1c589d2faac7df21f6f">{"x":{"diagram":"graph LR;\n    import[read data file] --> select[select variables of interest] \n    select --> na[label bad data as NA];\n    na -->|optional| depth[add coring depth/age]\n    "},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-1789db4054f009b77181" style="width:100%;height:100%;" class="DiagrammeR html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1789db4054f009b77181">{"x":{"diagram":"graph LR;\n    import[read data file] --> select[select variables of interest] \n    select --> na[label bad data as NA];\n    na -->|optional| depth[add coring depth/age]\n    "},"evals":[],"jsHooks":[]}</script>
 <p>Firstly, we need to load the packages we will use, and define a list of elements and other names of variables we might expect to find in the files.</p>
 <pre><code>library(readr)
 library(dplyr)
