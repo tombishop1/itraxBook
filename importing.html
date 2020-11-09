@@ -247,22 +247,366 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="processed-data" class="section level3">
 <h3><span class="header-section-number">2.2.1</span> Processed Data</h3>
 <p>This is the data most commonly used in analysis and it can be quickly imported using <code>itraxR::itrax_import()</code>. Note that, like for the example data, it is possible to have more than one processed data file. Typically cores have at least two, one created at the time of the scan based on settings for a single point near the top of the sequence, and another from a holistic re-analysis of the sequence.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="importing.html#cb3-1"></a>CD166_<span class="dv">19</span>_S1 &lt;-<span class="st"> </span><span class="kw">itrax_import</span>(<span class="st">&quot;CD166_19_S1/CD166_19_S1/Results.txt&quot;</span>, <span class="dt">depth =</span> <span class="dv">0</span>)</span>
-<span id="cb3-2"><a href="importing.html#cb3-2"></a><span class="kw">head</span>(CD166_<span class="dv">19</span>_S1)</span></code></pre></div>
-<pre><code>## [90m# A tibble: 6 x 42[39m
-##   depth   MSE   cps validity    Al    Si     P     S    Cl     K     Ca    Sc
-##   [3m[90m&lt;dbl&gt;[39m[23m [3m[90m&lt;dbl&gt;[39m[23m [3m[90m&lt;dbl&gt;[39m[23m [3m[90m&lt;lgl&gt;[39m[23m    [3m[90m&lt;dbl&gt;[39m[23m [3m[90m&lt;dbl&gt;[39m[23m [3m[90m&lt;dbl&gt;[39m[23m [3m[90m&lt;dbl&gt;[39m[23m [3m[90m&lt;dbl&gt;[39m[23m [3m[90m&lt;dbl&gt;[39m[23m  [3m[90m&lt;dbl&gt;[39m[23m [3m[90m&lt;dbl&gt;[39m[23m
-## [90m1[39m     1  1.41 [4m3[24m[4m4[24m525 TRUE        76   275     0    10  [4m1[24m318  [4m2[24m565 [4m1[24m[4m1[24m[4m2[24m734     0
-## [90m2[39m     2  1.57 [4m3[24m[4m8[24m370 TRUE        57   306     0     0  [4m1[24m513  [4m2[24m628 [4m1[24m[4m4[24m[4m4[24m287    14
-## [90m3[39m     3  1.55 [4m3[24m[4m9[24m796 TRUE        74   330     0    32  [4m1[24m470  [4m2[24m378 [4m1[24m[4m6[24m[4m2[24m938     0
-## [90m4[39m     4  1.41 [4m4[24m[4m0[24m022 TRUE        26   206     0    21  [4m1[24m312  [4m2[24m265 [4m1[24m[4m5[24m[4m3[24m194     0
-## [90m5[39m     5  1.41 [4m4[24m[4m1[24m973 TRUE        53   233     0    37  [4m1[24m740  [4m2[24m947 [4m1[24m[4m3[24m[4m5[24m879   106
-## [90m6[39m     6  1.36 [4m4[24m[4m1[24m268 TRUE        27   347     0    28  [4m1[24m576  [4m3[24m179 [4m1[24m[4m3[24m[4m2[24m183    14
-## [90m# … with 30 more variables: Ti [3m[90m&lt;dbl&gt;[90m[23m, V [3m[90m&lt;dbl&gt;[90m[23m, Cr [3m[90m&lt;dbl&gt;[90m[23m, Mn [3m[90m&lt;dbl&gt;[90m[23m, Fe [3m[90m&lt;dbl&gt;[90m[23m,[39m
-## [90m#   Ni [3m[90m&lt;dbl&gt;[90m[23m, Cu [3m[90m&lt;dbl&gt;[90m[23m, Zn [3m[90m&lt;dbl&gt;[90m[23m, Ga [3m[90m&lt;dbl&gt;[90m[23m, Ge [3m[90m&lt;dbl&gt;[90m[23m, Br [3m[90m&lt;dbl&gt;[90m[23m, Rb [3m[90m&lt;dbl&gt;[90m[23m,[39m
-## [90m#   Sr [3m[90m&lt;dbl&gt;[90m[23m, Y [3m[90m&lt;dbl&gt;[90m[23m, Zr [3m[90m&lt;dbl&gt;[90m[23m, Pd [3m[90m&lt;dbl&gt;[90m[23m, Cd [3m[90m&lt;dbl&gt;[90m[23m, I [3m[90m&lt;dbl&gt;[90m[23m, Cs [3m[90m&lt;dbl&gt;[90m[23m,[39m
-## [90m#   Ba [3m[90m&lt;dbl&gt;[90m[23m, Nd [3m[90m&lt;dbl&gt;[90m[23m, Sm [3m[90m&lt;dbl&gt;[90m[23m, Yb [3m[90m&lt;dbl&gt;[90m[23m, Ta [3m[90m&lt;dbl&gt;[90m[23m, W [3m[90m&lt;dbl&gt;[90m[23m, Pb [3m[90m&lt;dbl&gt;[90m[23m,[39m
-## [90m#   Bi [3m[90m&lt;dbl&gt;[90m[23m, `Mo inc` [3m[90m&lt;dbl&gt;[90m[23m, `Mo coh` [3m[90m&lt;dbl&gt;[90m[23m, position [3m[90m&lt;dbl&gt;[90m[23m[39m</code></pre>
+<pre class="proc_data"><code>CD166_19_S1 &lt;- itrax_import(&quot;CD166_19_S1/CD166_19_S1/Results.txt&quot;, depth = 0)
+head(CD166_19_S1)</code></pre>
+<table style="width:100%;">
+<colgroup>
+<col width="3%" />
+<col width="2%" />
+<col width="3%" />
+<col width="4%" />
+<col width="1%" />
+<col width="2%" />
+<col width="1%" />
+<col width="1%" />
+<col width="2%" />
+<col width="2%" />
+<col width="3%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="3%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="1%" />
+<col width="1%" />
+<col width="2%" />
+<col width="2%" />
+<col width="3%" />
+<col width="2%" />
+<col width="2%" />
+<col width="1%" />
+<col width="1%" />
+<col width="1%" />
+<col width="1%" />
+<col width="2%" />
+<col width="1%" />
+<col width="1%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="3%" />
+<col width="3%" />
+<col width="4%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">depth</th>
+<th align="right">MSE</th>
+<th align="right">cps</th>
+<th align="left">validity</th>
+<th align="right">Al</th>
+<th align="right">Si</th>
+<th align="right">P</th>
+<th align="right">S</th>
+<th align="right">Cl</th>
+<th align="right">K</th>
+<th align="right">Ca</th>
+<th align="right">Sc</th>
+<th align="right">Ti</th>
+<th align="right">V</th>
+<th align="right">Cr</th>
+<th align="right">Mn</th>
+<th align="right">Fe</th>
+<th align="right">Ni</th>
+<th align="right">Cu</th>
+<th align="right">Zn</th>
+<th align="right">Ga</th>
+<th align="right">Ge</th>
+<th align="right">Br</th>
+<th align="right">Rb</th>
+<th align="right">Sr</th>
+<th align="right">Y</th>
+<th align="right">Zr</th>
+<th align="right">Pd</th>
+<th align="right">Cd</th>
+<th align="right">I</th>
+<th align="right">Cs</th>
+<th align="right">Ba</th>
+<th align="right">Nd</th>
+<th align="right">Sm</th>
+<th align="right">Yb</th>
+<th align="right">Ta</th>
+<th align="right">W</th>
+<th align="right">Pb</th>
+<th align="right">Bi</th>
+<th align="right">Mo inc</th>
+<th align="right">Mo coh</th>
+<th align="right">position</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">1.41</td>
+<td align="right">34525</td>
+<td align="left">TRUE</td>
+<td align="right">76</td>
+<td align="right">275</td>
+<td align="right">0</td>
+<td align="right">10</td>
+<td align="right">1318</td>
+<td align="right">2565</td>
+<td align="right">112734</td>
+<td align="right">0</td>
+<td align="right">1661</td>
+<td align="right">51</td>
+<td align="right">258</td>
+<td align="right">508</td>
+<td align="right">35168</td>
+<td align="right">123</td>
+<td align="right">277</td>
+<td align="right">205</td>
+<td align="right">4</td>
+<td align="right">0</td>
+<td align="right">491</td>
+<td align="right">329</td>
+<td align="right">8306</td>
+<td align="right">15</td>
+<td align="right">255</td>
+<td align="right">31</td>
+<td align="right">13</td>
+<td align="right">38</td>
+<td align="right">0</td>
+<td align="right">63</td>
+<td align="right">17</td>
+<td align="right">43</td>
+<td align="right">144</td>
+<td align="right">789</td>
+<td align="right">1992</td>
+<td align="right">77</td>
+<td align="right">72</td>
+<td align="right">26323</td>
+<td align="right">8799</td>
+<td align="right">32.54</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="right">1.57</td>
+<td align="right">38370</td>
+<td align="left">TRUE</td>
+<td align="right">57</td>
+<td align="right">306</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1513</td>
+<td align="right">2628</td>
+<td align="right">144287</td>
+<td align="right">14</td>
+<td align="right">1806</td>
+<td align="right">88</td>
+<td align="right">326</td>
+<td align="right">559</td>
+<td align="right">36494</td>
+<td align="right">104</td>
+<td align="right">230</td>
+<td align="right">268</td>
+<td align="right">48</td>
+<td align="right">40</td>
+<td align="right">605</td>
+<td align="right">76</td>
+<td align="right">9181</td>
+<td align="right">140</td>
+<td align="right">322</td>
+<td align="right">78</td>
+<td align="right">34</td>
+<td align="right">48</td>
+<td align="right">0</td>
+<td align="right">48</td>
+<td align="right">67</td>
+<td align="right">46</td>
+<td align="right">282</td>
+<td align="right">776</td>
+<td align="right">2019</td>
+<td align="right">0</td>
+<td align="right">136</td>
+<td align="right">26778</td>
+<td align="right">9117</td>
+<td align="right">33.54</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="right">1.55</td>
+<td align="right">39796</td>
+<td align="left">TRUE</td>
+<td align="right">74</td>
+<td align="right">330</td>
+<td align="right">0</td>
+<td align="right">32</td>
+<td align="right">1470</td>
+<td align="right">2378</td>
+<td align="right">162938</td>
+<td align="right">0</td>
+<td align="right">2121</td>
+<td align="right">22</td>
+<td align="right">301</td>
+<td align="right">483</td>
+<td align="right">35952</td>
+<td align="right">134</td>
+<td align="right">150</td>
+<td align="right">123</td>
+<td align="right">0</td>
+<td align="right">43</td>
+<td align="right">550</td>
+<td align="right">295</td>
+<td align="right">9644</td>
+<td align="right">119</td>
+<td align="right">280</td>
+<td align="right">75</td>
+<td align="right">55</td>
+<td align="right">80</td>
+<td align="right">0</td>
+<td align="right">25</td>
+<td align="right">44</td>
+<td align="right">39</td>
+<td align="right">158</td>
+<td align="right">703</td>
+<td align="right">2016</td>
+<td align="right">13</td>
+<td align="right">199</td>
+<td align="right">26550</td>
+<td align="right">9303</td>
+<td align="right">34.54</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="right">1.41</td>
+<td align="right">40022</td>
+<td align="left">TRUE</td>
+<td align="right">26</td>
+<td align="right">206</td>
+<td align="right">0</td>
+<td align="right">21</td>
+<td align="right">1312</td>
+<td align="right">2265</td>
+<td align="right">153194</td>
+<td align="right">0</td>
+<td align="right">2031</td>
+<td align="right">75</td>
+<td align="right">306</td>
+<td align="right">485</td>
+<td align="right">35512</td>
+<td align="right">144</td>
+<td align="right">206</td>
+<td align="right">239</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">609</td>
+<td align="right">313</td>
+<td align="right">9940</td>
+<td align="right">107</td>
+<td align="right">475</td>
+<td align="right">66</td>
+<td align="right">24</td>
+<td align="right">67</td>
+<td align="right">0</td>
+<td align="right">60</td>
+<td align="right">75</td>
+<td align="right">64</td>
+<td align="right">218</td>
+<td align="right">794</td>
+<td align="right">2160</td>
+<td align="right">152</td>
+<td align="right">134</td>
+<td align="right">28310</td>
+<td align="right">9886</td>
+<td align="right">35.54</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="right">1.41</td>
+<td align="right">41973</td>
+<td align="left">TRUE</td>
+<td align="right">53</td>
+<td align="right">233</td>
+<td align="right">0</td>
+<td align="right">37</td>
+<td align="right">1740</td>
+<td align="right">2947</td>
+<td align="right">135879</td>
+<td align="right">106</td>
+<td align="right">1826</td>
+<td align="right">89</td>
+<td align="right">440</td>
+<td align="right">738</td>
+<td align="right">44303</td>
+<td align="right">166</td>
+<td align="right">276</td>
+<td align="right">240</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">659</td>
+<td align="right">304</td>
+<td align="right">10287</td>
+<td align="right">180</td>
+<td align="right">160</td>
+<td align="right">31</td>
+<td align="right">34</td>
+<td align="right">23</td>
+<td align="right">0</td>
+<td align="right">132</td>
+<td align="right">42</td>
+<td align="right">36</td>
+<td align="right">163</td>
+<td align="right">919</td>
+<td align="right">2344</td>
+<td align="right">54</td>
+<td align="right">157</td>
+<td align="right">31356</td>
+<td align="right">10140</td>
+<td align="right">36.54</td>
+</tr>
+<tr class="even">
+<td align="right">6</td>
+<td align="right">1.36</td>
+<td align="right">41268</td>
+<td align="left">TRUE</td>
+<td align="right">27</td>
+<td align="right">347</td>
+<td align="right">0</td>
+<td align="right">28</td>
+<td align="right">1576</td>
+<td align="right">3179</td>
+<td align="right">132183</td>
+<td align="right">14</td>
+<td align="right">1923</td>
+<td align="right">107</td>
+<td align="right">401</td>
+<td align="right">792</td>
+<td align="right">45283</td>
+<td align="right">151</td>
+<td align="right">250</td>
+<td align="right">294</td>
+<td align="right">40</td>
+<td align="right">48</td>
+<td align="right">709</td>
+<td align="right">318</td>
+<td align="right">9917</td>
+<td align="right">106</td>
+<td align="right">312</td>
+<td align="right">72</td>
+<td align="right">28</td>
+<td align="right">58</td>
+<td align="right">0</td>
+<td align="right">93</td>
+<td align="right">97</td>
+<td align="right">12</td>
+<td align="right">184</td>
+<td align="right">852</td>
+<td align="right">2336</td>
+<td align="right">54</td>
+<td align="right">182</td>
+<td align="right">30631</td>
+<td align="right">9968</td>
+<td align="right">37.54</td>
+</tr>
+</tbody>
+</table>
 <p>If you’d like more control over the import process, a typical <code>Tidyverse</code> workflow would consist of reading the file (they are tab-delimited), removing variables that are not of interest, and correctly labelling data that should be <code>NA</code>. You may also wish to assign a coring depth information at this stage.</p>
 <p>Firstly, we need to load the packages we will use, and define a list of elements and other names of variables we might expect to find in the files.</p>
 <pre><code>library(tidyverse)
@@ -310,13 +654,13 @@ df &lt;- lapply(names(mylist), function(i) within(mylist[[i]], {label &lt;- i}))
   bind_rows() %&gt;% 
   arrange(depth)</code></pre>
 <p>This process can be simplified using <code>itraxR::itrax_join()</code>, for example:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="importing.html#cb12-1"></a><span class="co"># import the core sections</span></span>
-<span id="cb12-2"><a href="importing.html#cb12-2"></a>CD166_<span class="dv">19</span>_S1 &lt;-<span class="st"> </span><span class="kw">itrax_import</span>(<span class="st">&quot;CD166_19_S1/CD166_19_S1/Results.txt&quot;</span>, <span class="dt">depth_top =</span> <span class="dv">0</span>)</span>
-<span id="cb12-3"><a href="importing.html#cb12-3"></a>CD166_<span class="dv">19</span>_S2 &lt;-<span class="st"> </span><span class="kw">itrax_import</span>(<span class="st">&quot;CD166_19_S2/CD166_19_S2/Results.txt&quot;</span>, <span class="dt">depth_top =</span> <span class="kw">max</span>(CD166_<span class="dv">19</span>_S1<span class="op">$</span>depth))</span>
-<span id="cb12-4"><a href="importing.html#cb12-4"></a>CD166_<span class="dv">19</span>_S3 &lt;-<span class="st"> </span><span class="kw">itrax_import</span>(<span class="st">&quot;CD166_19_S3/CD166_19_S3/Results.txt&quot;</span>, <span class="dt">depth_top =</span> <span class="kw">max</span>(CD166_<span class="dv">19</span>_S2<span class="op">$</span>depth))</span>
-<span id="cb12-5"><a href="importing.html#cb12-5"></a><span class="co">#join them together</span></span>
-<span id="cb12-6"><a href="importing.html#cb12-6"></a>CD166_<span class="dv">19</span> &lt;-<span class="st"> </span><span class="kw">itrax_join</span>(<span class="kw">list</span>(<span class="dt">S1 =</span> CD166_<span class="dv">19</span>_S1, <span class="dt">S2 =</span> CD166_<span class="dv">19</span>_S2, <span class="dt">S3 =</span> CD166_<span class="dv">19</span>_S3))</span>
-<span id="cb12-7"><a href="importing.html#cb12-7"></a><span class="kw">str</span>(CD166_<span class="dv">19</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="importing.html#cb11-1"></a><span class="co"># import the core sections</span></span>
+<span id="cb11-2"><a href="importing.html#cb11-2"></a>CD166_<span class="dv">19</span>_S1 &lt;-<span class="st"> </span><span class="kw">itrax_import</span>(<span class="st">&quot;CD166_19_S1/CD166_19_S1/Results.txt&quot;</span>, <span class="dt">depth_top =</span> <span class="dv">0</span>)</span>
+<span id="cb11-3"><a href="importing.html#cb11-3"></a>CD166_<span class="dv">19</span>_S2 &lt;-<span class="st"> </span><span class="kw">itrax_import</span>(<span class="st">&quot;CD166_19_S2/CD166_19_S2/Results.txt&quot;</span>, <span class="dt">depth_top =</span> <span class="kw">max</span>(CD166_<span class="dv">19</span>_S1<span class="op">$</span>depth))</span>
+<span id="cb11-4"><a href="importing.html#cb11-4"></a>CD166_<span class="dv">19</span>_S3 &lt;-<span class="st"> </span><span class="kw">itrax_import</span>(<span class="st">&quot;CD166_19_S3/CD166_19_S3/Results.txt&quot;</span>, <span class="dt">depth_top =</span> <span class="kw">max</span>(CD166_<span class="dv">19</span>_S2<span class="op">$</span>depth))</span>
+<span id="cb11-5"><a href="importing.html#cb11-5"></a><span class="co">#join them together</span></span>
+<span id="cb11-6"><a href="importing.html#cb11-6"></a>CD166_<span class="dv">19</span> &lt;-<span class="st"> </span><span class="kw">itrax_join</span>(<span class="kw">list</span>(<span class="dt">S1 =</span> CD166_<span class="dv">19</span>_S1, <span class="dt">S2 =</span> CD166_<span class="dv">19</span>_S2, <span class="dt">S3 =</span> CD166_<span class="dv">19</span>_S3))</span>
+<span id="cb11-7"><a href="importing.html#cb11-7"></a><span class="kw">str</span>(CD166_<span class="dv">19</span>)</span></code></pre></div>
 <pre><code>## tibble [4,206 × 43] (S3: tbl_df/tbl/data.frame)
 ##  $ depth   : num [1:4206] 1 2 3 4 5 6 7 8 9 10 ...
 ##  $ MSE     : num [1:4206] 1.41 1.57 1.55 1.41 1.41 1.36 1.52 1.38 1.58 1.52 ...
