@@ -60,7 +60,8 @@ This is the data most commonly used in analysis and it can be quickly imported u
 CD166_19_S1 <- itrax_import("CD166_19_S1/CD166_19_S1/Results.txt", depth = 0)
 head(CD166_19_S1)
 ```
-```{r proc_data_table, results = "asis"}
+```{r proc_data_table, echo=FALSE, message=FALSE, warning=FALSE, results="asis"}
+CD166_19_S1 <- itrax_import("CD166_19_S1/CD166_19_S1/Results.txt", depth = 0)
 kable(head(CD166_19_S1))
 ```
 
