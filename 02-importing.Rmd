@@ -15,6 +15,7 @@ require("knitr")
 opts_knit$set(root.dir = "CD166_19_(2020)/")
 install.packages("remotes")
 remotes::install_github("tombishop1/itraxR")
+library(itraxR)
 ```
 
 ## Metadata
@@ -22,7 +23,6 @@ remotes::install_github("tombishop1/itraxR")
 The scan data file `document.txt` can be quickly parsed using `itraxR::itrax_meta()`. The output is a dataframe from which the individual components can be easily accessed through subsetting functions, for example `as.numeric(itrax_meta()[6:7, 2])` would return a numeric vector of the start and end position of a scan.
 
 ```{r importing_metadata}
-library(itraxR)
 itrax_meta("CD166_19_S1/CD166_19_S1/document.txt")
 ```
 
@@ -111,7 +111,7 @@ df <- df %>% filter(depth > min(depth) + 10 & depth < max(depth) - 10)
 
 ### Joining XRF Data
 
-Ofen a core (sometimes referred to as a drive) is comprised of a sequence of individual sections, which may or may not be overlapping. Often we will want to integrate them into a continuous dataset for analytical purposes. When joining cores that do not overlap, this process is trivial --- the data might simply appended in order of depth, and a new column is added with the identity of the original core section. 
+Often a core (sometimes referred to as a drive) is comprised of a sequence of individual sections, which may or may not be overlapping. Often we will want to integrate them into a continuous dataset for analytical purposes. When joining cores that do not overlap, this process is trivial --- the data might simply appended in order of depth, and a new column is added with the identity of the original core section. 
 
 Where overlapping cores are present, there can be multiple measurements at a single depth (on different cores). In these cases not only will the individual measurements need to be re-ordered by depth, but an additional variable should be created that can be used in combination or alone to uniquely identify each measurement. The code below does this by creating an additional variable called `label`, with the name of the original core given in the named list. 
 
@@ -124,7 +124,7 @@ df <- lapply(names(mylist), function(i) within(mylist[[i]], {label <- i})) %>%
 
 This process can be simplified using `itraxR::itrax_join()`, for example:
 
-```{r itrax_join}
+```{r itrax_join, message=FALSE, warning=FALSE}
 # import the core sections
 CD166_19_S1 <- itrax_import("CD166_19_S1/CD166_19_S1/Results.txt", depth_top = 0)
 CD166_19_S2 <- itrax_import("CD166_19_S2/CD166_19_S2/Results.txt", depth_top = max(CD166_19_S1$depth))
