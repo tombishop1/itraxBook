@@ -7,7 +7,7 @@ These data are compositional, and represent the changes in the relative proporti
 It is trivial to calculate element ratios, to the extent that these can often simply be calculated where they are required rather than saving them to memory. For example, if a plot of the Compton divided by the Rayleigh scatter was desired, there is no need to save the computed value to a new variable (e.g. `coh_inc <- df$Mo.coh/df$Mo.inc` ) --- simply define the calculation during plotting.
 
 ## Preparing Data for Multivariate Data Analysis
-Where multivariate methods (cluster analysis, principle components analysis, correlation matricies) are required, it is usually necessary to transform data. This is because the statistical assumptions that underlie these methods are often not met when dealing with compositional data like that from an XRF core-scanner. There is no "right" or ideal way to deal with these issues, but a common method is to use a form of log transformation. Here we use a centered log transformation, which cannot be performed on zero values. 
+Where multivariate methods (cluster analysis, principle components analysis, correlation matricies) are required, it is usually necessary to transform data. This is because the statistical assumptions that underlie these methods are often not met when dealing with compositional data like that from an XRF core-scanner. There is no "right" or ideal way to deal with these issues, but a common method is to use a form of log transformation. Here we use a centred log transformation, which cannot be performed on zero values. 
 
 ```
 df %>% chemometrics::clr(df)
