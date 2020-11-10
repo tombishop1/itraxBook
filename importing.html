@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2020-11-09" />
+<meta name="date" content="2020-11-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -168,6 +168,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.3" data-path="importing.html"><a href="importing.html#optical-images-1"><i class="fa fa-check"></i><b>2.3</b> Optical Images</a></li>
 <li class="chapter" data-level="2.4" data-path="importing.html"><a href="importing.html#radiographic-images-1"><i class="fa fa-check"></i><b>2.4</b> Radiographic Images</a></li>
 <li class="chapter" data-level="2.5" data-path="importing.html"><a href="importing.html#magnetic-susceptability-1"><i class="fa fa-check"></i><b>2.5</b> Magnetic Susceptability</a></li>
+<li class="chapter" data-level="2.6" data-path="importing.html"><a href="importing.html#importing-everything"><i class="fa fa-check"></i><b>2.6</b> Importing Everything</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="tidying-data.html"><a href="tidying-data.html"><i class="fa fa-check"></i><b>3</b> Tidying Data</a></li>
 <li class="chapter" data-level="4" data-path="plotting.html"><a href="plotting.html"><i class="fa fa-check"></i><b>4</b> Plotting</a><ul>
@@ -177,6 +178,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5" data-path="transforming-data.html"><a href="transforming-data.html"><i class="fa fa-check"></i><b>5</b> Transforming Data</a><ul>
 <li class="chapter" data-level="5.1" data-path="transforming-data.html"><a href="transforming-data.html#ratios-and-normalisation"><i class="fa fa-check"></i><b>5.1</b> Ratios and Normalisation</a></li>
 <li class="chapter" data-level="5.2" data-path="transforming-data.html"><a href="transforming-data.html#preparing-data-for-multivariate-data-analysis"><i class="fa fa-check"></i><b>5.2</b> Preparing Data for Multivariate Data Analysis</a></li>
+<li class="chapter" data-level="5.3" data-path="transforming-data.html"><a href="transforming-data.html#data-reduction"><i class="fa fa-check"></i><b>5.3</b> Data Reduction</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="multivariate-methods.html"><a href="multivariate-methods.html"><i class="fa fa-check"></i><b>6</b> Multivariate Methods</a><ul>
 <li class="chapter" data-level="6.1" data-path="multivariate-methods.html"><a href="multivariate-methods.html#correlation-coefficients"><i class="fa fa-check"></i><b>6.1</b> Correlation Coefficients</a></li>
@@ -215,15 +217,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Chapter 2</span> Importing Data</h1>
 <p>All of the Itrax data is in either text-format or “tagged image format” (<code>*.tif</code>). Although this means it is easily read by the various import functions available in <code>R</code>, it still needs considerable cleaning and wrangling to get it to a point where it is useable for most analyses. There are three possible approaches to this task:</p>
 <ol style="list-style-type: decimal">
-<li>Use existing functions published in the <code>itraxR</code> package available from <a href="https://github.com/tombishop1/itraxR">github.com/tombishop1</a>. These are at an early stage and functionality might be broken, but are largely convenience functions for wrangling and analysing Itrax data.</li>
-<li>Work in base <code>R</code> to wrangle the data. This is perfectly achievable, and much of the current <code>itraxR</code> functionality was written this way.</li>
+<li>Use existing functions published in the <code>itraxR</code> package available from <a href="https://github.com/tombishop1/itraxR">github.com/tombishop1/itraxR</a>. These are at an early stage and functionality might be broken, but are largely convenience functions for wrangling and analysing Itrax data. It is easy to install the package directly from Github using <code>remotes::install_github("tombishop1/itraxR")</code>.</li>
+<li>Work in base <code>R</code> to wrangle the data. This is perfectly achievable, and much of the current <code>itraxR</code> functionality was originally written this way.</li>
 <li>Work in the <code>tidyverse</code> family of packages and style. For data wrangling tasks, this approach can result in simpler and more resilient code.</li>
 </ol>
 <p>In this guide examples will be given mostly using the <code>tidyverse</code>, and reference will be made to the convenience functions in <code>itraxR</code>.</p>
-<p>All of the Itrax data is in either text-format or “tagged image format” (<code>*.tiff</code>). Although this means it is easily read by the various import functions available in <code>R</code>, it still needs considerable cleaning and wrangling to get it to a point where it is useable. A number of convenience functions are provided in the package <code>itraxR</code>.</p>
 <div id="metadata-1" class="section level2">
 <h2><span class="header-section-number">2.1</span> Metadata</h2>
-<p>The scan data file <code>document.txt</code> can be quickly parsed using <code>itraxR::itrax_meta()</code>. The output is a dataframe from which the individual components can be easily accessed through subsetting functions, for example <code>as.numeric(itrax_meta()[6:7, 2])</code> would return a numeric vector of the start and end position of a scan.</p>
+<p>The scan data file <code>document.txt</code> can be quickly parsed using <code>itraxR::itrax_meta()</code>. The output is a dataframe from which the individual components can be easily accessed through subsetting functions, for example <code>as.numeric(itrax_meta()[6:7, 2])</code> would return a numeric vector of the start and end position of a scan. The file is tab-delimited, but the formatting is not consistent and will need considerable re-organising and tidying to get it all usable.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="importing.html#cb1-1"></a><span class="kw">itrax_meta</span>(<span class="st">&quot;CD166_19_S1/CD166_19_S1/document.txt&quot;</span>)</span></code></pre></div>
 <pre><code>##                   Parameter       Value       Unit
 ## 1               Sample name CD166_19_S1        str
@@ -1164,8 +1165,8 @@ TRUE
 </table>
 </div>
 <p>If you’d like more control over the import process, a typical <code>Tidyverse</code> workflow would consist of reading the file (they are tab-delimited), removing variables that are not of interest, and correctly labelling data that should be <code>NA</code>. You may also wish to assign a coring depth information at this stage.</p>
-<div id="htmlwidget-1789db4054f009b77181" style="width:100%;height:100%;" class="DiagrammeR html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1789db4054f009b77181">{"x":{"diagram":"graph LR;\n    import[read data file] --> select[select variables of interest] \n    select --> na[label bad data as NA];\n    na -->|optional| depth[add coring depth/age]\n    "},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-11e697c4dfe31007b690" style="width:100%;height:100%;" class="DiagrammeR html-widget"></div>
+<script type="application/json" data-for="htmlwidget-11e697c4dfe31007b690">{"x":{"diagram":"graph LR;\n    import[read data file] --> select[select variables of interest] \n    select --> na[label bad data as NA];\n    na -->|optional| depth[add coring depth/age]\n    "},"evals":[],"jsHooks":[]}</script>
 <p>Firstly, we need to load the packages we will use, and define a list of elements and other names of variables we might expect to find in the files.</p>
 <pre><code>library(readr)
 library(dplyr)
@@ -1294,6 +1295,10 @@ image &lt;- image[ , which(image_depth &gt; as.numeric(meta[6, 2]) &amp; image_d
 </div>
 <div id="magnetic-susceptability-1" class="section level2">
 <h2><span class="header-section-number">2.5</span> Magnetic Susceptability</h2>
+</div>
+<div id="importing-everything" class="section level2">
+<h2><span class="header-section-number">2.6</span> Importing Everything</h2>
+<p>Given the structured nature of individual core section scans, it might be helpful to import everything into a single data object.</p>
 
 </div>
 </div>

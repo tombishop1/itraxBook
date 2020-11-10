@@ -16,6 +16,7 @@ raw-data
 optical-images-1
 radiographic-images-1
 magnetic-susceptability-1
+importing-everything
 tidying-data
 plotting
 plotting-xrf-data
@@ -23,6 +24,7 @@ plotting-images
 transforming-data
 ratios-and-normalisation
 preparing-data-for-multivariate-data-analysis
+data-reduction
 multivariate-methods
 correlation-coefficients
 unconstrained-cluster-analysis
