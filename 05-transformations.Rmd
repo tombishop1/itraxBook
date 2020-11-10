@@ -44,3 +44,16 @@ input <- clr(input)
 
 row.names(input) <- rowlabels
 ```
+
+## Data Reduction
+
+Sometimes it is necessary to reduce the resolution of Itrax XRF data, usually to facilitate direct comparison with some other lower resolution data. For example, if calibrating using ICP-MS sub-samples taken at 10 mm intervals, but the Itrax XRF scan is at 0.2 mm, it will be necessary to average 50 Itrax measurements for each ICP-MS measurement. This is facilitated using the `itrax_averaging()` function. Despite the name, the function can use any appropriate summary function (e.g. standard deviation `sd()` or median `median()`.)
+
+```{r data_reduction}
+# get the Ti mean and standard deviation in 10 mm intervals
+CD166_19_S1 <- itrax_import("CD166_19_S1/CD166_19_S1/Results.txt", depth_top = 0)
+tibble( depthmin = itrax_averaging(CD166_19_S1, 10)$depthmin,
+        depthmax = itrax_averaging(CD166_19_S1, 10)$depthmax,
+        Fe_mean  = itrax_averaging(CD166_19_S1, 10)$Ti,
+        Fe_sd    = itrax_averaging(CD166_19_S1, 10, fun = sd)$Ti )
+```
