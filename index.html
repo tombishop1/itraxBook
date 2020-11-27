@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2020-11-10" />
+<meta name="date" content="2020-11-27" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -216,7 +216,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">Using Itrax Data in R</h1>
 <p class="author"><em>Thomas Bishop</em></p>
-<p class="date"><em>2020-11-10</em></p>
+<p class="date"><em>2020-11-27</em></p>
 </div>
 <div id="preface" class="section level1 unnumbered">
 <h1>Preface</h1>
@@ -230,7 +230,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="example-data" class="section level2">
 <h2><span class="header-section-number">0.3</span> Example Data</h2>
-<p>All of the examples in this book use scans from a sequence of marine sediment cores obtained during a cruise of the RRS Charles Darwin CD166 on the 6th of November 2004. The 4.3 meter sequence was obtained at station CD16619-01 (31º30.794’N, 17º11.777’W) from a depth of 4,467 meters. It is notable for containing a series of volcanic “bypass” turbidites. The scans were performed at the British Ocean Sediment Core Research Facility (BOSCORF) at the National Oceanographic Centre, Southampton in 2020. The drive is a sequence of three consecutive cores, and have been scanned for photographic and radiographic line-scan imagery, as well as three repeats of x-ray flourescence measurements. The data can be downloaded from the Github pages that form the source for this document, available at <a href="https://github.com/tombishop1/itraxBook">github.com/tombishop1/itraxBook</a>.</p>
+<p>All of these examples given in this book are from Piston core CD166/19, which was recovered from the Agadir Basin during the RRS Charles Darwin expedition CD166 in 2004 <span class="citation">Wynn and Cronin (<a href="#ref-Wynn2005" role="doc-biblioref">2005</a>)</span>. The core site is located at 31°31’ N, 17°11.77’ W at a water depth of 4502 m. The coring operation recovered 4.3 m of sediment composed of hemipelagite and turbidites. The hemipelagic sediments range from cream-brown carbonate-rich marl/ooze to red-brown clays. The turbidites include siliciclastic, volcaniclastic and calcareous sediments.</p>
+<p>The split core sections were analysed using the Cox Analytical Systems Itrax core scanner at the British Ocean Sediment Core Research Facility, National Oceanography Centre (Southampton, UK). The split core surfaces were cleaned and loaded to the core scanner along with a radiographic reference sample <span class="citation">Francus, Kanamaru, and Fortin (<a href="#ref-Francus2015" role="doc-biblioref">2015</a>)</span> and a colour card. The cores were first scanned to measure the sample surface height and to obtain optical images. The core sections were then covered with Mylar film to reduce sample desiccation during XRF scanning and x-radiography.</p>
+<p>XRF data were acquired using a molybdenum X-ray tube set at 30 kV and 30 mA with a dwell time of 30 seconds and a step size of 1 mm. X-radiographs were acquired with voltage and current set to 55 kV and 50 mA, respectively, and dwell time set to 500 ms. Step size for the x-radiography was set to 200 µm. Two replicate XRF scans were also performed for each of the three core sections that make up this core. The XRF settings for the replicates were kept consistent with those of the main XRF scan. The interval selected for the replicate scans ranged from 10 cm to 15 cm of the the total sample length. All raw XRF raw data were reprocessed using the QSpec spectral analysis software to optimise peak fitting.</p>
+<p>The data can be downloaded from the Github pages that form the source for this document, available at <a href="https://github.com/tombishop1/itraxBook">github.com/tombishop1/itraxBook</a>.</p>
 
 </div>
 </div>
@@ -238,6 +241,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="refs" class="references">
 <div id="ref-Croudace2019">
 <p>Croudace, Ian W., Ludvig Löwemark, Rik Tjallingii, and Bernd Zolitschka. 2019. “High resolution XRF core scanners: A key tool for the environmental and palaeoclimate sciences.” <em>Quaternary International</em> 514 (May): 1–4. <a href="https://doi.org/10.1016/j.quaint.2019.05.038">https://doi.org/10.1016/j.quaint.2019.05.038</a>.</p>
+</div>
+<div id="ref-Francus2015">
+<p>Francus, P., K. Kanamaru, and D. Fortin. 2015. “Standardization and Calibration of X-Radiographs Acquired with the ITRAX Core Scanner.” In <em>Micro-Xrf Studies of Sediment Cores, Developments in Paleoenvironmental Research 17</em>, edited by I. W. Croudace and R. G. Rothwell, 491–505. Dordrecht: Springer.</p>
+</div>
+<div id="ref-Wynn2005">
+<p>Wynn, R. B., and B. T. Cronin. 2005. “RRS "Charles Darwin" Cruise CD166, 29 Oct - 22 Nov 2004. Sedimentary processes and deposits in the Agadir Basin and Gulf of Cadiz.” 59. Vol. 44.</p>
 </div>
 </div>
             </section>
