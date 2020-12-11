@@ -1,8 +1,3 @@
-```{r setup, include=FALSE, echo=FALSE}
-require("knitr")
-opts_knit$set(root.dir = "CD166_19_(2020)/")
-```
-
 # Plotting
 There are a number of plotting options included in base `R` and some paleoenvironmental packages like `analouge`, but here we will use `ggplot2` and compatible packages. 
 
