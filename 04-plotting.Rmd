@@ -1,3 +1,8 @@
+```{r setup, include=FALSE, echo=FALSE}
+require("knitr")
+opts_knit$set(root.dir = "CD166_19_(2020)/")
+```
+
 # Plotting
 There are a number of plotting options included in base `R` and some paleoenvironmental packages like `analouge`, but here we will use `ggplot2` and compatible packages. 
 
@@ -38,8 +43,8 @@ df %>%
 The package `itraxR` provides functions for importing and creating basic plots of both the photographic and radiographic images. For the optical images, it is almost always necessary to trim the image to the extent of the actual scan, or extraneous image is included (e.g. the calibration card in the example shown below). The function `itraxR::itrax_image()` allows the extent of the scan to be defined, or extracted from the metadata. In the example below, `trim = FALSE` forces the whole image to be shown.
 
 ```{r plot_image}
-myImage <- itrax_image(file = "CD166_19_(2020)/CD166_19_S1/CD166_19_S1/optical.tif",
-                       meta = "CD166_19_(2020)/CD166_19_S1/CD166_19_S1/document.txt",
+myImage <- itrax_image(file = "CD166_19_S1/CD166_19_S1/optical.tif",
+                       meta = "CD166_19_S1/CD166_19_S1/document.txt",
                        trim = FALSE,
                        plot = TRUE
                        )
@@ -48,8 +53,8 @@ myImage <- itrax_image(file = "CD166_19_(2020)/CD166_19_S1/CD166_19_S1/optical.t
 For radiographic images the function `itraxR::itrax_radiograph()` can be used using an identical syntax as `itraxR::itrax_image()`. Often the contrast needs to be adjusted, so a contrast-adjusted radiograph is supplied in the example data (`radiograph0.tif`). 
 
 ```{r itrax_image}
-myRadio <- itrax_radiograph(file = "CD166_19_(2020)/CD166_19_S1/CD166_19_S1_RAD/radiograph0.tif",
-                            meta = "CD166_19_(2020)/CD166_19_S1/CD166_19_S1_RAD/document.txt",
+myRadio <- itrax_radiograph(file = "CD166_19_S1/CD166_19_S1_RAD/radiograph0.tif",
+                            meta = "CD166_19_S1/CD166_19_S1_RAD/document.txt",
                             plot = TRUE
                             )
 ```
@@ -88,12 +93,12 @@ rm(myImage, myRadio)
 It is often desirable to combine a sequence of cores. This is trivial for cores like `CD166_19` where there are no overlapping sections. However, note that the coring depth information is different from the `position` that these images are referenced to. The coring depth is not contained in any of the Itrax metadata, and should be recorded elsewhere, whereas `position` refers to the coordinates on the Itrax core holder. In the code below the depth information is extracted from the combined XRF data created in a previous chapter (for example using `max(CD166_19[which(CD166_19$label == "S2"),]$depth)` to get the maximum depth of the middle section. The radiographs can be added in the same fashion as the previous example.
 
 ```{r overplot_sequence}
-CD166_19_S1_optical <- itrax_image(file = "CD166_19_(2020)/CD166_19_S1/CD166_19_S1/optical.tif", 
-                                   meta = "CD166_19_(2020)/CD166_19_S1/CD166_19_S1/document.txt")
-CD166_19_S2_optical <- itrax_image(file = "CD166_19_(2020)/CD166_19_S2/CD166_19_S2/optical.tif", 
-                                   meta = "CD166_19_(2020)/CD166_19_S2/CD166_19_S2/document.txt")
-CD166_19_S3_optical <- itrax_image(file = "CD166_19_(2020)/CD166_19_S3/CD166_19_S3/optical.tif", 
-                                   meta = "CD166_19_(2020)/CD166_19_S3/CD166_19_S3/document.txt")
+CD166_19_S1_optical <- itrax_image(file = "CD166_19_S1/CD166_19_S1/optical.tif", 
+                                   meta = "CD166_19_S1/CD166_19_S1/document.txt")
+CD166_19_S2_optical <- itrax_image(file = "CD166_19_S2/CD166_19_S2/optical.tif", 
+                                   meta = "CD166_19_S2/CD166_19_S2/document.txt")
+CD166_19_S3_optical <- itrax_image(file = "CD166_19_S3/CD166_19_S3/optical.tif", 
+                                   meta = "CD166_19_S3/CD166_19_S3/document.txt")
 
 ggplot() +
   ylim(rev(range(CD166_19$depth))) +
