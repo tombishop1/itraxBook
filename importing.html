@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2020-11-27" />
+<meta name="date" content="2020-12-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -55,7 +55,7 @@
 <script src="libs/anchor-sections-1.0/anchor-sections.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
-<script src="libs/htmlwidgets-1.5.2/htmlwidgets.js"></script>
+<script src="libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
 <script src="libs/d3-3.3.8/d3.min.js"></script>
 <script src="libs/dagre-0.4.0/dagre-d3.min.js"></script>
 <link href="libs/mermaid-0.3.0/dist/mermaid.css" rel="stylesheet" />
@@ -292,6 +292,9 @@ S
 Cl
 </th>
 <th style="text-align:right;">
+Ar
+</th>
+<th style="text-align:right;">
 K
 </th>
 <th style="text-align:right;">
@@ -422,6 +425,9 @@ TRUE
 1318
 </td>
 <td style="text-align:right;">
+604
+</td>
+<td style="text-align:right;">
 2565
 </td>
 <td style="text-align:right;">
@@ -548,6 +554,9 @@ TRUE
 </td>
 <td style="text-align:right;">
 1513
+</td>
+<td style="text-align:right;">
+595
 </td>
 <td style="text-align:right;">
 2628
@@ -678,6 +687,9 @@ TRUE
 1470
 </td>
 <td style="text-align:right;">
+506
+</td>
+<td style="text-align:right;">
 2378
 </td>
 <td style="text-align:right;">
@@ -804,6 +816,9 @@ TRUE
 </td>
 <td style="text-align:right;">
 1312
+</td>
+<td style="text-align:right;">
+555
 </td>
 <td style="text-align:right;">
 2265
@@ -934,6 +949,9 @@ TRUE
 1740
 </td>
 <td style="text-align:right;">
+591
+</td>
+<td style="text-align:right;">
 2947
 </td>
 <td style="text-align:right;">
@@ -1062,6 +1080,9 @@ TRUE
 1576
 </td>
 <td style="text-align:right;">
+504
+</td>
+<td style="text-align:right;">
 3179
 </td>
 <td style="text-align:right;">
@@ -1165,8 +1186,8 @@ TRUE
 </table>
 </div>
 <p>If you’d like more control over the import process, a typical <code>Tidyverse</code> workflow would consist of reading the file (they are tab-delimited), removing variables that are not of interest, and correctly labelling data that should be <code>NA</code>. You may also wish to assign a coring depth information at this stage.</p>
-<div id="htmlwidget-2a00bbed71b233c1d1c0" style="width:100%;height:100%;" class="DiagrammeR html-widget"></div>
-<script type="application/json" data-for="htmlwidget-2a00bbed71b233c1d1c0">{"x":{"diagram":"graph LR;\n    import[read data file] --> select[select variables of interest] \n    select --> na[label bad data as NA];\n    na -->|optional| depth[add coring depth/age]\n    "},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-27f8bc8568219e99ce11" style="width:100%;height:100%;" class="DiagrammeR html-widget"></div>
+<script type="application/json" data-for="htmlwidget-27f8bc8568219e99ce11">{"x":{"diagram":"graph LR;\n    import[read data file] --> select[select variables of interest] \n    select --> na[label bad data as NA];\n    na -->|optional| depth[add coring depth/age]\n    "},"evals":[],"jsHooks":[]}</script>
 <p>Firstly, we need to load the packages we will use, and define a list of elements and other names of variables we might expect to find in the files.</p>
 <pre><code>library(readr)
 library(dplyr)
@@ -1221,7 +1242,7 @@ df &lt;- lapply(names(mylist), function(i) within(mylist[[i]], {label &lt;- i}))
 <span id="cb11-5"><a href="importing.html#cb11-5"></a><span class="co">#join them together</span></span>
 <span id="cb11-6"><a href="importing.html#cb11-6"></a>CD166_<span class="dv">19</span> &lt;-<span class="st"> </span><span class="kw">itrax_join</span>(<span class="kw">list</span>(<span class="dt">S1 =</span> CD166_<span class="dv">19</span>_S1, <span class="dt">S2 =</span> CD166_<span class="dv">19</span>_S2, <span class="dt">S3 =</span> CD166_<span class="dv">19</span>_S3))</span>
 <span id="cb11-7"><a href="importing.html#cb11-7"></a><span class="kw">str</span>(CD166_<span class="dv">19</span>)</span></code></pre></div>
-<pre><code>## tibble [4,206 × 43] (S3: tbl_df/tbl/data.frame)
+<pre><code>## tibble [4,206 × 44] (S3: tbl_df/tbl/data.frame)
 ##  $ depth   : num [1:4206] 1 2 3 4 5 6 7 8 9 10 ...
 ##  $ MSE     : num [1:4206] 1.41 1.57 1.55 1.41 1.41 1.36 1.52 1.38 1.58 1.52 ...
 ##  $ cps     : num [1:4206] 34525 38370 39796 40022 41973 ...
@@ -1231,6 +1252,7 @@ df &lt;- lapply(names(mylist), function(i) within(mylist[[i]], {label &lt;- i}))
 ##  $ P       : num [1:4206] 0 0 0 0 0 0 0 0 0 0 ...
 ##  $ S       : num [1:4206] 10 0 32 21 37 28 59 19 44 30 ...
 ##  $ Cl      : num [1:4206] 1318 1513 1470 1312 1740 ...
+##  $ Ar      : num [1:4206] 604 595 506 555 591 504 584 489 597 512 ...
 ##  $ K       : num [1:4206] 2565 2628 2378 2265 2947 ...
 ##  $ Ca      : num [1:4206] 112734 144287 162938 153194 135879 ...
 ##  $ Sc      : num [1:4206] 0 14 0 0 106 14 0 46 0 0 ...
