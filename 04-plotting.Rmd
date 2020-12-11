@@ -35,24 +35,170 @@ df %>%
 ```
 
 ## Plotting Images
-Once an image file has been imported, the image can be integrated into `ggplot` code using the workflow below. 
+The package `itraxR` provides functions for importing and creating basic plots of both the photographic and radiographic images. For the optical images, it is almost always necessary to trim the image to the extent of the actual scan, or extraneous image is included (e.g. the calibration card in the example shown below). The function `itraxR::itrax_image()` allows the extent of the scan to be defined, or extracted from the metadata. In the example below, `trim = FALSE` forces the whole image to be shown.
 
+```{r plot_image}
+myImage <- itrax_image(file = "CD166_19_(2020)/CD166_19_S1/CD166_19_S1/optical.tif",
+                       meta = "CD166_19_(2020)/CD166_19_S1/CD166_19_S1/document.txt",
+                       trim = FALSE,
+                       plot = TRUE
+                       )
 ```
-library(tidyverse)
-library(grid)
+
+For radiographic images the function `itraxR::itrax_radiograph()` can be used using an identical syntax as `itraxR::itrax_image()`. Often the contrast needs to be adjusted, so a contrast-adjusted radiograph is supplied in the example data (`radiograph0.tif`). 
+
+```{r itrax_image}
+myRadio <- itrax_radiograph(file = "CD166_19_(2020)/CD166_19_S1/CD166_19_S1_RAD/radiograph0.tif",
+                            meta = "CD166_19_(2020)/CD166_19_S1/CD166_19_S1_RAD/document.txt",
+                            plot = TRUE
+                            )
+```
+
+The simple plots generated as a side effect of these functions are sometimes sufficient for simple plots, but for more complex diagrams you will need to generate them from scratch. For example, it is often desirable to overplot the radiograph on the optical image. The code below does this. Note the calculations made for the `xmin = ` and `ymin = ` parameters for `annotation_custom()` when adding the radiograph `rasterGrob()`; these correctly position the radiograph along the centre of the image.
+
+```{r overplot}
+ggplot() +
+  ylim(rev(range(as.numeric(row.names(myImage$image))))) +
+  scale_x_continuous(breaks = round(range(as.numeric(colnames(myImage$image))), 0),
+                     limits = range(as.numeric(colnames(myImage$image)))) +
+  labs(y = "Position [mm]", x = "[mm]") +
+  annotation_custom(rasterGrob(myImage$image,
+                               width = unit(1, "npc"),
+                               height = unit(1, "npc")),
+                    ymax = max(as.numeric(row.names(myImage$image)))/-1,
+                    ymin = min(as.numeric(row.names(myImage$image)))/-1,
+                    xmin = min(as.numeric(colnames(myImage$image))),
+                    xmax = max(as.numeric(colnames(myImage$image)))
+  ) +
+  annotation_custom(rasterGrob(myRadio$image,
+                               width = unit(1, "npc"),
+                               height = unit(1, "npc")),
+                    ymax = max(as.numeric(row.names(myRadio$image)))/-1,
+                    ymin = min(as.numeric(row.names(myRadio$image)))/-1,
+                    xmin = mean(as.numeric(colnames(myImage$image))) - mean(as.numeric(colnames(myRadio$image))),
+                    xmax = mean(as.numeric(colnames(myImage$image))) + mean(as.numeric(colnames(myRadio$image)))
+  ) +
+  coord_fixed(ratio = 1)
+```
+
+```{r tidyup, include=FALSE}
+rm(myImage, myRadio)
+```
+
+It is often desirable to combine a sequence of cores. This is trivial for cores like `CD166_19` where there are no overlapping sections. However, note that the coring depth information is different from the `position` that these images are referenced to. The coring depth is not contained in any of the Itrax metadata, and should be recorded elsewhere, whereas `position` refers to the coordinates on the Itrax core holder. In the code below the depth information is extracted from the combined XRF data created in a previous chapter (for example using `max(CD166_19[which(CD166_19$label == "S2"),]$depth)` to get the maximum depth of the middle section. The radiographs can be added in the same fashion as the previous example.
+
+```{r overplot_sequence}
+CD166_19_S1_optical <- itrax_image(file = "CD166_19_(2020)/CD166_19_S1/CD166_19_S1/optical.tif", 
+                                   meta = "CD166_19_(2020)/CD166_19_S1/CD166_19_S1/document.txt")
+CD166_19_S2_optical <- itrax_image(file = "CD166_19_(2020)/CD166_19_S2/CD166_19_S2/optical.tif", 
+                                   meta = "CD166_19_(2020)/CD166_19_S2/CD166_19_S2/document.txt")
+CD166_19_S3_optical <- itrax_image(file = "CD166_19_(2020)/CD166_19_S3/CD166_19_S3/optical.tif", 
+                                   meta = "CD166_19_(2020)/CD166_19_S3/CD166_19_S3/document.txt")
 
 ggplot() +
-  annotation_custom(rasterGrob(image2, 
+  ylim(rev(range(CD166_19$depth))) +
+  scale_x_continuous(breaks = round(range(as.numeric(colnames(CD166_19_S1_optical$image))), 0),
+                     limits = range(as.numeric(colnames(CD166_19_S1_optical$image)))) +
+  coord_fixed(ratio = 1) +
+  labs(y = "Depth [mm]", x = "[mm]") +
+  annotation_custom(rasterGrob(CD166_19_S1_optical$image,
                                width = unit(1, "npc"),
-                               height = unit(1, "npc"))) +
-  xlab("") +
-  ylab("Position [mm]") +
-  ylim(as.numeric(meta[6:7, 2]))
+                               height = unit(1, "npc")),
+                    ymax = max(CD166_19[which(CD166_19$label == "S1"),]$depth)/-1,
+                    ymin = min(CD166_19[which(CD166_19$label == "S1"),]$depth)/-1,
+                    xmin = min(as.numeric(colnames(CD166_19_S1_optical$image))),
+                    xmax = max(as.numeric(colnames(CD166_19_S1_optical$image)))
+  ) +
+  annotation_custom(rasterGrob(CD166_19_S2_optical$image,
+                               width = unit(1, "npc"),
+                               height = unit(1, "npc")),
+                    ymax = max(CD166_19[which(CD166_19$label == "S2"),]$depth)/-1,
+                    ymin = min(CD166_19[which(CD166_19$label == "S2"),]$depth)/-1,
+                    xmin = min(as.numeric(colnames(CD166_19_S2_optical$image))),
+                    xmax = max(as.numeric(colnames(CD166_19_S2_optical$image)))
+  ) +
+  annotation_custom(rasterGrob(CD166_19_S3_optical$image,
+                               width = unit(1, "npc"),
+                               height = unit(1, "npc")),
+                    ymax = max(CD166_19[which(CD166_19$label == "S3"),]$depth)/-1,
+                    ymin = min(CD166_19[which(CD166_19$label == "S3"),]$depth)/-1,
+                    xmin = min(as.numeric(colnames(CD166_19_S3_optical$image))),
+                    xmax = max(as.numeric(colnames(CD166_19_S3_optical$image)))
+  )
 ```
 
-If the image needs to be rotated, the `aperm()` function needs to be used, followed by reversing the image. 
+Where there are overlaps it is often desirable to plot the cores adjacent to one another. It is simply a case of adjusting the `xmin = ` and `xmax = ` parameters in the `annotation_custom()` function for every other section. In this context the x-axis labels become largely meaningless and can be omitted. 
 
+```{r sideplot_sequence}
+ggplot() +
+  ylim(rev(range(CD166_19$depth))) +
+  xlim(0, max(as.numeric(colnames(CD166_19_S2_optical$image)))*2) +
+  coord_fixed(ratio = 1) +
+  labs(y = "Depth [mm]") +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) +
+  annotation_custom(rasterGrob(CD166_19_S1_optical$image,
+                               width = unit(1, "npc"),
+                               height = unit(1, "npc")),
+                    ymax = max(CD166_19[which(CD166_19$label == "S1"),]$depth)/-1,
+                    ymin = min(CD166_19[which(CD166_19$label == "S1"),]$depth)/-1,
+                    xmin = min(as.numeric(colnames(CD166_19_S1_optical$image))),
+                    xmax = max(as.numeric(colnames(CD166_19_S1_optical$image)))
+  ) +
+  annotation_custom(rasterGrob(CD166_19_S2_optical$image,
+                               width = unit(1, "npc"),
+                               height = unit(1, "npc")),
+                    ymax = max(CD166_19[which(CD166_19$label == "S2"),]$depth)/-1,
+                    ymin = min(CD166_19[which(CD166_19$label == "S2"),]$depth)/-1,
+                    xmin = max(as.numeric(colnames(CD166_19_S2_optical$image))),
+                    xmax = max(as.numeric(colnames(CD166_19_S2_optical$image)))*2
+  ) +
+  annotation_custom(rasterGrob(CD166_19_S3_optical$image,
+                               width = unit(1, "npc"),
+                               height = unit(1, "npc")),
+                    ymax = max(CD166_19[which(CD166_19$label == "S3"),]$depth)/-1,
+                    ymin = min(CD166_19[which(CD166_19$label == "S3"),]$depth)/-1,
+                    xmin = min(as.numeric(colnames(CD166_19_S3_optical$image))),
+                    xmax = max(as.numeric(colnames(CD166_19_S3_optical$image)))
+  )
 ```
-image2 <- aperm(image, c(2,1,3))
-image2 <- image2[c(dim(image2)[1]: 1), , ]
+
+Note that omitting the line `coord_fixed(ratio = 1)` allows the aspect ratio of the plot to be reshaped. Although usually it is desirable to keep the plot in the correct shape, sometimes for very long sequences the images end up so narrow as to be quite useless, so the x-axis can be stretched to accentuate the features in it. The example below simply omits the `coord_fixed()` line from the previous example.
+
+```{r sideplot_sequence_aspectratio, echo=FALSE}
+ggplot() +
+  ylim(rev(range(CD166_19$depth))) +
+  xlim(0, max(as.numeric(colnames(CD166_19_S2_optical$image)))*2) +
+#  coord_fixed(ratio = 1) +
+  labs(y = "Depth [mm]") +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) +
+  annotation_custom(rasterGrob(CD166_19_S1_optical$image,
+                               width = unit(1, "npc"),
+                               height = unit(1, "npc")),
+                    ymax = max(CD166_19[which(CD166_19$label == "S1"),]$depth)/-1,
+                    ymin = min(CD166_19[which(CD166_19$label == "S1"),]$depth)/-1,
+                    xmin = min(as.numeric(colnames(CD166_19_S1_optical$image))),
+                    xmax = max(as.numeric(colnames(CD166_19_S1_optical$image)))
+  ) +
+  annotation_custom(rasterGrob(CD166_19_S2_optical$image,
+                               width = unit(1, "npc"),
+                               height = unit(1, "npc")),
+                    ymax = max(CD166_19[which(CD166_19$label == "S2"),]$depth)/-1,
+                    ymin = min(CD166_19[which(CD166_19$label == "S2"),]$depth)/-1,
+                    xmin = max(as.numeric(colnames(CD166_19_S2_optical$image))),
+                    xmax = max(as.numeric(colnames(CD166_19_S2_optical$image)))*2
+  ) +
+  annotation_custom(rasterGrob(CD166_19_S3_optical$image,
+                               width = unit(1, "npc"),
+                               height = unit(1, "npc")),
+                    ymax = max(CD166_19[which(CD166_19$label == "S3"),]$depth)/-1,
+                    ymin = min(CD166_19[which(CD166_19$label == "S3"),]$depth)/-1,
+                    xmin = min(as.numeric(colnames(CD166_19_S3_optical$image))),
+                    xmax = max(as.numeric(colnames(CD166_19_S3_optical$image)))
+  )
 ```
+
+Finally, it may be necessary to plot the images horizontally rather than the more traditional vertical plots often used in down-core data presentation. `aperm()` and `t()` may be used for the optical and radiographic images respectively to transpose the x- and y-coordinates, but the images will need to be mirrored so that the tops of the sections are on the right-hand side and the graphs run from oldest to youngest when read left-to-right, in the generally accepted order of these types of graph. 
