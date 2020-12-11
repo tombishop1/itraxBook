@@ -1,8 +1,3 @@
-```{r setup, include=FALSE, echo=FALSE}
-require("knitr")
-opts_knit$set(root.dir = "CD166_19_(2020)/")
-```
-
 # Importing Data {#importing}
 
 All of the Itrax data is in either text-format or "tagged image format" (`*.tif`). Although this means it is easily read by the various import functions available in `R`, it still needs considerable cleaning and wrangling to get it to a point where it is useable for most analyses. There are three possible approaches to this task:
