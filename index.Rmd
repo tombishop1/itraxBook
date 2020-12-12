@@ -13,8 +13,17 @@ description: This book is a guide to importing, tidying, manipulating and analys
 
 # Preface {-}
 
-## Why did I write this book?
-During the COVID-19 pandemic in 2020 it became necessary to formalise (or at least, organise) the support offered to students using the Itrax core scanner at The University of Manchester Geography Laboratories so they could be offered online. This led to an unexpectedly popular series of seminars. When these came to an end, we decided it would be useful to summarise our seminars into a reference guide that could be updated over time. This is that guide.  
+## Introduction
+Itrax core scanners (manufactured by Cox Analytical Systems, Sweden) are used in palaeooceanography, palaeolimnological, geological and other "down-core" studies of sedimentary core material. The multi-sensory data can include radiography, optical images, magnetic susceptibility, but most importantly energy-dispersive x-ray florescence (ED-XRF) measurements of elemental abundance. The data can be harder to work with compared to some other palaeoenvironmental techniques because:
+
+1. Very large quantities of data are produced. ED-XRF measurements can be made every 100-200 μm, so for long core sections, these datasets are large. Simple line-graphs can become problematic, and multivariate analysis can become unworkable on some software.
+2. Images can be very large and need correct alignment. Combining them with line-graphs or other images can be troublesome. 
+3. ED-XRF elemental data is compositional, but dimensionless (they do not have units attached e.g. [ppm]). This can make the use of traditional statistical tools and tests problematic. 
+
+This guide comes from a series of seminars offered to users of the Itrax core scanner at The University of Manchester Geography Laboratories in 2020.
+
+## The itraxR Package
+The `itraxR` package offers a range of convenience functions for working with Itrax data. The book mostly uses the functions in this package, but the source code is available and fully commented, so is easy to as a basis for other work. The package and code are available from [github.com/tombishop1/itraxR](https://github.com/tombishop1/itraxR).  
 
 ## Prerequisites
 This guide assumes a basic knowledge of `R` and the `tidyverse`, including data types, assignments, and pipes. It also assumes a background knowledge of the core scanner and the nature of the data it produces; see @Croudace2019 and references therein. Some of the sections on data analysis assume some knowledge of compositional data analysis. 
@@ -46,7 +55,8 @@ if (!require("itraxR", character.only = TRUE)) {
 # itrax_import - readr, janitor, dplyr
 # itrax_join   - dplyr
 # itrax_meta   - none 
-packages = c("janitor", "dplyr", "readr", "kableExtra", "DiagrammeR")
+ # packages = c("janitor", "dplyr", "readr", "kableExtra", "DiagrammeR")
+packages = c("kableExtra", "DiagrammeR")
 
 ## Now load or install & load all those CRAN packages
 package.check <- lapply(
