@@ -16,7 +16,6 @@ joining-xrf-data
 raw-data
 optical-images-1
 radiographic-images-1
-magnetic-susceptability-1
 importing-everything
 tidying-data
 plotting
