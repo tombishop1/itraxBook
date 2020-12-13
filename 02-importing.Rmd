@@ -88,7 +88,7 @@ In addition, it should be noted that unlike the optical images that always begin
 
 Given the structured nature of individual core section scans, it might be helpful to import everything into a single data object (`list()`). This is particularly helpful when dealing with large numbers of core sections. However, some care should be taken here, as it is easy to end up holding large quantities of data in memory, particularly where images are included. The structure of this can be adapted to your needs, but could look something like the following example.
 
-```{r everything}
+```
 CD166_19_S1 <- list(metadata   = itrax_meta("document.txt"),
                     xrf        = itrax_import("Results.txt", depth = 0),
                     image      = itrax_image("optical.tif")$image,
