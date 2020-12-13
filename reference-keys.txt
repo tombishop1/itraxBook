@@ -1,4 +1,5 @@
-why-did-i-write-this-book
+introduction
+the-itraxr-package
 prerequisites
 example-data
 intro
