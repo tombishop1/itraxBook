@@ -40,6 +40,7 @@ The data can be downloaded from the Github pages that form the source for this d
 ```{r setup, include=FALSE, echo=FALSE}
 require("knitr")
 opts_knit$set(root.dir = "CD166_19_(2020)/")
+setwd("CD166_19_(2020)/")
 
 # check if itraxR is installed, if not, install
 if (!require("itraxR", character.only = TRUE)) {
@@ -49,16 +50,13 @@ if (!require("itraxR", character.only = TRUE)) {
 }
 
 # now check dependencies
-## First specify the packages of interest
+# First specify the packages of interest
 # these are the dependencies for:
 # the document - kableExtra, DiagrammeR
-# itrax_import - readr, janitor, dplyr
-# itrax_join   - dplyr
-# itrax_meta   - none 
- # packages = c("janitor", "dplyr", "readr", "kableExtra", "DiagrammeR")
-packages = c("kableExtra", "DiagrammeR")
+packages = c("janitor", "dplyr", "readr", "kableExtra", "DiagrammeR")
+#packages = c("kableExtra", "DiagrammeR")
 
-## Now load or install & load all those CRAN packages
+# Now load or install & load all those CRAN packages
 package.check <- lapply(
   packages,
   FUN = function(x) {
