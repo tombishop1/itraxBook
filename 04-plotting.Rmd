@@ -85,7 +85,7 @@ ggplot() +
   coord_fixed(ratio = 1)
 ```
 
-```{r tidyup, include=FALSE}
+```{r tidyup2, include=FALSE}
 rm(myImage, myRadio)
 ```
 
