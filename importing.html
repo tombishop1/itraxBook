@@ -51,8 +51,6 @@
 
 
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
-<link href="libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0/anchor-sections.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
@@ -162,7 +160,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.4" data-path="importing.html"><a href="importing.html#radiographic-images-1"><i class="fa fa-check"></i><b>2.4</b> Radiographic Images</a></li>
 <li class="chapter" data-level="2.5" data-path="importing.html"><a href="importing.html#importing-everything"><i class="fa fa-check"></i><b>2.5</b> Importing Everything</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="tidying-data.html"><a href="tidying-data.html"><i class="fa fa-check"></i><b>3</b> Tidying Data</a></li>
+<li class="chapter" data-level="3" data-path="tidying-data.html"><a href="tidying-data.html"><i class="fa fa-check"></i><b>3</b> Tidying Data</a><ul>
+<li class="chapter" data-level="3.1" data-path="tidying-data.html"><a href="tidying-data.html#low-count-rates"><i class="fa fa-check"></i><b>3.1</b> Low Count Rates</a></li>
+<li class="chapter" data-level="3.2" data-path="tidying-data.html"><a href="tidying-data.html#surface-slope-corrections"><i class="fa fa-check"></i><b>3.2</b> Surface Slope Corrections</a></li>
+<li class="chapter" data-level="3.3" data-path="tidying-data.html"><a href="tidying-data.html#tube-current"><i class="fa fa-check"></i><b>3.3</b> Tube current</a></li>
+<li class="chapter" data-level="3.4" data-path="tidying-data.html"><a href="tidying-data.html#correcting-for-water-content"><i class="fa fa-check"></i><b>3.4</b> Correcting for Water Content</a></li>
+<li class="chapter" data-level="3.5" data-path="tidying-data.html"><a href="tidying-data.html#correcting-grain-size"><i class="fa fa-check"></i><b>3.5</b> Correcting Grain Size</a></li>
+<li class="chapter" data-level="3.6" data-path="tidying-data.html"><a href="tidying-data.html#high-signal-to-noise-ratios"><i class="fa fa-check"></i><b>3.6</b> High Signal-to-noise Ratios</a></li>
+</ul></li>
 <li class="chapter" data-level="4" data-path="plotting.html"><a href="plotting.html"><i class="fa fa-check"></i><b>4</b> Plotting</a><ul>
 <li class="chapter" data-level="4.1" data-path="plotting.html"><a href="plotting.html#plotting-xrf-data"><i class="fa fa-check"></i><b>4.1</b> Plotting XRF Data</a></li>
 <li class="chapter" data-level="4.2" data-path="plotting.html"><a href="plotting.html#plotting-images"><i class="fa fa-check"></i><b>4.2</b> Plotting Images</a></li>
@@ -1278,15 +1283,39 @@ df &lt;- lapply(names(mylist), function(i) within(mylist[[i]], {label &lt;- i}))
 ##   ..$ Unit     : chr [1:10] &quot;mm&quot; &quot;mm&quot; &quot;microns&quot; &quot;mm&quot; ...</code></pre>
 <p>However, if there is a desire to manipulate the raw data from the radiographic image, some further work is required because the “pixel” is not square, but rectangular; that is to say the length of the pixel differs from its width. On the core scanner a single pixel has a width across the core of 20 μm, but has a variable coverage along the core (usually between 50 and 200 μm). The processed image downscales the pixel width to match the pixel length in order to force square pixels, losing some resolution along the way.</p>
 <p>In addition, it should be noted that unlike the optical images that always begin from <code>position == 0</code>, the radiographic images have defined start and end points just like an XRF scan, the parameters of which can be accessed from the <code>$meta</code> object, or using <code>itraxR::itrax_meta()</code>.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="importing.html#cb11-1"></a><span class="kw">rm</span>(<span class="dt">list =</span> <span class="kw">ls</span>())</span></code></pre></div>
 </div>
 <div id="importing-everything" class="section level2">
 <h2><span class="header-section-number">2.5</span> Importing Everything</h2>
-<p>Given the structured nature of individual core section scans, it might be helpful to import everything into a single data object (<code>list()</code>). This is particularly helpful when dealing with large numbers of core sections. However, some care should be taken here, as it is easy to end up holding large quantities of data in memory, particularly where images are included. The structure of this can be adapted to your needs, but could look something like the following example.</p>
-<pre><code>CD166_19_S1 &lt;- list(metadata   = itrax_meta(&quot;document.txt&quot;),
-                    xrf        = itrax_import(&quot;Results.txt&quot;, depth = 0),
-                    image      = itrax_image(&quot;optical.tif&quot;)$image,
-                    radiograph = itrax_radiograph(&quot;radiograph0.tif&quot;)$image)
-str(CD166_19_S1)</code></pre>
+<p>Given the structured nature of individual core section scans, it might be helpful to import everything into a single data object (<code>list()</code>). This is particularly helpful when dealing with large numbers of core sections. However, some care should be taken here, as it is easy to end up holding large quantities of data in memory, particularly where images are included. The structure of this can be adapted to your needs, but could look something like the following example. <strong>These are the data that will be used elsewhere in this guide</strong>.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="importing.html#cb12-1"></a>CD166_<span class="dv">19</span>_S1 &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">metadata   =</span> <span class="kw">itrax_meta</span>(<span class="st">&quot;CD166_19_S1/CD166_19_S1/document.txt&quot;</span>),</span>
+<span id="cb12-2"><a href="importing.html#cb12-2"></a>                    <span class="dt">xrf        =</span> <span class="kw">itrax_import</span>(<span class="st">&quot;CD166_19_S1/CD166_19_S1/Results.txt&quot;</span>, </span>
+<span id="cb12-3"><a href="importing.html#cb12-3"></a>                                              <span class="dt">depth =</span> <span class="dv">0</span>, </span>
+<span id="cb12-4"><a href="importing.html#cb12-4"></a>                                              <span class="dt">parameters =</span> <span class="st">&quot;all&quot;</span>),</span>
+<span id="cb12-5"><a href="importing.html#cb12-5"></a>                    <span class="dt">image      =</span> <span class="kw">itrax_image</span>(<span class="dt">file =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1/optical.tif&quot;</span>,</span>
+<span id="cb12-6"><a href="importing.html#cb12-6"></a>                                             <span class="dt">meta =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1/document.txt&quot;</span>),</span>
+<span id="cb12-7"><a href="importing.html#cb12-7"></a>                    <span class="dt">radiograph =</span> <span class="kw">itrax_radiograph</span>(<span class="dt">file =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1_RAD/radiograph0.tif&quot;</span>,</span>
+<span id="cb12-8"><a href="importing.html#cb12-8"></a>                                                  <span class="dt">meta =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1_RAD/document.txt&quot;</span>))</span>
+<span id="cb12-9"><a href="importing.html#cb12-9"></a></span>
+<span id="cb12-10"><a href="importing.html#cb12-10"></a>CD166_<span class="dv">19</span>_S2 &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">metadata   =</span> <span class="kw">itrax_meta</span>(<span class="st">&quot;CD166_19_S2/CD166_19_S2/document.txt&quot;</span>),</span>
+<span id="cb12-11"><a href="importing.html#cb12-11"></a>                    <span class="dt">xrf        =</span> <span class="kw">itrax_import</span>(<span class="st">&quot;CD166_19_S2/CD166_19_S2/Results.txt&quot;</span>, </span>
+<span id="cb12-12"><a href="importing.html#cb12-12"></a>                                              <span class="dt">depth =</span> <span class="kw">max</span>(CD166_<span class="dv">19</span>_S1<span class="op">$</span>xrf<span class="op">$</span>depth), </span>
+<span id="cb12-13"><a href="importing.html#cb12-13"></a>                                              <span class="dt">parameters =</span> <span class="st">&quot;all&quot;</span>),</span>
+<span id="cb12-14"><a href="importing.html#cb12-14"></a>                    <span class="dt">image      =</span> <span class="kw">itrax_image</span>(<span class="dt">file =</span> <span class="st">&quot;CD166_19_S2/CD166_19_S2/optical.tif&quot;</span>,</span>
+<span id="cb12-15"><a href="importing.html#cb12-15"></a>                                             <span class="dt">meta =</span> <span class="st">&quot;CD166_19_S2/CD166_19_S2/document.txt&quot;</span>),</span>
+<span id="cb12-16"><a href="importing.html#cb12-16"></a>                    <span class="dt">radiograph =</span> <span class="kw">itrax_radiograph</span>(<span class="dt">file =</span> <span class="st">&quot;CD166_19_S2/CD166_19_S2_RAD/radiograph.tif&quot;</span>,</span>
+<span id="cb12-17"><a href="importing.html#cb12-17"></a>                                                  <span class="dt">meta =</span> <span class="st">&quot;CD166_19_S2/CD166_19_S2_RAD/document.txt&quot;</span>))</span>
+<span id="cb12-18"><a href="importing.html#cb12-18"></a></span>
+<span id="cb12-19"><a href="importing.html#cb12-19"></a>CD166_<span class="dv">19</span>_S3 &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">metadata   =</span> <span class="kw">itrax_meta</span>(<span class="st">&quot;CD166_19_S3/CD166_19_S3/document.txt&quot;</span>),</span>
+<span id="cb12-20"><a href="importing.html#cb12-20"></a>                    <span class="dt">xrf        =</span> <span class="kw">itrax_import</span>(<span class="st">&quot;CD166_19_S3/CD166_19_S3/Results.txt&quot;</span>, </span>
+<span id="cb12-21"><a href="importing.html#cb12-21"></a>                                              <span class="dt">depth =</span> <span class="kw">max</span>(CD166_<span class="dv">19</span>_S2<span class="op">$</span>xrf<span class="op">$</span>depth), </span>
+<span id="cb12-22"><a href="importing.html#cb12-22"></a>                                              <span class="dt">parameters =</span> <span class="st">&quot;all&quot;</span>),</span>
+<span id="cb12-23"><a href="importing.html#cb12-23"></a>                    <span class="dt">image      =</span> <span class="kw">itrax_image</span>(<span class="dt">file =</span> <span class="st">&quot;CD166_19_S3/CD166_19_S3/optical.tif&quot;</span>,</span>
+<span id="cb12-24"><a href="importing.html#cb12-24"></a>                                             <span class="dt">meta =</span> <span class="st">&quot;CD166_19_S3/CD166_19_S3/document.txt&quot;</span>),</span>
+<span id="cb12-25"><a href="importing.html#cb12-25"></a>                    <span class="dt">radiograph =</span> <span class="kw">itrax_radiograph</span>(<span class="dt">file =</span> <span class="st">&quot;CD166_19_S3/CD166_19_S3_RAD/radiograph.tif&quot;</span>,</span>
+<span id="cb12-26"><a href="importing.html#cb12-26"></a>                                                  <span class="dt">meta =</span> <span class="st">&quot;CD166_19_S3/CD166_19_S3_RAD/document.txt&quot;</span>))</span>
+<span id="cb12-27"><a href="importing.html#cb12-27"></a></span>
+<span id="cb12-28"><a href="importing.html#cb12-28"></a>CD166_<span class="dv">19</span>_xrf &lt;-<span class="st"> </span><span class="kw">itrax_join</span>(<span class="kw">list</span>(<span class="dt">S1 =</span> CD166_<span class="dv">19</span>_S1<span class="op">$</span>xrf, <span class="dt">S2 =</span> CD166_<span class="dv">19</span>_S2<span class="op">$</span>xrf, <span class="dt">S3 =</span> CD166_<span class="dv">19</span>_S3<span class="op">$</span>xrf))</span></code></pre></div>
 
 </div>
 </div>

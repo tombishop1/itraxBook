@@ -18,6 +18,12 @@ optical-images-1
 radiographic-images-1
 importing-everything
 tidying-data
+low-count-rates
+surface-slope-corrections
+tube-current
+correcting-for-water-content
+correcting-grain-size
+high-signal-to-noise-ratios
 plotting
 plotting-xrf-data
 plotting-images

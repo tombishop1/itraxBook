@@ -51,8 +51,6 @@
 
 
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
-<link href="libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0/anchor-sections.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
@@ -162,7 +160,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.4" data-path="importing.html"><a href="importing.html#radiographic-images-1"><i class="fa fa-check"></i><b>2.4</b> Radiographic Images</a></li>
 <li class="chapter" data-level="2.5" data-path="importing.html"><a href="importing.html#importing-everything"><i class="fa fa-check"></i><b>2.5</b> Importing Everything</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="tidying-data.html"><a href="tidying-data.html"><i class="fa fa-check"></i><b>3</b> Tidying Data</a></li>
+<li class="chapter" data-level="3" data-path="tidying-data.html"><a href="tidying-data.html"><i class="fa fa-check"></i><b>3</b> Tidying Data</a><ul>
+<li class="chapter" data-level="3.1" data-path="tidying-data.html"><a href="tidying-data.html#low-count-rates"><i class="fa fa-check"></i><b>3.1</b> Low Count Rates</a></li>
+<li class="chapter" data-level="3.2" data-path="tidying-data.html"><a href="tidying-data.html#surface-slope-corrections"><i class="fa fa-check"></i><b>3.2</b> Surface Slope Corrections</a></li>
+<li class="chapter" data-level="3.3" data-path="tidying-data.html"><a href="tidying-data.html#tube-current"><i class="fa fa-check"></i><b>3.3</b> Tube current</a></li>
+<li class="chapter" data-level="3.4" data-path="tidying-data.html"><a href="tidying-data.html#correcting-for-water-content"><i class="fa fa-check"></i><b>3.4</b> Correcting for Water Content</a></li>
+<li class="chapter" data-level="3.5" data-path="tidying-data.html"><a href="tidying-data.html#correcting-grain-size"><i class="fa fa-check"></i><b>3.5</b> Correcting Grain Size</a></li>
+<li class="chapter" data-level="3.6" data-path="tidying-data.html"><a href="tidying-data.html#high-signal-to-noise-ratios"><i class="fa fa-check"></i><b>3.6</b> High Signal-to-noise Ratios</a></li>
+</ul></li>
 <li class="chapter" data-level="4" data-path="plotting.html"><a href="plotting.html"><i class="fa fa-check"></i><b>4</b> Plotting</a><ul>
 <li class="chapter" data-level="4.1" data-path="plotting.html"><a href="plotting.html#plotting-xrf-data"><i class="fa fa-check"></i><b>4.1</b> Plotting XRF Data</a></li>
 <li class="chapter" data-level="4.2" data-path="plotting.html"><a href="plotting.html#plotting-images"><i class="fa fa-check"></i><b>4.2</b> Plotting Images</a></li>
@@ -214,7 +219,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1>Preface</h1>
 <div id="introduction" class="section level2">
 <h2><span class="header-section-number">0.1</span> Introduction</h2>
-<p>Itrax core scanners (manufactured by Cox Analytical Systems, Sweden) are used in palaeooceanography, palaeolimnological, geological and other “down-core” studies of sedimentary core material. The multi-sensory data can include radiography, optical images, magnetic susceptibility, but most importantly energy-dispersive x-ray florescence (ED-XRF) measurements of elemental abundance. The data can be harder to work with compared to some other palaeoenvironmental techniques because:</p>
+<p>Itrax core scanners (manufactured by Cox Analytical Systems, Sweden) are used in palaeoceanography, palaeolimnological, geological and other “down-core” studies of sedimentary core material. The multi-sensory data can include radiography, optical images, magnetic susceptibility, but most importantly energy-dispersive x-ray florescence (ED-XRF) measurements of elemental abundance. The data can be harder to work with compared to some other palaeoenvironmental techniques because:</p>
 <ol style="list-style-type: decimal">
 <li>Very large quantities of data are produced. ED-XRF measurements can be made every 100-200 μm, so for long core sections, these datasets are large. Simple line-graphs can become problematic, and multivariate analysis can become unworkable on some software.</li>
 <li>Images can be very large and need correct alignment. Combining them with line-graphs or other images can be troublesome.</li>
