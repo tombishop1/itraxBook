@@ -52,7 +52,7 @@ if (!require("itraxR", character.only = TRUE)) {
 if (!require("tidypaleo", character.only = TRUE)) {
   install.packages("remotes")
   remotes::install_github("paleolimbot/tidypaleo")
-  library(itraxR)
+  library(tidypaleo)
 }
 
 # now check dependencies
