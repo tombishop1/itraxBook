@@ -53,8 +53,8 @@ if (!require("itraxR", character.only = TRUE)) {
 # First specify the packages of interest
 # these are the dependencies for:
 # the document - kableExtra, DiagrammeR
-packages = c("janitor", "dplyr", "readr", "kableExtra", "DiagrammeR")
-#packages = c("kableExtra", "DiagrammeR")
+#packages = c("janitor", "dplyr", "readr", "kableExtra", "DiagrammeR")
+packages = c("kableExtra", "DiagrammeR")
 
 # Now load or install & load all those CRAN packages
 package.check <- lapply(
