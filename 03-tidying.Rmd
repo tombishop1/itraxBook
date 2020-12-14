@@ -9,3 +9,39 @@ In the functionality provided by `itraxR`, the need for data cleaning is much re
 
 The easiest way to do this is using a `tidyverse` style sequence of pipes that set the observations of faulty data as `NA`. 
 
+## Low Count Rates
+
+## Surface Slope Corrections
+
+There is a relationship between the slope of the surface of the core material and the intensity for most elements. Hence areas with a large slope may produce an increase or decrease in a particular element intensity regardless of any actual change in the abundance of an element. This can be corrected for where the effect can be quantified experimentally, but @Jarvis2015 report results of experiments where the slope varies from -0.3 to +0.3 causing variation of around 120 to 80% of the true value. As such, we might initially seek to exclude areas of the core with a high slope. By default, `itraxR::itrax_import()` doesn't import the `sample surface` variable, so the parameter `parameters = "all"` should be passed to access it. The computation is simple to perform using `dplyr::lag()`, and could be used as part of a conditional expression that would mark all measurements with a slope beyond a certain tolerance as having `validity == FALSE`. For example, the example below marks all values with a slope (in either direction) greater than 0.1 mm/200 μm (1:5) as being invalid. As shown for the core below, the core slope is well within the defined tolerances.
+
+```{r slope, warning=FALSE}
+CD166_19_S1$xrf %>%
+  mutate(slope = `sample surface` - dplyr::lag(`sample surface`)) %>%
+  mutate(new_validity = ifelse(slope <=-0.1 | slope >=0.1 | is.na(slope) == TRUE, FALSE, TRUE)) %>%
+  select(c(`sample surface`, slope, validity, new_validity)) %>%
+  
+  ggplot(aes(slope)) +
+  geom_histogram(bins = 20) +
+  xlim(-0.15, 0.15) +
+  geom_vline(xintercept = c(-0.1, 0.1))
+```
+
+## Tube current
+
+Although element peak areas are not exactly linearly related to tube current, they can be approximated to a linear relationship (see @Jarvis2015). The `Q-Spec` software can report either peak areas (n) or intensities (n/mA), and it is easy to tell which you are using: peak areas are always integers, but intensities are always fractions. It is easy to adjust from one to the other:
+
+```{r current correction}
+current <- as.numeric(CD166_19_S1$metadata[18, 2])
+head(CD166_19_S1$xrf %>%
+  mutate(intensity_Fe = round(Fe/current, 3)) %>%        # convert to intensity
+  mutate(peakarea_Fe  = round(intensity_Fe*current)) %>% # convert to peak area
+  select(Fe, intensity_Fe, peakarea_Fe))
+rm(current)
+```
+
+## Correcting for Water Content
+
+## Correcting Grain Size
+
+## High Signal-to-noise Ratios

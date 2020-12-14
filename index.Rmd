@@ -14,7 +14,7 @@ description: This book is a guide to importing, tidying, manipulating and analys
 # Preface {-}
 
 ## Introduction
-Itrax core scanners (manufactured by Cox Analytical Systems, Sweden) are used in palaeooceanography, palaeolimnological, geological and other "down-core" studies of sedimentary core material. The multi-sensory data can include radiography, optical images, magnetic susceptibility, but most importantly energy-dispersive x-ray florescence (ED-XRF) measurements of elemental abundance. The data can be harder to work with compared to some other palaeoenvironmental techniques because:
+Itrax core scanners (manufactured by Cox Analytical Systems, Sweden) are used in palaeoceanography, palaeolimnological, geological and other "down-core" studies of sedimentary core material. The multi-sensory data can include radiography, optical images, magnetic susceptibility, but most importantly energy-dispersive x-ray florescence (ED-XRF) measurements of elemental abundance. The data can be harder to work with compared to some other palaeoenvironmental techniques because:
 
 1. Very large quantities of data are produced. ED-XRF measurements can be made every 100-200 μm, so for long core sections, these datasets are large. Simple line-graphs can become problematic, and multivariate analysis can become unworkable on some software.
 2. Images can be very large and need correct alignment. Combining them with line-graphs or other images can be troublesome. 
@@ -49,12 +49,15 @@ if (!require("itraxR", character.only = TRUE)) {
   library(itraxR)
 }
 
+if (!require("tidypaleo", character.only = TRUE)) {
+  install.packages("remotes")
+  remotes::install_github("paleolimbot/tidypaleo")
+  library(itraxR)
+}
+
 # now check dependencies
 # First specify the packages of interest
-# these are the dependencies for:
-# the document - kableExtra, DiagrammeR
-#packages = c("janitor", "dplyr", "readr", "kableExtra", "DiagrammeR")
-packages = c("kableExtra", "DiagrammeR")
+packages = c("kableExtra", "DiagrammeR", "tidyr", "PeriodicTable")
 
 # Now load or install & load all those CRAN packages
 package.check <- lapply(

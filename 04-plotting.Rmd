@@ -1,11 +1,11 @@
 # Plotting
-There are a number of plotting options included in base `R` and some paleoenvironmental packages like `analouge`, but here we will use `ggplot2` and compatible packages. 
+There are a number of plotting options included in base `R` and some palaeoenvironmental packages like `analouge`, but here we will use `ggplot2` and compatible packages. We will also be using `tidypaleo`, a package made available from [Dewey Dunnington on Github]( https://github.com/paleolimbot/tidypaleo). 
 
 ## Plotting XRF Data
-For simple biplots, `ggplot2` provides the following solution.
+For simple biplots, `ggplot2` provides the following solution. This includes different colour coding to differentiate the core sections. 
 
-```
-ggplot(data = na.omit(df), mapping = aes(x = depth, y = Mo.coh/Mo.inc)) +
+```{r simpleplot}
+ggplot(data = na.omit(CD166_19_xrf), mapping = aes(x = depth, y = `Mo coh`/`Mo inc`)) +
   geom_line(aes(color = label)) + 
   coord_flip() +
   scale_x_reverse() +
@@ -14,23 +14,27 @@ ggplot(data = na.omit(df), mapping = aes(x = depth, y = Mo.coh/Mo.inc)) +
   theme(legend.position = "none")
 ```
 
-Where a traditional stratigraphic plot is desired, the `tidypaleo` package provides useful functionality for producting these. However, the data does need to converted to long-form from the existing table. In this way `tidypaleo::facet_geochem_gridh` works in a way similar to `ggplot::facet_wrap` but has been creates a stratigraphic plot.
+Where a traditional stratigraphic plot is desired, the `tidypaleo` package provides useful functionality for producting these. However, the data does need to converted to long-form from the existing table. In this way `tidypaleo::facet_geochem_gridh` works in a way similar to `ggplot::facet_wrap` but has been creates a stratigraphic plot. We can use the package `periodicTable` to quickly get a list of symbols used in the periodic table. 
 
-```
-library(tidypaleo)
-df %>% 
-  mutate(`coh/inc` = Mo.coh/Mo.inc) %>%
+```{r palaeoplot}
+
+data(periodicTable)
+elements <- periodicTable$symb
+rm(periodicTable)
+
+CD166_19_xrf %>% 
+  mutate(`coh/inc` = `Mo coh`/`Mo inc`) %>%
   select(Fe, Ti, `coh/inc`, Mn, depth, label) %>% 
-  pivot_longer(!c("depth", "label"), names_to = "elements", values_to = "peakarea") %>% 
-  drop_na() %>%
+  tidyr::pivot_longer(!c("depth", "label"), names_to = "elements", values_to = "peakarea") %>% 
+  tidyr::drop_na() %>%
   mutate(elements = factor(elements, levels = c("Fe", "Mn", "Ti", "coh/inc"))) %>%
 
   ggplot(aes(x = peakarea, y = depth)) +
-    geom_lineh(aes(color = label)) +
+    tidypaleo::geom_lineh(aes(color = label)) +
     scale_y_reverse() +
     facet_geochem_gridh(vars(elements)) +
     labs(x = "peak area", y = "Depth [mm]") +
-    theme_paleo() +
+    tidypaleo::theme_paleo() +
     theme(legend.position = "none")
 ```
 
@@ -88,42 +92,35 @@ rm(myImage, myRadio)
 It is often desirable to combine a sequence of cores. This is trivial for cores like `CD166_19` where there are no overlapping sections. However, note that the coring depth information is different from the `position` that these images are referenced to. The coring depth is not contained in any of the Itrax metadata, and should be recorded elsewhere, whereas `position` refers to the coordinates on the Itrax core holder. In the code below the depth information is extracted from the combined XRF data created in a previous chapter (for example using `max(CD166_19[which(CD166_19$label == "S2"),]$depth)` to get the maximum depth of the middle section. The radiographs can be added in the same fashion as the previous example.
 
 ```{r overplot_sequence}
-CD166_19_S1_optical <- itrax_image(file = "CD166_19_S1/CD166_19_S1/optical.tif", 
-                                   meta = "CD166_19_S1/CD166_19_S1/document.txt")
-CD166_19_S2_optical <- itrax_image(file = "CD166_19_S2/CD166_19_S2/optical.tif", 
-                                   meta = "CD166_19_S2/CD166_19_S2/document.txt")
-CD166_19_S3_optical <- itrax_image(file = "CD166_19_S3/CD166_19_S3/optical.tif", 
-                                   meta = "CD166_19_S3/CD166_19_S3/document.txt")
-
 ggplot() +
-  ylim(rev(range(CD166_19$depth))) +
-  scale_x_continuous(breaks = round(range(as.numeric(colnames(CD166_19_S1_optical$image))), 0),
-                     limits = range(as.numeric(colnames(CD166_19_S1_optical$image)))) +
+  ylim(rev(range(CD166_19_xrf$depth))) +
+  scale_x_continuous(breaks = round(range(as.numeric(colnames(CD166_19_S1$image$image))), 0),
+                     limits = range(as.numeric(colnames(CD166_19_S1$image$image)))) +
   coord_fixed(ratio = 1) +
   labs(y = "Depth [mm]", x = "[mm]") +
-  annotation_custom(rasterGrob(CD166_19_S1_optical$image,
+  annotation_custom(rasterGrob(CD166_19_S1$image$image,
                                width = unit(1, "npc"),
                                height = unit(1, "npc")),
-                    ymax = max(CD166_19[which(CD166_19$label == "S1"),]$depth)/-1,
-                    ymin = min(CD166_19[which(CD166_19$label == "S1"),]$depth)/-1,
-                    xmin = min(as.numeric(colnames(CD166_19_S1_optical$image))),
-                    xmax = max(as.numeric(colnames(CD166_19_S1_optical$image)))
+                    ymax = max(CD166_19_S1$xrf$depth)/-1,
+                    ymin = min(CD166_19_S1$xrf$depth)/-1,
+                    xmin = min(as.numeric(colnames(CD166_19_S1$image$image))),
+                    xmax = max(as.numeric(colnames(CD166_19_S1$image$image)))
   ) +
-  annotation_custom(rasterGrob(CD166_19_S2_optical$image,
+  annotation_custom(rasterGrob(CD166_19_S2$image$image,
                                width = unit(1, "npc"),
                                height = unit(1, "npc")),
-                    ymax = max(CD166_19[which(CD166_19$label == "S2"),]$depth)/-1,
-                    ymin = min(CD166_19[which(CD166_19$label == "S2"),]$depth)/-1,
-                    xmin = min(as.numeric(colnames(CD166_19_S2_optical$image))),
-                    xmax = max(as.numeric(colnames(CD166_19_S2_optical$image)))
+                    ymax = max(CD166_19_S2$xrf$depth)/-1,
+                    ymin = min(CD166_19_S2$xrf$depth)/-1,
+                    xmin = min(as.numeric(colnames(CD166_19_S2$image$image))),
+                    xmax = max(as.numeric(colnames(CD166_19_S2$image$image)))
   ) +
-  annotation_custom(rasterGrob(CD166_19_S3_optical$image,
+  annotation_custom(rasterGrob(CD166_19_S3$image$image,
                                width = unit(1, "npc"),
                                height = unit(1, "npc")),
-                    ymax = max(CD166_19[which(CD166_19$label == "S3"),]$depth)/-1,
-                    ymin = min(CD166_19[which(CD166_19$label == "S3"),]$depth)/-1,
-                    xmin = min(as.numeric(colnames(CD166_19_S3_optical$image))),
-                    xmax = max(as.numeric(colnames(CD166_19_S3_optical$image)))
+                    ymax = max(CD166_19_S3$xrf$depth)/-1,
+                    ymin = min(CD166_19_S3$xrf$depth)/-1,
+                    xmin = min(as.numeric(colnames(CD166_19_S3$image$image))),
+                    xmax = max(as.numeric(colnames(CD166_19_S3$image$image)))
   )
 ```
 
@@ -131,36 +128,34 @@ Where there are overlaps it is often desirable to plot the cores adjacent to one
 
 ```{r sideplot_sequence}
 ggplot() +
-  ylim(rev(range(CD166_19$depth))) +
-  xlim(0, max(as.numeric(colnames(CD166_19_S2_optical$image)))*2) +
+  ylim(rev(range(CD166_19_xrf$depth))) +
+  scale_x_continuous(breaks = round(c(0, max(as.numeric(colnames(CD166_19_S2$image$image)))*2)),
+                     limits = c(0, max(as.numeric(colnames(CD166_19_S2$image$image)))*2)) +
   coord_fixed(ratio = 1) +
-  labs(y = "Depth [mm]") +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank()) +
-  annotation_custom(rasterGrob(CD166_19_S1_optical$image,
+  labs(y = "Depth [mm]", x = "[mm]") +
+  annotation_custom(rasterGrob(CD166_19_S1$image$image,
                                width = unit(1, "npc"),
                                height = unit(1, "npc")),
-                    ymax = max(CD166_19[which(CD166_19$label == "S1"),]$depth)/-1,
-                    ymin = min(CD166_19[which(CD166_19$label == "S1"),]$depth)/-1,
-                    xmin = min(as.numeric(colnames(CD166_19_S1_optical$image))),
-                    xmax = max(as.numeric(colnames(CD166_19_S1_optical$image)))
+                    ymax = max(CD166_19_S1$xrf$depth)/-1,
+                    ymin = min(CD166_19_S1$xrf$depth)/-1,
+                    xmin = min(as.numeric(colnames(CD166_19_S1$image$image))),
+                    xmax = max(as.numeric(colnames(CD166_19_S1$image$image)))
   ) +
-  annotation_custom(rasterGrob(CD166_19_S2_optical$image,
+  annotation_custom(rasterGrob(CD166_19_S2$image$image,
                                width = unit(1, "npc"),
                                height = unit(1, "npc")),
-                    ymax = max(CD166_19[which(CD166_19$label == "S2"),]$depth)/-1,
-                    ymin = min(CD166_19[which(CD166_19$label == "S2"),]$depth)/-1,
-                    xmin = max(as.numeric(colnames(CD166_19_S2_optical$image))),
-                    xmax = max(as.numeric(colnames(CD166_19_S2_optical$image)))*2
+                    ymax = max(CD166_19_S2$xrf$depth)/-1,
+                    ymin = min(CD166_19_S2$xrf$depth)/-1,
+                    xmin = max(as.numeric(colnames(CD166_19_S2$image$image))),
+                    xmax = max(as.numeric(colnames(CD166_19_S2$image$image)))*2
   ) +
-  annotation_custom(rasterGrob(CD166_19_S3_optical$image,
+  annotation_custom(rasterGrob(CD166_19_S3$image$image,
                                width = unit(1, "npc"),
                                height = unit(1, "npc")),
-                    ymax = max(CD166_19[which(CD166_19$label == "S3"),]$depth)/-1,
-                    ymin = min(CD166_19[which(CD166_19$label == "S3"),]$depth)/-1,
-                    xmin = min(as.numeric(colnames(CD166_19_S3_optical$image))),
-                    xmax = max(as.numeric(colnames(CD166_19_S3_optical$image)))
+                    ymax = max(CD166_19_S3$xrf$depth)/-1,
+                    ymin = min(CD166_19_S3$xrf$depth)/-1,
+                    xmin = min(as.numeric(colnames(CD166_19_S3$image$image))),
+                    xmax = max(as.numeric(colnames(CD166_19_S3$image$image)))
   )
 ```
 
@@ -168,36 +163,34 @@ Note that omitting the line `coord_fixed(ratio = 1)` allows the aspect ratio of 
 
 ```{r sideplot_sequence_aspectratio, echo=FALSE}
 ggplot() +
-  ylim(rev(range(CD166_19$depth))) +
-  xlim(0, max(as.numeric(colnames(CD166_19_S2_optical$image)))*2) +
-#  coord_fixed(ratio = 1) +
-  labs(y = "Depth [mm]") +
-  theme(axis.title.x=element_blank(),
-        axis.text.x=element_blank(),
-        axis.ticks.x=element_blank()) +
-  annotation_custom(rasterGrob(CD166_19_S1_optical$image,
+  ylim(rev(range(CD166_19_xrf$depth))) +
+  scale_x_continuous(breaks = round(c(0, max(as.numeric(colnames(CD166_19_S2$image$image)))*2)),
+                     limits = c(0, max(as.numeric(colnames(CD166_19_S2$image$image)))*2)) +
+  #coord_fixed(ratio = 1) +
+  labs(y = "Depth [mm]", x = "[mm]") +
+  annotation_custom(rasterGrob(CD166_19_S1$image$image,
                                width = unit(1, "npc"),
                                height = unit(1, "npc")),
-                    ymax = max(CD166_19[which(CD166_19$label == "S1"),]$depth)/-1,
-                    ymin = min(CD166_19[which(CD166_19$label == "S1"),]$depth)/-1,
-                    xmin = min(as.numeric(colnames(CD166_19_S1_optical$image))),
-                    xmax = max(as.numeric(colnames(CD166_19_S1_optical$image)))
+                    ymax = max(CD166_19_S1$xrf$depth)/-1,
+                    ymin = min(CD166_19_S1$xrf$depth)/-1,
+                    xmin = min(as.numeric(colnames(CD166_19_S1$image$image))),
+                    xmax = max(as.numeric(colnames(CD166_19_S1$image$image)))
   ) +
-  annotation_custom(rasterGrob(CD166_19_S2_optical$image,
+  annotation_custom(rasterGrob(CD166_19_S2$image$image,
                                width = unit(1, "npc"),
                                height = unit(1, "npc")),
-                    ymax = max(CD166_19[which(CD166_19$label == "S2"),]$depth)/-1,
-                    ymin = min(CD166_19[which(CD166_19$label == "S2"),]$depth)/-1,
-                    xmin = max(as.numeric(colnames(CD166_19_S2_optical$image))),
-                    xmax = max(as.numeric(colnames(CD166_19_S2_optical$image)))*2
+                    ymax = max(CD166_19_S2$xrf$depth)/-1,
+                    ymin = min(CD166_19_S2$xrf$depth)/-1,
+                    xmin = max(as.numeric(colnames(CD166_19_S2$image$image))),
+                    xmax = max(as.numeric(colnames(CD166_19_S2$image$image)))*2
   ) +
-  annotation_custom(rasterGrob(CD166_19_S3_optical$image,
+  annotation_custom(rasterGrob(CD166_19_S3$image$image,
                                width = unit(1, "npc"),
                                height = unit(1, "npc")),
-                    ymax = max(CD166_19[which(CD166_19$label == "S3"),]$depth)/-1,
-                    ymin = min(CD166_19[which(CD166_19$label == "S3"),]$depth)/-1,
-                    xmin = min(as.numeric(colnames(CD166_19_S3_optical$image))),
-                    xmax = max(as.numeric(colnames(CD166_19_S3_optical$image)))
+                    ymax = max(CD166_19_S3$xrf$depth)/-1,
+                    ymin = min(CD166_19_S3$xrf$depth)/-1,
+                    xmin = min(as.numeric(colnames(CD166_19_S3$image$image))),
+                    xmax = max(as.numeric(colnames(CD166_19_S3$image$image)))
   )
 ```
 
