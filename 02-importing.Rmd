@@ -55,6 +55,7 @@ CD166_19_S3 <- itrax_import("CD166_19_S3/CD166_19_S3/Results.txt", depth_top = m
 #join them together
 CD166_19 <- itrax_join(list(S1 = CD166_19_S1, S2 = CD166_19_S2, S3 = CD166_19_S3))
 str(CD166_19)
+rm(CD166_19_S1, CD166_19_S2, CD166_19_S3)
 ```
 
 ### Raw Data
@@ -84,10 +85,6 @@ However, if there is a desire to manipulate the raw data from the radiographic i
 
 In addition, it should be noted that unlike the optical images that always begin from `position == 0`, the radiographic images have defined start and end points just like an XRF scan, the parameters of which can be accessed from the `$meta` object, or using `itraxR::itrax_meta()`.
 
-```{r tidyup}
-rm(list = ls())
-```
-
 ## Importing Everything
 
 Given the structured nature of individual core section scans, it might be helpful to import everything into a single data object (`list()`). This is particularly helpful when dealing with large numbers of core sections. However, some care should be taken here, as it is easy to end up holding large quantities of data in memory, particularly where images are included. The structure of this can be adapted to your needs, but could look something like the following example. **These are the data that will be used elsewhere in this guide**. 
@@ -100,7 +97,8 @@ CD166_19_S1 <- list(metadata   = itrax_meta("CD166_19_S1/CD166_19_S1/document.tx
                     image      = itrax_image(file = "CD166_19_S1/CD166_19_S1/optical.tif",
                                              meta = "CD166_19_S1/CD166_19_S1/document.txt"),
                     radiograph = itrax_radiograph(file = "CD166_19_S1/CD166_19_S1_RAD/radiograph0.tif",
-                                                  meta = "CD166_19_S1/CD166_19_S1_RAD/document.txt"))
+                                                  meta = "CD166_19_S1/CD166_19_S1_RAD/document.txt",
+                                                  trim = as.numeric(itrax_meta("CD166_19_S1/CD166_19_S1/document.txt")[6:7,2])))
 
 CD166_19_S2 <- list(metadata   = itrax_meta("CD166_19_S2/CD166_19_S2/document.txt"),
                     xrf        = itrax_import("CD166_19_S2/CD166_19_S2/Results.txt", 
@@ -109,7 +107,8 @@ CD166_19_S2 <- list(metadata   = itrax_meta("CD166_19_S2/CD166_19_S2/document.tx
                     image      = itrax_image(file = "CD166_19_S2/CD166_19_S2/optical.tif",
                                              meta = "CD166_19_S2/CD166_19_S2/document.txt"),
                     radiograph = itrax_radiograph(file = "CD166_19_S2/CD166_19_S2_RAD/radiograph.tif",
-                                                  meta = "CD166_19_S2/CD166_19_S2_RAD/document.txt"))
+                                                  meta = "CD166_19_S2/CD166_19_S2_RAD/document.txt",
+                                                  trim = as.numeric(itrax_meta("CD166_19_S2/CD166_19_S2/document.txt")[6:7,2])))
 
 CD166_19_S3 <- list(metadata   = itrax_meta("CD166_19_S3/CD166_19_S3/document.txt"),
                     xrf        = itrax_import("CD166_19_S3/CD166_19_S3/Results.txt", 
@@ -118,7 +117,8 @@ CD166_19_S3 <- list(metadata   = itrax_meta("CD166_19_S3/CD166_19_S3/document.tx
                     image      = itrax_image(file = "CD166_19_S3/CD166_19_S3/optical.tif",
                                              meta = "CD166_19_S3/CD166_19_S3/document.txt"),
                     radiograph = itrax_radiograph(file = "CD166_19_S3/CD166_19_S3_RAD/radiograph.tif",
-                                                  meta = "CD166_19_S3/CD166_19_S3_RAD/document.txt"))
+                                                  meta = "CD166_19_S3/CD166_19_S3_RAD/document.txt",
+                                                  trim = as.numeric(itrax_meta("CD166_19_S3/CD166_19_S3/document.txt")[6:7,2])))
 
 CD166_19_xrf <- itrax_join(list(S1 = CD166_19_S1$xrf, S2 = CD166_19_S2$xrf, S3 = CD166_19_S3$xrf))
 ```
