@@ -1,7 +1,7 @@
-introduction
 the-itraxr-package
 prerequisites
 example-data
+utility-data
 intro
 metadata
 xrf-data
@@ -19,8 +19,10 @@ radiographic-images-1
 importing-everything
 tidying-data
 low-count-rates
-surface-slope-corrections
+surface-slope
+combining-validity-flags
 tube-current
+dead-time
 correcting-for-water-content
 correcting-grain-size
 high-signal-to-noise-ratios
@@ -31,7 +33,6 @@ combining-images-with-xrf-data
 transforming-data
 ratios-and-normalisation
 preparing-data-for-multivariate-data-analysis
-data-reduction
 multivariate-methods
 correlation-coefficients
 unconstrained-cluster-analysis
