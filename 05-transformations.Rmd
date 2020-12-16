@@ -4,10 +4,13 @@ The XRF data typically reported from the Itrax core scanner come from the spectr
 ## Ratios and Normalisation
 These data are compositional, and represent the changes in the relative proportions of all components of the matrix, measured and un-measured. As such it is likely the data will need transforming for certain types of multivariate analysis. As previously mentioned, these data are dimensionless, and as such do not represent a quantity, but are directly related to the absolute amount of a particular element in the matrix. It is often the case that ratios of elements are used to represent changes in composition --- this is sometimes referred to as normalisation, or normalising one element against another. 
 
-It is trivial to calculate element ratios, to the extent that these can often simply be calculated where they are required rather than saving them to memory. For example, if a plot of the Compton divided by the Rayleigh scatter was desired, there is no need to save the computed value to a new variable (e.g. `coh_inc <- df$Mo.coh/df$Mo.inc`) --- simply define the calculation during plotting.
+It is trivial to calculate element ratios, to the extent that these can often simply be calculated where they are required rather than saving them to memory. For example, if a plot of the Compton divided by the Rayleigh scatter was desired, there is no need to save the computed value to a new variable (e.g. `coh_inc <- df$Mo.coh/df$Mo.inc`) --- simply define the calculation during plotting. To calculate ratios for all elements at once, use `mutate(across(any_ofelementsList))`, where `elementsList` is a list of chemical elements extracted from `data(PeriodicTable)`.
 
 ```{r divide_by_inc}
-
+kable(head(
+CD166_19_xrf %>%
+  mutate(across(any_of(elementsList)) /`Mo inc`)
+))
 ```
 
 ## Preparing Data for Multivariate Data Analysis

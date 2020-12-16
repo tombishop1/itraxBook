@@ -13,7 +13,6 @@ description: This book is a guide to importing, tidying, manipulating and analys
 
 # Preface {-}
 
-## Introduction
 Itrax core scanners (manufactured by Cox Analytical Systems, Sweden) are used in palaeoceanography, palaeolimnological, geological and other "down-core" studies of sedimentary core material. The multi-sensory data can include radiography, optical images, magnetic susceptibility, but most importantly energy-dispersive x-ray florescence (ED-XRF) measurements of elemental abundance. The data can be harder to work with compared to some other palaeoenvironmental techniques because:
 
 1. Very large quantities of data are produced. ED-XRF measurements can be made every 100-200 μm, so for long core sections, these datasets are large. Simple line-graphs can become problematic, and multivariate analysis can become unworkable on some software.
@@ -57,7 +56,7 @@ if (!require("tidypaleo", character.only = TRUE)) {
 
 # now check dependencies
 # First specify the packages of interest
-packages = c("kableExtra", "DiagrammeR", "tidyr", "PeriodicTable", "egg")
+packages = c("kableExtra", "DiagrammeR", "tidyverse", "PeriodicTable", "egg")
 
 # Now load or install & load all those CRAN packages
 package.check <- lapply(
@@ -71,4 +70,14 @@ package.check <- lapply(
 )
 rm(package.check, packages)
 
+```
+
+## Utility Data
+
+It is often useful to have a list of symbols used to represent elements for various subsetting functions. This can be extracted from the example data included with the package `periodicTable` as follows. The `vector` called `elementslist` will be referred to elsewhere in this book. 
+
+```{r tableofelements}
+data(periodicTable)
+elementsList <- periodicTable$symb
+rm(periodicTable)
 ```

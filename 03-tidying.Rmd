@@ -11,20 +11,71 @@ The easiest way to do this is using a `tidyverse` style sequence of pipes that s
 
 ## Low Count Rates
 
-## Surface Slope Corrections
+The count rate ("cps", or counts-per-second) is the rate of energy event detection at the detector, and is a function of both the excitation beam condition (tube type, voltage and current) and the matrix. Because the tube type and voltage are often chosen based on other considerations, the operator usually only adjusts the tube current to optimise the count rate. The higher the total counts for each measurement, the better the measurement will be in terms of detection limits and uncertainties. Higher count rates allow for shorter dwell times, but this must be balanced against the need to minimise harmonics in the spectra. Harmonics can occur where the photon flux is so high that the detector cannot differentiate between two photons, and so registers the sum energy instead. For example, a particularly common phenomenon is the detection of two Fe Kα photons (energy 6.4 keV) as a single photon with the energy 12.8 keV. The graph below shows that for these cores there is the expected positive correlation between the count rate and the Fe Kα * 2 sum peak. To some extent the Q-Spec software will accommodate these harmonics, but operators commonly aim for a count rate of between 30-50 kcps. 
+
+```{r cps, warning=FALSE}
+ggplot(data = CD166_19_xrf, mapping = aes(x = cps, y = `Fe a*2`)) + 
+  geom_point() 
+```
+
+Deletion criteria can be on the basis of count rates (excluding very low and high values), selected harmonics (e.g. Fe a*2), or both. An example is shown below. 
+
+```{r cps_deletion}
+CD166_19_xrf %>%
+  mutate(in_tolerance = ifelse(cps <=30000 | cps >=60000 | is.na(cps) == TRUE, FALSE, TRUE)) %>%
+  
+  ggplot(mapping = aes(x = depth, y = cps)) + 
+  geom_jitter(aes(col = in_tolerance)) +
+  scale_x_reverse() +
+  geom_hline(yintercept = c(30000, 60000))
+  
+```
+
+## Surface Slope
 
 There is a relationship between the slope of the surface of the core material and the intensity for most elements. Hence areas with a large slope may produce an increase or decrease in a particular element intensity regardless of any actual change in the abundance of an element. This can be corrected for where the effect can be quantified experimentally, but @Jarvis2015 report results of experiments where the slope varies from -0.3 to +0.3 causing variation of around 120 to 80% of the true value. As such, we might initially seek to exclude areas of the core with a high slope. By default, `itraxR::itrax_import()` doesn't import the `sample surface` variable, so the parameter `parameters = "all"` should be passed to access it. The computation is simple to perform using `dplyr::lag()`, and could be used as part of a conditional expression that would mark all measurements with a slope beyond a certain tolerance as having `validity == FALSE`. For example, the example below marks all values with a slope (in either direction) greater than 0.1 mm/200 μm (1:5) as being invalid. As shown for the core below, the core slope is well within the defined tolerances.
 
 ```{r slope, warning=FALSE}
-CD166_19_S1$xrf %>%
+CD166_19_xrf %>%
   mutate(slope = `sample surface` - dplyr::lag(`sample surface`)) %>%
-  mutate(new_validity = ifelse(slope <=-0.1 | slope >=0.1 | is.na(slope) == TRUE, FALSE, TRUE)) %>%
-  select(c(`sample surface`, slope, validity, new_validity)) %>%
+  mutate(in_tolerance = ifelse(slope <=-0.1 | slope >=0.1 | is.na(slope) == TRUE, FALSE, TRUE)) %>%
   
-  ggplot(aes(slope)) +
-  geom_histogram(bins = 20) +
-  xlim(-0.15, 0.15) +
-  geom_vline(xintercept = c(-0.1, 0.1))
+  ggplot(mapping = aes(x = depth, y = slope)) +
+  scale_y_continuous(limits = c(-0.15, 0.15), oob = scales::squish) +
+  geom_point(aes(col = in_tolerance)) +
+  geom_hline(yintercept = c(-0.1, 0.1)) +
+  scale_x_reverse()
+```
+
+## Combining "Validity" Flags
+
+It is often desirable to combine all deletion criteria into a single binary variable. This means combining multiple binary variables, returning `FALSE` if any of the values are `FALSE`, but only returning `TRUE` if all of the values are `TRUE`. 
+
+```{r combined_validity_checks}
+CD166_19_xrf %>%
+  mutate(slope = `sample surface` - dplyr::lag(`sample surface`)) %>%
+  mutate(in_slope_tolerance = ifelse(slope <=-0.1 | slope >=0.1 | is.na(slope) == TRUE, FALSE, TRUE)) %>%
+  select(-slope) %>%
+  mutate(in_cps_tolerance = ifelse(cps <=30000 | cps >=60000 | is.na(cps) == TRUE, FALSE, TRUE)) %>%
+  rowwise() %>%
+  mutate(validity = !any(c(validity, in_slope_tolerance, in_cps_tolerance) == FALSE)) %>%
+  select(-c(in_slope_tolerance, in_cps_tolerance)) %>%
+  head()
+```
+
+Bear in mind that this doesn't remove observations considered defective, only marks them has `validity == FALSE`. If they are to be excluded from subsequent analysis, they should be removed using `filter(validity == TRUE)`.
+
+```{r slice_invalid}
+CD166_19_xrf %>%
+  mutate(slope = `sample surface` - dplyr::lag(`sample surface`)) %>%
+  mutate(in_slope_tolerance = ifelse(slope <=-0.1 | slope >=0.1 | is.na(slope) == TRUE, FALSE, TRUE)) %>%
+  select(-slope) %>%
+  mutate(in_cps_tolerance = ifelse(cps <=30000 | cps >=60000 | is.na(cps) == TRUE, FALSE, TRUE)) %>%
+  rowwise() %>%
+  mutate(validity = !any(c(validity, in_slope_tolerance, in_cps_tolerance) == FALSE)) %>%
+  select(-c(in_slope_tolerance, in_cps_tolerance)) %>%
+  filter(validity == TRUE) %>%
+  head()
 ```
 
 ## Tube current
@@ -33,15 +84,42 @@ Although element peak areas are not exactly linearly related to tube current, th
 
 ```{r current correction}
 current <- as.numeric(CD166_19_S1$metadata[18, 2])
-head(CD166_19_S1$xrf %>%
+  CD166_19_S1$xrf %>%
   mutate(intensity_Fe = round(Fe/current, 3)) %>%        # convert to intensity
   mutate(peakarea_Fe  = round(intensity_Fe*current)) %>% # convert to peak area
-  select(Fe, intensity_Fe, peakarea_Fe))
+  select(Fe, intensity_Fe, peakarea_Fe) %>%
+  head()
 rm(current)
+```
+
+## Dead Time
+
+In silicone drift ED-XRF detectors the electronics are only so fast. This limits the flux of photons into the detector that can be measured. When the count rate is high, the detector will not be making observations whilst the electronics "catch-up"; this is the dead-time, and here it is expressed as a fraction of the overall dwell time. When the system is optimised variations in dead-time are usually small enough to be ignored, but where the matrix or configuration leads to large variations in dead-time they should be corrected for. 
+
+```{r deadtime, warning=FALSE}
+ggplot(data = CD166_19_xrf, aes(x = depth, y = Dt)) +
+  scale_x_reverse() + 
+  scale_y_continuous(sec.axis = sec_axis( trans=~(.+(1-mean(CD166_19_xrf$Dt, na.rm = TRUE))), name="Correction Factor")) +
+  geom_line() +
+  geom_hline(yintercept = mean(CD166_19_xrf$Dt, na.rm = TRUE), linetype = "dotted")
+```
+
+```{r dt_correction}
+CD166_19_xrf %>%
+  mutate(newDt = Dt+(1-mean(CD166_19_xrf$Dt, na.rm = TRUE))) %>% 
+  mutate(across(any_of(elementsList)) * newDt) %>%
+  select(-newDt) %>%
+  head()
 ```
 
 ## Correcting for Water Content
 
+Water content can be corrected for as a simple dilution effect, for example, if a sample contains 50% water by weight, the peak intensity can be doubled. The water content must be determined using some other lab method (e.g. loss-on-ignition), and it is likely that this can only be performed on samples larger than the original scan interval (e.g. 10 mm subsamples). A conservative approach is to use the `itrax_averaging()` function to re-sample the XRF data to the resolution of the water content data, or the reverse (upsampling the water content data) might be applied with caution. For some scans the Mo inc./Mo coh. varies with water content and can be used as a proxy to correct for water content. 
+
 ## Correcting Grain Size
 
+Grain size variations are known the affect the detection of some elements. Grain size determinations made using analytical equipment (e.g. a laser granulometer) can be used to correct for grain size. 
+
 ## High Signal-to-noise Ratios
+
+The inclusion of an element in an XRF dataset does not necessarily mean that the element is well-detected, and some elements will be so poorly detected that those data can be removed.

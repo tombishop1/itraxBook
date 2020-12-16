@@ -29,7 +29,7 @@ head(CD166_19_S1)
 
 ```{r proc_data_table, echo=FALSE, message=FALSE, warning=FALSE, results='asis'}
 CD166_19_S1 <- itrax_import("CD166_19_S1/CD166_19_S1/Results.txt", depth = 0)
-kable(head(CD166_19_S1)) %>% scroll_box(width = "100%")
+glimpse(CD166_19_S1) #%>% scroll_box(width = "100%")
 ```
 
 ### Joining XRF Data
@@ -54,7 +54,7 @@ CD166_19_S2 <- itrax_import("CD166_19_S2/CD166_19_S2/Results.txt", depth_top = m
 CD166_19_S3 <- itrax_import("CD166_19_S3/CD166_19_S3/Results.txt", depth_top = max(CD166_19_S2$depth))
 #join them together
 CD166_19 <- itrax_join(list(S1 = CD166_19_S1, S2 = CD166_19_S2, S3 = CD166_19_S3))
-str(CD166_19)
+dim(CD166_19)
 rm(CD166_19_S1, CD166_19_S2, CD166_19_S3)
 ```
 
@@ -67,7 +67,7 @@ Sometimes it is useful to work with raw data rather than the calculated intensit
 In order to make the images usable for plotting alongside other data, they need to be cropped to the scanned area and referenced to the `position` or a `depth` variable. The initial crop can be supressed using `trim = FALSE` if the whole image is desired. Images in `R` are read in as a matrix with 3 dimensions (length, width, and the three colours). The data can be imported using `itraxR::itrax_image()`. This function can produce a basic diagram (shown in subsequent section), but here we focus on the structure of the imported object. `$image` is a three dimensional array, the first two dimensions are the length of the core and the width, respectively. Those two dimensions have `"dimnames"` (`rownames()` and `colnames()` respectively). For the `rownames()`, this is an interpolated position, in mm, and for the `colnames()` this is the width in mm, and always begins at 0. The last dimension always has a length of three, and comprises of the red, green and blue values for each of the pixels. `$meta` is a table containing selected data from the scan metadata relevant to the image. 
 
 ```{r image_import_0}
-str(itrax_image(file = "CD166_19_S1/CD166_19_S1/optical.tif",
+glimpse(itrax_image(file = "CD166_19_S1/CD166_19_S1/optical.tif",
                 meta = "CD166_19_S1/CD166_19_S1/document.txt",
                 trim = FALSE))
 ```
@@ -77,7 +77,7 @@ str(itrax_image(file = "CD166_19_S1/CD166_19_S1/optical.tif",
 The function `itraxR::itrax_radio()` imports the processed radiographic images (`*.tif`) in a very similar way to that for the optical images, the main difference being the matrix only has two dimensions (length and width) as the image is greyscale. 
 
 ```{r radio_import_0}
-str(itrax_radiograph(file = "CD166_19_S1/CD166_19_S1_RAD/radiograph0.tif",
+glimpse(itrax_radiograph(file = "CD166_19_S1/CD166_19_S1_RAD/radiograph0.tif",
                      meta = "CD166_19_S1/CD166_19_S1_RAD/document.txt"))
 ```
 
