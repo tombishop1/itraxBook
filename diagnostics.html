@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>8.1  | Using Itrax Data in R</title>
+  <title>8.1 Diagnostics | Using Itrax Data in R</title>
   <meta name="description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="8.1  | Using Itrax Data in R" />
+  <meta property="og:title" content="8.1 Diagnostics | Using Itrax Data in R" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="8.1  | Using Itrax Data in R" />
+  <meta name="twitter:title" content="8.1 Diagnostics | Using Itrax Data in R" />
   
   <meta name="twitter:description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
   
@@ -189,7 +189,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.3" data-path="log-ratio-methods.html"><a href="log-ratio-methods.html"><i class="fa fa-check"></i><b>7.3</b> Log-Ratio Methods</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="exporting-data.html"><a href="exporting-data.html"><i class="fa fa-check"></i><b>8</b> Exporting Data</a><ul>
-<li class="chapter" data-level="8.1" data-path="section.html"><a href="section.html"><i class="fa fa-check"></i><b>8.1</b> </a></li>
+<li class="chapter" data-level="8.1" data-path="diagnostics.html"><a href="diagnostics.html"><i class="fa fa-check"></i><b>8.1</b> Diagnostics</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -212,9 +212,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="section" class="section level2">
-<h2><span class="header-section-number">8.1</span> </h2>
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="section.html#cb49-1"></a>version</span></code></pre></div>
+<div id="diagnostics" class="section level2">
+<h2><span class="header-section-number">8.1</span> Diagnostics</h2>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="diagnostics.html#cb49-1"></a>version</span></code></pre></div>
 <pre><code>##                _                           
 ## platform       x86_64-apple-darwin17.0     
 ## arch           x86_64                      
@@ -230,6 +230,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## language       R                           
 ## version.string R version 4.0.3 (2020-10-10)
 ## nickname       Bunny-Wunnies Freak Out</code></pre>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="diagnostics.html#cb51-1"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>), <span class="dt">y =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>)</span></code></pre></div>
+<pre><code>## [90m# A tibble: 3 x 2[39m
+##   x         y
+##   [3m[90m&lt;chr&gt;[39m[23m [3m[90m&lt;int&gt;[39m[23m
+## [90m1[39m a         1
+## [90m2[39m b         2
+## [90m3[39m c         3</code></pre>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="diagnostics.html#cb53-1"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>), <span class="dt">y =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(x)</span></code></pre></div>
+<pre><code>## [90m# A tibble: 3 x 2[39m
+## [90m# Groups:   x [3][39m
+##   x         y
+##   [3m[90m&lt;chr&gt;[39m[23m [3m[90m&lt;int&gt;[39m[23m
+## [90m1[39m a         1
+## [90m2[39m b         2
+## [90m3[39m c         3</code></pre>
 
 </div>
 <!-- </div> -->
