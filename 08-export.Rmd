@@ -9,17 +9,3 @@ head(data.frame(depthmin = itrax_averaging(CD166_19_xrf, 10)$depthmin,
                 Ti_mean  = itrax_averaging(CD166_19_xrf, 10)$Ti,
                 Ti_sd    = itrax_averaging(CD166_19_xrf, 10, fun = sd)$Ti))
 ```
-
-
-## Diagnostics 
-#```{r version}
-#version
-#```
-
-#```{r test_tibble}
-#tibble(x = c("a", "b", "c"), y = 1:3)
-#```
-
-#```{r test_tibble2}
-#tibble(x = c("a", "b", "c"), y = 1:3) %>% group_by(x)
-#```
