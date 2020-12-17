@@ -60,7 +60,8 @@ CD166_19_xrf %>%
   rowwise() %>%
   mutate(validity = !any(c(validity, in_slope_tolerance, in_cps_tolerance) == FALSE)) %>%
   select(-c(in_slope_tolerance, in_cps_tolerance)) %>%
-  head()
+  head() %>%
+  kable()
 ```
 
 Bear in mind that this doesn't remove observations considered defective, only marks them has `validity == FALSE`. If they are to be excluded from subsequent analysis, they should be removed using `filter(validity == TRUE)`.
