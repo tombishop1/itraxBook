@@ -1,7 +1,7 @@
 bookdown::gitbook:
   css: style.css
   split_by: section
-  #df_print: kable
+  df_print: kable
   config:
     toc:
       before: |
