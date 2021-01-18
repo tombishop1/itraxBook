@@ -40,6 +40,7 @@ constrained-cluster-analaysis
 principle-components-analysis
 calibrating-data
 suitable-methods
+preparing-data
 linear-methods
 log-ratio-methods
 exporting-data

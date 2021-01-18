@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-01-12" />
+<meta name="date" content="2021-01-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -185,8 +185,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="7" data-path="calibrating-data.html"><a href="calibrating-data.html"><i class="fa fa-check"></i><b>7</b> Calibrating Data</a><ul>
 <li class="chapter" data-level="7.1" data-path="suitable-methods.html"><a href="suitable-methods.html"><i class="fa fa-check"></i><b>7.1</b> Suitable Methods</a></li>
-<li class="chapter" data-level="7.2" data-path="linear-methods.html"><a href="linear-methods.html"><i class="fa fa-check"></i><b>7.2</b> Linear Methods</a></li>
-<li class="chapter" data-level="7.3" data-path="log-ratio-methods.html"><a href="log-ratio-methods.html"><i class="fa fa-check"></i><b>7.3</b> Log-Ratio Methods</a></li>
+<li class="chapter" data-level="7.2" data-path="preparing-data.html"><a href="preparing-data.html"><i class="fa fa-check"></i><b>7.2</b> Preparing Data</a></li>
+<li class="chapter" data-level="7.3" data-path="linear-methods.html"><a href="linear-methods.html"><i class="fa fa-check"></i><b>7.3</b> Linear Methods</a></li>
+<li class="chapter" data-level="7.4" data-path="log-ratio-methods.html"><a href="log-ratio-methods.html"><i class="fa fa-check"></i><b>7.4</b> Log-Ratio Methods</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="exporting-data.html"><a href="exporting-data.html"><i class="fa fa-check"></i><b>8</b> Exporting Data</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
@@ -212,19 +213,1208 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="exporting-data" class="section level1">
 <h1><span class="header-section-number">Chapter 8</span> Exporting Data</h1>
-<p>Data is easy to export from <code>R</code>. Tables can be exported by piping to <code>readr::write_csv()</code>. For diagrams created in <code>ggplot2</code>, pipe to <code>ggsave()</code>. Sometimes it is necessary to reduce the resolution of Itrax XRF data, usually to facilitate direct comparison with some other lower resolution data. For example, if calibrating using ICP-MS sub-samples taken at 10 mm intervals, but the Itrax XRF scan is at 0.2 mm, it will be necessary to average 50 Itrax measurements for each ICP-MS measurement. This is facilitated using the <code>itrax_averaging()</code> function. Despite the name, the function can use any appropriate summary function (e.g. standard deviation <code>sd()</code> or median <code>median()</code>.)</p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="exporting-data.html#cb46-1"></a><span class="co"># get the Ti mean and standard deviation in 10 mm intervals</span></span>
-<span id="cb46-2"><a href="exporting-data.html#cb46-2"></a><span class="kw">head</span>(<span class="kw">data.frame</span>(<span class="dt">depthmin =</span> <span class="kw">itrax_averaging</span>(CD166_<span class="dv">19</span>_xrf, <span class="dv">10</span>)<span class="op">$</span>depthmin,</span>
-<span id="cb46-3"><a href="exporting-data.html#cb46-3"></a>                <span class="dt">depthmax =</span> <span class="kw">itrax_averaging</span>(CD166_<span class="dv">19</span>_xrf, <span class="dv">10</span>)<span class="op">$</span>depthmax,</span>
-<span id="cb46-4"><a href="exporting-data.html#cb46-4"></a>                <span class="dt">Ti_mean  =</span> <span class="kw">itrax_averaging</span>(CD166_<span class="dv">19</span>_xrf, <span class="dv">10</span>)<span class="op">$</span>Ti,</span>
-<span id="cb46-5"><a href="exporting-data.html#cb46-5"></a>                <span class="dt">Ti_sd    =</span> <span class="kw">itrax_averaging</span>(CD166_<span class="dv">19</span>_xrf, <span class="dv">10</span>, <span class="dt">fun =</span> sd)<span class="op">$</span>Ti))</span></code></pre></div>
-<pre><code>##   depthmin depthmax Ti_mean     Ti_sd
-## 1        1       10  2101.3 331.36789
-## 2       11       20  2460.8 306.68833
-## 3       21       30  2222.5  50.31733
-## 4       31       40  2264.9 118.89253
-## 5       41       50  2311.8 163.99377
-## 6       51       60  2401.3  90.61770</code></pre>
+<p>Data is easy to export from <code>R</code>. Tables can be exported by piping to <code>readr::write_csv()</code>. For diagrams created in <code>ggplot2</code>, pipe to <code>ggsave()</code>. Sometimes it is necessary to reduce the resolution of Itrax XRF data, usually to facilitate direct comparison with some other lower resolution data. For example, if calibrating using ICP-MS sub-samples taken at 10 mm intervals, but the Itrax XRF scan is at 0.2 mm, it will be necessary to average 50 Itrax measurements for each ICP-MS measurement. This is facilitated using the <code>itrax_reduce()</code> function. The example below demonstrates calculating the averages for contiguous 20 mm chunks of the XRF data.</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="exporting-data.html#cb52-1"></a><span class="co"># get the data as 20 mm intervals</span></span>
+<span id="cb52-2"><a href="exporting-data.html#cb52-2"></a><span class="kw">itrax_reduce</span>(CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">drop_na</span>(), <span class="dt">by =</span> <span class="dv">20</span>) <span class="op">%&gt;%</span></span>
+<span id="cb52-3"><a href="exporting-data.html#cb52-3"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>label) <span class="op">%&gt;%</span></span>
+<span id="cb52-4"><a href="exporting-data.html#cb52-4"></a><span class="st">  </span><span class="kw">head</span>() <span class="op">%&gt;%</span></span>
+<span id="cb52-5"><a href="exporting-data.html#cb52-5"></a><span class="st">  </span><span class="kw">kable</span>()</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align:right;">
+resample_names
+</th>
+<th style="text-align:right;">
+depth
+</th>
+<th style="text-align:right;">
+MSE
+</th>
+<th style="text-align:right;">
+cps
+</th>
+<th style="text-align:right;">
+validity
+</th>
+<th style="text-align:right;">
+Al
+</th>
+<th style="text-align:right;">
+Si
+</th>
+<th style="text-align:right;">
+P
+</th>
+<th style="text-align:right;">
+S
+</th>
+<th style="text-align:right;">
+Cl
+</th>
+<th style="text-align:right;">
+Ar
+</th>
+<th style="text-align:right;">
+K
+</th>
+<th style="text-align:right;">
+Ca
+</th>
+<th style="text-align:right;">
+Sc
+</th>
+<th style="text-align:right;">
+Ti
+</th>
+<th style="text-align:right;">
+V
+</th>
+<th style="text-align:right;">
+Cr
+</th>
+<th style="text-align:right;">
+Mn
+</th>
+<th style="text-align:right;">
+Fe
+</th>
+<th style="text-align:right;">
+Ni
+</th>
+<th style="text-align:right;">
+Cu
+</th>
+<th style="text-align:right;">
+Zn
+</th>
+<th style="text-align:right;">
+Ga
+</th>
+<th style="text-align:right;">
+Ge
+</th>
+<th style="text-align:right;">
+Br
+</th>
+<th style="text-align:right;">
+Rb
+</th>
+<th style="text-align:right;">
+Sr
+</th>
+<th style="text-align:right;">
+Y
+</th>
+<th style="text-align:right;">
+Zr
+</th>
+<th style="text-align:right;">
+Pd
+</th>
+<th style="text-align:right;">
+Cd
+</th>
+<th style="text-align:right;">
+I
+</th>
+<th style="text-align:right;">
+Cs
+</th>
+<th style="text-align:right;">
+Ba
+</th>
+<th style="text-align:right;">
+Nd
+</th>
+<th style="text-align:right;">
+Sm
+</th>
+<th style="text-align:right;">
+Yb
+</th>
+<th style="text-align:right;">
+Ta
+</th>
+<th style="text-align:right;">
+W
+</th>
+<th style="text-align:right;">
+Pb
+</th>
+<th style="text-align:right;">
+Bi
+</th>
+<th style="text-align:right;">
+Mo inc
+</th>
+<th style="text-align:right;">
+Mo coh
+</th>
+<th style="text-align:right;">
+filename
+</th>
+<th style="text-align:right;">
+position
+</th>
+<th style="text-align:right;">
+sample surface
+</th>
+<th style="text-align:right;">
+E-gain
+</th>
+<th style="text-align:right;">
+E-offset
+</th>
+<th style="text-align:right;">
+F-slope
+</th>
+<th style="text-align:right;">
+F-offset
+</th>
+<th style="text-align:right;">
+Fe a*2
+</th>
+<th style="text-align:right;">
+Fe a+b
+</th>
+<th style="text-align:right;">
+S1
+</th>
+<th style="text-align:right;">
+S2
+</th>
+<th style="text-align:right;">
+S3
+</th>
+<th style="text-align:right;">
+Dt
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+10.5
+</td>
+<td style="text-align:right;">
+1.5170
+</td>
+<td style="text-align:right;">
+40656.25
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+63.90
+</td>
+<td style="text-align:right;">
+342.00
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+25.50
+</td>
+<td style="text-align:right;">
+1412.30
+</td>
+<td style="text-align:right;">
+574.4
+</td>
+<td style="text-align:right;">
+2669.80
+</td>
+<td style="text-align:right;">
+157293.6
+</td>
+<td style="text-align:right;">
+14.65
+</td>
+<td style="text-align:right;">
+2281.05
+</td>
+<td style="text-align:right;">
+55.95
+</td>
+<td style="text-align:right;">
+352.80
+</td>
+<td style="text-align:right;">
+622.20
+</td>
+<td style="text-align:right;">
+40855.25
+</td>
+<td style="text-align:right;">
+122.00
+</td>
+<td style="text-align:right;">
+197.40
+</td>
+<td style="text-align:right;">
+199.00
+</td>
+<td style="text-align:right;">
+22.55
+</td>
+<td style="text-align:right;">
+66.25
+</td>
+<td style="text-align:right;">
+551.55
+</td>
+<td style="text-align:right;">
+222.60
+</td>
+<td style="text-align:right;">
+9805.35
+</td>
+<td style="text-align:right;">
+122.50
+</td>
+<td style="text-align:right;">
+347.05
+</td>
+<td style="text-align:right;">
+56.70
+</td>
+<td style="text-align:right;">
+59.15
+</td>
+<td style="text-align:right;">
+58.05
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+67.85
+</td>
+<td style="text-align:right;">
+53.5
+</td>
+<td style="text-align:right;">
+33.85
+</td>
+<td style="text-align:right;">
+210.65
+</td>
+<td style="text-align:right;">
+780.35
+</td>
+<td style="text-align:right;">
+2139.50
+</td>
+<td style="text-align:right;">
+58.50
+</td>
+<td style="text-align:right;">
+159.95
+</td>
+<td style="text-align:right;">
+26958.05
+</td>
+<td style="text-align:right;">
+9495.95
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+42.04
+</td>
+<td style="text-align:right;">
+6.5155
+</td>
+<td style="text-align:right;">
+0.010267
+</td>
+<td style="text-align:right;">
+-0.009931
+</td>
+<td style="text-align:right;">
+0.0099
+</td>
+<td style="text-align:right;">
+0.077115
+</td>
+<td style="text-align:right;">
+128.00
+</td>
+<td style="text-align:right;">
+162.10
+</td>
+<td style="text-align:right;">
+337.25
+</td>
+<td style="text-align:right;">
+231.80
+</td>
+<td style="text-align:right;">
+310.00
+</td>
+<td style="text-align:right;">
+0.10465
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+30.5
+</td>
+<td style="text-align:right;">
+1.6570
+</td>
+<td style="text-align:right;">
+44606.35
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+63.35
+</td>
+<td style="text-align:right;">
+271.95
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+20.75
+</td>
+<td style="text-align:right;">
+1307.25
+</td>
+<td style="text-align:right;">
+626.9
+</td>
+<td style="text-align:right;">
+2105.50
+</td>
+<td style="text-align:right;">
+209736.1
+</td>
+<td style="text-align:right;">
+8.00
+</td>
+<td style="text-align:right;">
+2243.70
+</td>
+<td style="text-align:right;">
+30.90
+</td>
+<td style="text-align:right;">
+340.45
+</td>
+<td style="text-align:right;">
+460.40
+</td>
+<td style="text-align:right;">
+38272.60
+</td>
+<td style="text-align:right;">
+90.40
+</td>
+<td style="text-align:right;">
+166.30
+</td>
+<td style="text-align:right;">
+160.00
+</td>
+<td style="text-align:right;">
+16.55
+</td>
+<td style="text-align:right;">
+91.10
+</td>
+<td style="text-align:right;">
+482.65
+</td>
+<td style="text-align:right;">
+121.05
+</td>
+<td style="text-align:right;">
+11166.85
+</td>
+<td style="text-align:right;">
+108.25
+</td>
+<td style="text-align:right;">
+223.90
+</td>
+<td style="text-align:right;">
+52.45
+</td>
+<td style="text-align:right;">
+90.55
+</td>
+<td style="text-align:right;">
+71.50
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+13.05
+</td>
+<td style="text-align:right;">
+37.0
+</td>
+<td style="text-align:right;">
+13.05
+</td>
+<td style="text-align:right;">
+303.25
+</td>
+<td style="text-align:right;">
+747.65
+</td>
+<td style="text-align:right;">
+2193.20
+</td>
+<td style="text-align:right;">
+64.30
+</td>
+<td style="text-align:right;">
+159.40
+</td>
+<td style="text-align:right;">
+25516.50
+</td>
+<td style="text-align:right;">
+9867.00
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+62.04
+</td>
+<td style="text-align:right;">
+6.7210
+</td>
+<td style="text-align:right;">
+0.010267
+</td>
+<td style="text-align:right;">
+-0.009931
+</td>
+<td style="text-align:right;">
+0.0099
+</td>
+<td style="text-align:right;">
+0.077115
+</td>
+<td style="text-align:right;">
+124.35
+</td>
+<td style="text-align:right;">
+165.70
+</td>
+<td style="text-align:right;">
+307.30
+</td>
+<td style="text-align:right;">
+223.65
+</td>
+<td style="text-align:right;">
+313.00
+</td>
+<td style="text-align:right;">
+0.10110
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+50.5
+</td>
+<td style="text-align:right;">
+1.6635
+</td>
+<td style="text-align:right;">
+46711.95
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+71.00
+</td>
+<td style="text-align:right;">
+286.95
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+14.60
+</td>
+<td style="text-align:right;">
+1309.90
+</td>
+<td style="text-align:right;">
+668.1
+</td>
+<td style="text-align:right;">
+2117.85
+</td>
+<td style="text-align:right;">
+224533.0
+</td>
+<td style="text-align:right;">
+20.95
+</td>
+<td style="text-align:right;">
+2356.55
+</td>
+<td style="text-align:right;">
+45.90
+</td>
+<td style="text-align:right;">
+346.95
+</td>
+<td style="text-align:right;">
+730.75
+</td>
+<td style="text-align:right;">
+39565.80
+</td>
+<td style="text-align:right;">
+94.45
+</td>
+<td style="text-align:right;">
+205.80
+</td>
+<td style="text-align:right;">
+162.00
+</td>
+<td style="text-align:right;">
+9.25
+</td>
+<td style="text-align:right;">
+99.75
+</td>
+<td style="text-align:right;">
+495.70
+</td>
+<td style="text-align:right;">
+124.10
+</td>
+<td style="text-align:right;">
+11495.35
+</td>
+<td style="text-align:right;">
+118.95
+</td>
+<td style="text-align:right;">
+217.05
+</td>
+<td style="text-align:right;">
+53.80
+</td>
+<td style="text-align:right;">
+97.55
+</td>
+<td style="text-align:right;">
+56.20
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+18.45
+</td>
+<td style="text-align:right;">
+31.4
+</td>
+<td style="text-align:right;">
+22.00
+</td>
+<td style="text-align:right;">
+334.80
+</td>
+<td style="text-align:right;">
+773.30
+</td>
+<td style="text-align:right;">
+2282.00
+</td>
+<td style="text-align:right;">
+77.95
+</td>
+<td style="text-align:right;">
+163.15
+</td>
+<td style="text-align:right;">
+26124.15
+</td>
+<td style="text-align:right;">
+10142.35
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+82.04
+</td>
+<td style="text-align:right;">
+6.7440
+</td>
+<td style="text-align:right;">
+0.010267
+</td>
+<td style="text-align:right;">
+-0.009931
+</td>
+<td style="text-align:right;">
+0.0099
+</td>
+<td style="text-align:right;">
+0.077115
+</td>
+<td style="text-align:right;">
+158.65
+</td>
+<td style="text-align:right;">
+190.15
+</td>
+<td style="text-align:right;">
+304.65
+</td>
+<td style="text-align:right;">
+249.50
+</td>
+<td style="text-align:right;">
+347.50
+</td>
+<td style="text-align:right;">
+0.10160
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+70.5
+</td>
+<td style="text-align:right;">
+1.7050
+</td>
+<td style="text-align:right;">
+47521.35
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+72.70
+</td>
+<td style="text-align:right;">
+322.50
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+21.90
+</td>
+<td style="text-align:right;">
+1490.00
+</td>
+<td style="text-align:right;">
+677.1
+</td>
+<td style="text-align:right;">
+2094.30
+</td>
+<td style="text-align:right;">
+230826.2
+</td>
+<td style="text-align:right;">
+3.95
+</td>
+<td style="text-align:right;">
+2541.10
+</td>
+<td style="text-align:right;">
+40.55
+</td>
+<td style="text-align:right;">
+355.90
+</td>
+<td style="text-align:right;">
+858.05
+</td>
+<td style="text-align:right;">
+40759.25
+</td>
+<td style="text-align:right;">
+91.30
+</td>
+<td style="text-align:right;">
+203.35
+</td>
+<td style="text-align:right;">
+143.65
+</td>
+<td style="text-align:right;">
+7.10
+</td>
+<td style="text-align:right;">
+90.65
+</td>
+<td style="text-align:right;">
+488.40
+</td>
+<td style="text-align:right;">
+131.10
+</td>
+<td style="text-align:right;">
+11441.30
+</td>
+<td style="text-align:right;">
+121.25
+</td>
+<td style="text-align:right;">
+212.70
+</td>
+<td style="text-align:right;">
+71.15
+</td>
+<td style="text-align:right;">
+105.85
+</td>
+<td style="text-align:right;">
+66.35
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+19.30
+</td>
+<td style="text-align:right;">
+39.2
+</td>
+<td style="text-align:right;">
+17.65
+</td>
+<td style="text-align:right;">
+365.55
+</td>
+<td style="text-align:right;">
+754.20
+</td>
+<td style="text-align:right;">
+2275.10
+</td>
+<td style="text-align:right;">
+81.25
+</td>
+<td style="text-align:right;">
+151.25
+</td>
+<td style="text-align:right;">
+26322.45
+</td>
+<td style="text-align:right;">
+10097.25
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+102.04
+</td>
+<td style="text-align:right;">
+6.7025
+</td>
+<td style="text-align:right;">
+0.010267
+</td>
+<td style="text-align:right;">
+-0.009931
+</td>
+<td style="text-align:right;">
+0.0099
+</td>
+<td style="text-align:right;">
+0.077115
+</td>
+<td style="text-align:right;">
+151.05
+</td>
+<td style="text-align:right;">
+165.40
+</td>
+<td style="text-align:right;">
+337.85
+</td>
+<td style="text-align:right;">
+234.05
+</td>
+<td style="text-align:right;">
+333.90
+</td>
+<td style="text-align:right;">
+0.10150
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+90.5
+</td>
+<td style="text-align:right;">
+1.6960
+</td>
+<td style="text-align:right;">
+47657.15
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+73.85
+</td>
+<td style="text-align:right;">
+394.30
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+24.85
+</td>
+<td style="text-align:right;">
+1515.20
+</td>
+<td style="text-align:right;">
+691.4
+</td>
+<td style="text-align:right;">
+2672.00
+</td>
+<td style="text-align:right;">
+211971.1
+</td>
+<td style="text-align:right;">
+2.10
+</td>
+<td style="text-align:right;">
+3048.25
+</td>
+<td style="text-align:right;">
+61.70
+</td>
+<td style="text-align:right;">
+378.20
+</td>
+<td style="text-align:right;">
+1044.15
+</td>
+<td style="text-align:right;">
+49457.40
+</td>
+<td style="text-align:right;">
+103.85
+</td>
+<td style="text-align:right;">
+238.10
+</td>
+<td style="text-align:right;">
+184.95
+</td>
+<td style="text-align:right;">
+16.15
+</td>
+<td style="text-align:right;">
+83.60
+</td>
+<td style="text-align:right;">
+483.80
+</td>
+<td style="text-align:right;">
+156.05
+</td>
+<td style="text-align:right;">
+11023.55
+</td>
+<td style="text-align:right;">
+141.05
+</td>
+<td style="text-align:right;">
+270.00
+</td>
+<td style="text-align:right;">
+57.60
+</td>
+<td style="text-align:right;">
+89.10
+</td>
+<td style="text-align:right;">
+74.10
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+37.00
+</td>
+<td style="text-align:right;">
+52.8
+</td>
+<td style="text-align:right;">
+37.00
+</td>
+<td style="text-align:right;">
+353.00
+</td>
+<td style="text-align:right;">
+804.55
+</td>
+<td style="text-align:right;">
+2313.25
+</td>
+<td style="text-align:right;">
+68.75
+</td>
+<td style="text-align:right;">
+158.40
+</td>
+<td style="text-align:right;">
+27127.85
+</td>
+<td style="text-align:right;">
+10260.90
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+122.04
+</td>
+<td style="text-align:right;">
+6.6425
+</td>
+<td style="text-align:right;">
+0.010267
+</td>
+<td style="text-align:right;">
+-0.009931
+</td>
+<td style="text-align:right;">
+0.0099
+</td>
+<td style="text-align:right;">
+0.077115
+</td>
+<td style="text-align:right;">
+167.40
+</td>
+<td style="text-align:right;">
+186.95
+</td>
+<td style="text-align:right;">
+428.65
+</td>
+<td style="text-align:right;">
+264.60
+</td>
+<td style="text-align:right;">
+319.75
+</td>
+<td style="text-align:right;">
+0.10265
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+110.5
+</td>
+<td style="text-align:right;">
+1.6765
+</td>
+<td style="text-align:right;">
+47675.70
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+84.45
+</td>
+<td style="text-align:right;">
+490.20
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+22.15
+</td>
+<td style="text-align:right;">
+1507.35
+</td>
+<td style="text-align:right;">
+651.8
+</td>
+<td style="text-align:right;">
+3433.10
+</td>
+<td style="text-align:right;">
+190465.4
+</td>
+<td style="text-align:right;">
+1.50
+</td>
+<td style="text-align:right;">
+3464.10
+</td>
+<td style="text-align:right;">
+78.90
+</td>
+<td style="text-align:right;">
+394.00
+</td>
+<td style="text-align:right;">
+1300.75
+</td>
+<td style="text-align:right;">
+58619.80
+</td>
+<td style="text-align:right;">
+141.30
+</td>
+<td style="text-align:right;">
+259.50
+</td>
+<td style="text-align:right;">
+209.60
+</td>
+<td style="text-align:right;">
+21.55
+</td>
+<td style="text-align:right;">
+68.25
+</td>
+<td style="text-align:right;">
+512.20
+</td>
+<td style="text-align:right;">
+279.10
+</td>
+<td style="text-align:right;">
+10500.15
+</td>
+<td style="text-align:right;">
+165.70
+</td>
+<td style="text-align:right;">
+309.25
+</td>
+<td style="text-align:right;">
+57.65
+</td>
+<td style="text-align:right;">
+76.00
+</td>
+<td style="text-align:right;">
+77.95
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+96.35
+</td>
+<td style="text-align:right;">
+42.9
+</td>
+<td style="text-align:right;">
+37.20
+</td>
+<td style="text-align:right;">
+313.15
+</td>
+<td style="text-align:right;">
+822.10
+</td>
+<td style="text-align:right;">
+2361.80
+</td>
+<td style="text-align:right;">
+87.95
+</td>
+<td style="text-align:right;">
+174.55
+</td>
+<td style="text-align:right;">
+28097.70
+</td>
+<td style="text-align:right;">
+10329.05
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+142.04
+</td>
+<td style="text-align:right;">
+6.5570
+</td>
+<td style="text-align:right;">
+0.010267
+</td>
+<td style="text-align:right;">
+-0.009931
+</td>
+<td style="text-align:right;">
+0.0099
+</td>
+<td style="text-align:right;">
+0.077115
+</td>
+<td style="text-align:right;">
+146.05
+</td>
+<td style="text-align:right;">
+146.40
+</td>
+<td style="text-align:right;">
+473.55
+</td>
+<td style="text-align:right;">
+271.90
+</td>
+<td style="text-align:right;">
+408.40
+</td>
+<td style="text-align:right;">
+0.10450
+</td>
+</tr>
+</tbody>
+</table>
 
 </div>
             </section>

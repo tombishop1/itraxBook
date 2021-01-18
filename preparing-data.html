@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 3 Tidying Data | Using Itrax Data in R</title>
+  <title>7.2 Preparing Data | Using Itrax Data in R</title>
   <meta name="description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 3 Tidying Data | Using Itrax Data in R" />
+  <meta property="og:title" content="7.2 Preparing Data | Using Itrax Data in R" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 3 Tidying Data | Using Itrax Data in R" />
+  <meta name="twitter:title" content="7.2 Preparing Data | Using Itrax Data in R" />
   
   <meta name="twitter:description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="importing-everything.html"/>
-<link rel="next" href="low-count-rates.html"/>
+<link rel="prev" href="suitable-methods.html"/>
+<link rel="next" href="linear-methods.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -211,24 +211,70 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="tidying-data" class="section level1">
-<h1><span class="header-section-number">Chapter 3</span> Tidying Data</h1>
-<p>In the functionality provided by <code>itraxR</code>, the need for data cleaning is much reduced. However, you may still encounter poor quality data that needs removing from subsequent analysis. This can be broadly defined as:</p>
-<ul>
-<li>Data at the start and end of the the core, where a volume of core material is “missing”.</li>
-<li>Measurements where the optical configuration is out of position (marked as <code>validity == 0</code>), often due to holes or stones in the core.</li>
-<li>Areas of the core with low total counts.</li>
-<li>Individual measurements that are statistical outliers.</li>
-</ul>
-<p>The easiest way to do this is using a <code>tidyverse</code> style sequence of pipes that set the observations of faulty data as <code>NA</code>.</p>
+<div id="preparing-data" class="section level2">
+<h2><span class="header-section-number">7.2</span> Preparing Data</h2>
+<p>In order to perform empirical calibration it is necessary to have some quantitative data that relates directly to the Itrax XRF data. The quantitative data is unlikely to be at the same resolution as the Itrax XRF data. For example, it is typical to scan cores at between 0.2 and 1 mm, but typical to sub-sample for WD-XRF or ICP at between 5 - 10 mm. In addition, where Itrax scans are contiguous, sub-samples may not be, for example a 10 mm sub-sample might be taken every 80 mm.</p>
+<p>The function <code>itraxR::itrax_reduction()</code> can be used to reduce the data to match the resolution of some other data. The example below uses the hypothetical example of some determinations of Ti on sub-samples on the core sequence that are 10 mm in size, taken every 50 mm. Here is the hypothetical data:</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="preparing-data.html#cb46-1"></a><span class="kw">glimpse</span>(icp)</span></code></pre></div>
+<pre><code>## Rows: 84
+## Columns: 4
+## $ SampleID [3m[90m&lt;chr&gt;[39m[23m &quot;ICP_ID_1&quot;, &quot;ICP_ID_2&quot;, &quot;ICP_ID_3&quot;, &quot;ICP_ID_4&quot;, &quot;ICP_ID_5&quot;, …
+## $ top      [3m[90m&lt;dbl&gt;[39m[23m 1, 51, 101, 151, 201, 251, 301, 351, 401, 451, 501, 551, 601…
+## $ bot      [3m[90m&lt;dbl&gt;[39m[23m 11, 61, 111, 161, 211, 261, 311, 361, 411, 461, 511, 561, 61…
+## $ Ti       [3m[90m&lt;dbl&gt;[39m[23m 0.36084200, -0.97326216, -0.81854635, -0.47373931, -1.840559…</code></pre>
+<p>And here is the use of <code>itrax_reduce()</code> to reduce our Itrax XRF data (<code>CD166_19_xrf</code>), using the shape of the “icp” data (in <code>icp</code>).</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="preparing-data.html#cb48-1"></a>xrf_icp &lt;-<span class="st"> </span>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
+<span id="cb48-2"><a href="preparing-data.html#cb48-2"></a><span class="st">  </span><span class="kw">drop_na</span>() <span class="op">%&gt;%</span></span>
+<span id="cb48-3"><a href="preparing-data.html#cb48-3"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(label, filename)) <span class="op">%&gt;%</span></span>
+<span id="cb48-4"><a href="preparing-data.html#cb48-4"></a><span class="st">  </span><span class="kw">itrax_reduce</span>(<span class="dt">names =</span> icp<span class="op">$</span>SampleID,</span>
+<span id="cb48-5"><a href="preparing-data.html#cb48-5"></a>               <span class="dt">breaks_lower =</span> icp<span class="op">$</span>top,</span>
+<span id="cb48-6"><a href="preparing-data.html#cb48-6"></a>               <span class="dt">breaks_upper =</span> icp<span class="op">$</span>bot) <span class="op">%&gt;%</span></span>
+<span id="cb48-7"><a href="preparing-data.html#cb48-7"></a><span class="st">  </span><span class="kw">select</span>(resample_names, Ti) <span class="op">%&gt;%</span></span>
+<span id="cb48-8"><a href="preparing-data.html#cb48-8"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">Ti_XRF =</span> Ti,</span>
+<span id="cb48-9"><a href="preparing-data.html#cb48-9"></a>         <span class="dt">SampleID =</span> resample_names) <span class="op">%&gt;%</span></span>
+<span id="cb48-10"><a href="preparing-data.html#cb48-10"></a><span class="st">  </span></span>
+<span id="cb48-11"><a href="preparing-data.html#cb48-11"></a><span class="st">  </span><span class="kw">inner_join</span>(., icp, <span class="dt">by =</span> <span class="st">&quot;SampleID&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb48-12"><a href="preparing-data.html#cb48-12"></a><span class="st">  </span><span class="kw">select</span>(SampleID, Ti, Ti_XRF, <span class="kw">everything</span>())</span>
+<span id="cb48-13"><a href="preparing-data.html#cb48-13"></a></span>
+<span id="cb48-14"><a href="preparing-data.html#cb48-14"></a>xrf_icp <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">glimpse</span>()</span></code></pre></div>
+<pre><code>## Rows: 84
+## Columns: 5
+## $ SampleID [3m[90m&lt;chr&gt;[39m[23m &quot;ICP_ID_1&quot;, &quot;ICP_ID_2&quot;, &quot;ICP_ID_3&quot;, &quot;ICP_ID_4&quot;, &quot;ICP_ID_5&quot;, …
+## $ Ti       [3m[90m&lt;dbl&gt;[39m[23m 0.36084200, -0.97326216, -0.81854635, -0.47373931, -1.840559…
+## $ Ti_XRF   [3m[90m&lt;dbl&gt;[39m[23m 2101.300, 2401.300, 3410.100, 5984.286, 2571.200, 1873.500, …
+## $ top      [3m[90m&lt;dbl&gt;[39m[23m 1, 51, 101, 151, 201, 251, 301, 351, 401, 451, 501, 551, 601…
+## $ bot      [3m[90m&lt;dbl&gt;[39m[23m 11, 61, 111, 161, 211, 261, 311, 361, 411, 461, 511, 561, 61…</code></pre>
+<p>Note the requirement to remove text based columns (in this case <code>file</code> and <code>label</code>) from the data before this step is performed - if the reducing function cannot handle a data type (e.g. passing characters to <code>mean()</code>), errors will occur. If we wanted to add the standard deviation alongside the mean for each chunk, this can be done my modifying the default reducing function (<code>mean()</code>) to <code>sd()</code>, for example:</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="preparing-data.html#cb50-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
+<span id="cb50-2"><a href="preparing-data.html#cb50-2"></a><span class="st">  </span><span class="kw">drop_na</span>() <span class="op">%&gt;%</span></span>
+<span id="cb50-3"><a href="preparing-data.html#cb50-3"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(label, filename)) <span class="op">%&gt;%</span></span>
+<span id="cb50-4"><a href="preparing-data.html#cb50-4"></a><span class="st">  </span><span class="kw">itrax_reduce</span>(<span class="dt">names =</span> icp<span class="op">$</span>SampleID,</span>
+<span id="cb50-5"><a href="preparing-data.html#cb50-5"></a>               <span class="dt">breaks_lower =</span> icp<span class="op">$</span>top,</span>
+<span id="cb50-6"><a href="preparing-data.html#cb50-6"></a>               <span class="dt">breaks_upper =</span> icp<span class="op">$</span>bot,</span>
+<span id="cb50-7"><a href="preparing-data.html#cb50-7"></a>               <span class="dt">fun =</span> sd) <span class="op">%&gt;%</span></span>
+<span id="cb50-8"><a href="preparing-data.html#cb50-8"></a><span class="st">  </span><span class="kw">select</span>(resample_names, Ti) <span class="op">%&gt;%</span></span>
+<span id="cb50-9"><a href="preparing-data.html#cb50-9"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">Ti_XRF_sd =</span> Ti,</span>
+<span id="cb50-10"><a href="preparing-data.html#cb50-10"></a>         <span class="dt">SampleID =</span> resample_names) <span class="op">%&gt;%</span></span>
+<span id="cb50-11"><a href="preparing-data.html#cb50-11"></a><span class="st">  </span><span class="kw">inner_join</span>(., xrf_icp, <span class="dt">by =</span> <span class="st">&quot;SampleID&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb50-12"><a href="preparing-data.html#cb50-12"></a><span class="st">  </span><span class="kw">select</span>(SampleID, Ti, Ti_XRF, Ti_XRF_sd, <span class="kw">everything</span>()) <span class="op">%&gt;%</span></span>
+<span id="cb50-13"><a href="preparing-data.html#cb50-13"></a><span class="st">  </span><span class="kw">glimpse</span>()</span></code></pre></div>
+<pre><code>## Rows: 84
+## Columns: 6
+## $ SampleID  [3m[90m&lt;chr&gt;[39m[23m &quot;ICP_ID_1&quot;, &quot;ICP_ID_2&quot;, &quot;ICP_ID_3&quot;, &quot;ICP_ID_4&quot;, &quot;ICP_ID_5&quot;,…
+## $ Ti        [3m[90m&lt;dbl&gt;[39m[23m 0.36084200, -0.97326216, -0.81854635, -0.47373931, -1.84055…
+## $ Ti_XRF    [3m[90m&lt;dbl&gt;[39m[23m 2101.300, 2401.300, 3410.100, 5984.286, 2571.200, 1873.500,…
+## $ Ti_XRF_sd [3m[90m&lt;dbl&gt;[39m[23m 331.36789, 90.61770, 92.66601, 1646.19417, 213.96511, 231.1…
+## $ top       [3m[90m&lt;dbl&gt;[39m[23m 1, 51, 101, 151, 201, 251, 301, 351, 401, 451, 501, 551, 60…
+## $ bot       [3m[90m&lt;dbl&gt;[39m[23m 11, 61, 111, 161, 211, 261, 311, 361, 411, 461, 511, 561, 6…</code></pre>
+<p>It is worth reading <code>?itraxR::itrax_reduce()</code> as the behaviour can and should be modified depending on your exact use case. For example, in th situation above where none of the samples are contiguous it might be wise to modify the parameters of <code>itraxR::itrax_reduce()</code> to include <code>edges = c("&gt;=", "&lt;=")</code> so that the “edges” of the sub-samples are captured. This might not be the case for contiguous samples in order to avoid “double-counting”.</p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="importing-everything.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="low-count-rates.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="suitable-methods.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="linear-methods.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
