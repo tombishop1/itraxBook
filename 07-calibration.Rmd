@@ -1,6 +1,73 @@
 # Calibrating Data
 
+Although much analysis can be done using the peak-area data from the Itrax, it may be desirable to attempt to fully quantify the data. Because of the variability typically encountered in palaeoenvironmental work a "fundamental parameters" type approach is not often possible, although there is some functionality for this in the `Q-Spec` software on the instrument. 
+
+Rather, an empirical approach is usually required, whereby some subset of the material is sampled and a relationship (calibration curve) is calculated for analytes of interest. An empirical approach also has the benefit of being able to estimate the uncertainties of the calibration. 
+
 ## Suitable Methods
+
+## Preparing Data
+
+In order to perform empirical calibration it is necessary to have some quantitative data that relates directly to the Itrax XRF data. The quantitative data is unlikely to be at the same resolution as the Itrax XRF data. For example, it is typical to scan cores at between 0.2 and 1 mm, but typical to sub-sample for WD-XRF or ICP at between 5 - 10 mm. In addition, where Itrax scans are contiguous, sub-samples may not be, for example a 10 mm sub-sample might be taken every 80 mm.
+
+The function `itraxR::itrax_reduction()` can be used to reduce the data to match the resolution of some other data. The example below uses the hypothetical example of some determinations of Ti on sub-samples on the core sequence that are 10 mm in size, taken every 50 mm. Here is the hypothetical data:
+
+```{r include=FALSE}
+icp <- tibble(top = seq(from = min(CD166_19_xrf$depth), to = max(CD166_19_xrf$depth)-10, by = 10),
+              bot = top + 10,
+              Ti  = rnorm(length(top))
+       ) %>%
+  filter(row_number() %% 5 == 1) %>%
+  mutate(SampleID = paste0("ICP_ID_", 1:length(top))) %>%
+  select(SampleID, everything())
+```
+
+```{r}
+glimpse(icp)
+```
+
+And here is the use of `itrax_reduce()` to reduce our Itrax XRF data (`CD166_19_xrf`), using the shape of the "icp" data (in `icp`). 
+
+```{r}
+xrf_icp <- CD166_19_xrf %>%
+  drop_na() %>%
+  select(-c(label, filename)) %>%
+  itrax_reduce(names = icp$SampleID,
+               breaks_lower = icp$top,
+               breaks_upper = icp$bot) %>%
+  select(resample_names, Ti) %>%
+  rename(Ti_XRF = Ti,
+         SampleID = resample_names) %>%
+  
+  inner_join(., icp, by = "SampleID") %>%
+  select(SampleID, Ti, Ti_XRF, everything())
+
+xrf_icp %>% glimpse()
+```
+
+Note the requirement to remove text based columns (in this case `file` and `label`) from the data before this step is performed - if the reducing function cannot handle a data type (e.g. passing characters to `mean()`), errors will occur. If we wanted to add the standard deviation alongside the mean for each chunk, this can be done my modifying the default reducing function (`mean()`) to `sd()`, for example:
+
+```{r}
+CD166_19_xrf %>%
+  drop_na() %>%
+  select(-c(label, filename)) %>%
+  itrax_reduce(names = icp$SampleID,
+               breaks_lower = icp$top,
+               breaks_upper = icp$bot,
+               fun = sd) %>%
+  select(resample_names, Ti) %>%
+  rename(Ti_XRF_sd = Ti,
+         SampleID = resample_names) %>%
+  inner_join(., xrf_icp, by = "SampleID") %>%
+  select(SampleID, Ti, Ti_XRF, Ti_XRF_sd, everything()) %>%
+  glimpse()
+```
+
+It is worth reading `?itraxR::itrax_reduce()` as the behaviour can and should be modified depending on your exact use case. For example, in th situation above where none of the samples are contiguous it might be wise to modify the parameters of `itraxR::itrax_reduce()` to include `edges = c(">=", "<=")` so that the "edges" of the sub-samples are captured. This might not be the case for contiguous samples in order to avoid "double-counting". 
+
+```{r include=FALSE}
+rm(icp, xrf_icp)
+```
 
 ## Linear Methods
 
