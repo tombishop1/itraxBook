@@ -56,7 +56,7 @@ if (!require("tidypaleo", character.only = TRUE)) {
 
 # now check dependencies
 # First specify the packages of interest
-packages = c("kableExtra", "DiagrammeR", "tidyverse", "PeriodicTable", "egg")
+packages = c("kableExtra", "DiagrammeR", "tidyverse", "PeriodicTable", "egg", "errors")
 
 # Now load or install & load all those CRAN packages
 package.check <- lapply(
