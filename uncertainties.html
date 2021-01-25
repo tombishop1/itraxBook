@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>1.2 XRF Data | Using Itrax Data in R</title>
+  <title>3.8 Uncertainties | Using Itrax Data in R</title>
   <meta name="description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="1.2 XRF Data | Using Itrax Data in R" />
+  <meta property="og:title" content="3.8 Uncertainties | Using Itrax Data in R" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="1.2 XRF Data | Using Itrax Data in R" />
+  <meta name="twitter:title" content="3.8 Uncertainties | Using Itrax Data in R" />
   
   <meta name="twitter:description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="metadata.html"/>
-<link rel="next" href="optical-images.html"/>
+<link rel="prev" href="correcting-grain-size.html"/>
+<link rel="next" href="high-signal-to-noise-ratios.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -213,19 +213,53 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="xrf-data" class="section level2">
-<h2><span class="header-section-number">1.2</span> XRF Data</h2>
-<p>The XRF data can be split into two groups — “raw” and “processed” data. The raw data is contained in a separate folder called <code>XRF data</code>, and consists of a single file, beginning with <code>L000000.spe</code> and incrementing sequentially. This file can be read using a text editor and is tab-delimited. The first part is a header, containing metadata information. The second part is a table of all the channels of the detector and the corresponding count for each channel. Increasing channel numbers represent increasing energy, but some thought needs to be given to calibrating channels into an energy — this step is usually performed using specialist software. In addition, a file called <code>sumspectra.spe</code> is often included in the root directory; this is simply the sum of all the <code>*.spe</code> files in the <code>XRF data</code> directory, and is sometimes useful in processing the data.</p>
-<p>Processed data comes from the <code>Q-Spec</code> software (Cox Analytical Systems, Sweden) provided with the machine. Its function is to process the spectral data files (<code>*.spe</code>) into peak-areas for each element of interest by fitting a model to the data. The model needs some user input and intervention to optimise it, and the quality of the model can be assessed using a number of diagnostic parameters, the most important being the root-mean-squared-error (RMSE). The <code>Q-Spec</code> software can also perform some quantitative calibration of the data, although this is a less typical use-case. Often the operator will include a file that contains all of the settings used by <code>Q-Spec</code> to translate the raw data files into the peak area output file — this file will have the extension <code>*.dfl</code> and will often simply be called <code>settings.dfl</code>.</p>
-<p>The processed elemental data comes in the form of a text file comprising of a tab-delimited table, with a single row for each measurement step, and a column for parameters including individual element peak areas in counts (n) or intensities (n/mA). The data files commonly have names like <code>result.txt</code> or <code>Results.txt</code>, but may have been subsequently renamed. These are the ED-XRF data most commonly worked with by analysts.</p>
+<div id="uncertainties" class="section level2">
+<h2><span class="header-section-number">3.8</span> Uncertainties</h2>
+<p>The best way to quantify the uncertainties in the XRF data is in repeat measurements. The example dataset contains short sections of repeat measurements. An example might begin by reading in the repeat scan data, as below.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="uncertainties.html#cb27-1"></a>CD166_<span class="dv">19</span>_S1_REP1 &lt;-<span class="st"> </span><span class="kw">itrax_import</span>(<span class="st">&quot;CD166_19_S1/CD166_19_S1_REP1/Results.txt&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb27-2"><a href="uncertainties.html#cb27-2"></a><span class="st">  </span><span class="kw">select</span>(<span class="kw">any_of</span>(<span class="kw">c</span>(elementsList, <span class="st">&quot;position&quot;</span>))) <span class="op">%&gt;%</span></span>
+<span id="cb27-3"><a href="uncertainties.html#cb27-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">scan =</span> <span class="st">&quot;scan1&quot;</span>)</span>
+<span id="cb27-4"><a href="uncertainties.html#cb27-4"></a>CD166_<span class="dv">19</span>_S1_REP2 &lt;-<span class="st"> </span><span class="kw">itrax_import</span>(<span class="st">&quot;CD166_19_S1/CD166_19_S1_REP2/Results.txt&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb27-5"><a href="uncertainties.html#cb27-5"></a><span class="st">  </span><span class="kw">select</span>(<span class="kw">any_of</span>(<span class="kw">c</span>(elementsList, <span class="st">&quot;position&quot;</span>))) <span class="op">%&gt;%</span></span>
+<span id="cb27-6"><a href="uncertainties.html#cb27-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">scan =</span> <span class="st">&quot;scan2&quot;</span>)</span>
+<span id="cb27-7"><a href="uncertainties.html#cb27-7"></a>CD166_<span class="dv">19</span>_S1_REP3 &lt;-<span class="st"> </span>CD166_<span class="dv">19</span>_S1<span class="op">$</span>xrf <span class="op">%&gt;%</span></span>
+<span id="cb27-8"><a href="uncertainties.html#cb27-8"></a><span class="st">  </span><span class="kw">filter</span>(position <span class="op">&gt;=</span><span class="st"> </span><span class="kw">min</span>(<span class="kw">c</span>(CD166_<span class="dv">19</span>_S1_REP1<span class="op">$</span>position, CD166_<span class="dv">19</span>_S1_REP2<span class="op">$</span>position)) <span class="op">&amp;</span><span class="st"> </span></span>
+<span id="cb27-9"><a href="uncertainties.html#cb27-9"></a><span class="st">           </span>position <span class="op">&lt;=</span><span class="st"> </span><span class="kw">max</span>(<span class="kw">c</span>(CD166_<span class="dv">19</span>_S1_REP1<span class="op">$</span>position, CD166_<span class="dv">19</span>_S1_REP2<span class="op">$</span>position))) <span class="op">%&gt;%</span></span>
+<span id="cb27-10"><a href="uncertainties.html#cb27-10"></a><span class="st">  </span><span class="kw">select</span>(<span class="kw">any_of</span>(<span class="kw">c</span>(elementsList, <span class="st">&quot;position&quot;</span>))) <span class="op">%&gt;%</span></span>
+<span id="cb27-11"><a href="uncertainties.html#cb27-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">scan =</span> <span class="st">&quot;scan3&quot;</span>)</span></code></pre></div>
+<p>It should then be combined into a single dataset.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="uncertainties.html#cb28-1"></a>S1_reps &lt;-<span class="st"> </span><span class="kw">list</span>(CD166_<span class="dv">19</span>_S1_REP1, CD166_<span class="dv">19</span>_S1_REP2, CD166_<span class="dv">19</span>_S1_REP3) <span class="op">%&gt;%</span></span>
+<span id="cb28-2"><a href="uncertainties.html#cb28-2"></a><span class="st">  </span><span class="kw">reduce</span>(full_join) <span class="op">%&gt;%</span></span>
+<span id="cb28-3"><a href="uncertainties.html#cb28-3"></a><span class="st">  </span><span class="kw">select</span>(scan, position, <span class="kw">everything</span>())</span></code></pre></div>
+<pre><code>## Joining, by = c(&quot;Al&quot;, &quot;Si&quot;, &quot;P&quot;, &quot;S&quot;, &quot;Cl&quot;, &quot;Ar&quot;, &quot;K&quot;, &quot;Ca&quot;, &quot;Sc&quot;, &quot;Ti&quot;, &quot;V&quot;, &quot;Cr&quot;, &quot;Mn&quot;, &quot;Fe&quot;, &quot;Ni&quot;, &quot;Cu&quot;, &quot;Zn&quot;, &quot;Ga&quot;, &quot;Ge&quot;, &quot;Br&quot;, &quot;Rb&quot;, &quot;Sr&quot;, &quot;Y&quot;, &quot;Zr&quot;, &quot;Pd&quot;, &quot;Cd&quot;, &quot;I&quot;, &quot;Cs&quot;, &quot;Ba&quot;, &quot;Nd&quot;, &quot;Sm&quot;, &quot;Yb&quot;, &quot;Ta&quot;, &quot;W&quot;, &quot;Pb&quot;, &quot;Bi&quot;, &quot;position&quot;, &quot;scan&quot;)
+## Joining, by = c(&quot;Al&quot;, &quot;Si&quot;, &quot;P&quot;, &quot;S&quot;, &quot;Cl&quot;, &quot;Ar&quot;, &quot;K&quot;, &quot;Ca&quot;, &quot;Sc&quot;, &quot;Ti&quot;, &quot;V&quot;, &quot;Cr&quot;, &quot;Mn&quot;, &quot;Fe&quot;, &quot;Ni&quot;, &quot;Cu&quot;, &quot;Zn&quot;, &quot;Ga&quot;, &quot;Ge&quot;, &quot;Br&quot;, &quot;Rb&quot;, &quot;Sr&quot;, &quot;Y&quot;, &quot;Zr&quot;, &quot;Pd&quot;, &quot;Cd&quot;, &quot;I&quot;, &quot;Cs&quot;, &quot;Ba&quot;, &quot;Nd&quot;, &quot;Sm&quot;, &quot;Yb&quot;, &quot;Ta&quot;, &quot;W&quot;, &quot;Pb&quot;, &quot;Bi&quot;, &quot;position&quot;, &quot;scan&quot;)</code></pre>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="uncertainties.html#cb30-1"></a><span class="kw">rm</span>(CD166_<span class="dv">19</span>_S1_REP1, CD166_<span class="dv">19</span>_S1_REP2, CD166_<span class="dv">19</span>_S1_REP3)</span></code></pre></div>
+<p>Finally, a function to calculate the uncertainties. The <code>errors</code> package is used to create an output that can combine both the value and the associated uncertainty. It is a really neat way of working with quantities.</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="uncertainties.html#cb31-1"></a><span class="kw">library</span>(errors)</span>
+<span id="cb31-2"><a href="uncertainties.html#cb31-2"></a>S1_reps &lt;-<span class="st"> </span>S1_reps <span class="op">%&gt;%</span></span>
+<span id="cb31-3"><a href="uncertainties.html#cb31-3"></a><span class="st">  </span><span class="kw">group_by</span>(position) <span class="op">%&gt;%</span></span>
+<span id="cb31-4"><a href="uncertainties.html#cb31-4"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="kw">across</span>(<span class="kw">any_of</span>(elementsList), </span>
+<span id="cb31-5"><a href="uncertainties.html#cb31-5"></a>                   <span class="cf">function</span>(x){<span class="kw">set_errors</span>(<span class="dt">x =</span> <span class="kw">mean</span>(x, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), </span>
+<span id="cb31-6"><a href="uncertainties.html#cb31-6"></a>                                          <span class="dt">value =</span> <span class="kw">sd</span>(x, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))}</span>
+<span id="cb31-7"><a href="uncertainties.html#cb31-7"></a>                   )</span>
+<span id="cb31-8"><a href="uncertainties.html#cb31-8"></a>            )</span></code></pre></div>
+<p>These can be plotted using the mean and standard deviation instead of a single value using <code>errors::errors_min()</code> and <code>errors::errors_max()</code> really easily.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="uncertainties.html#cb32-1"></a>S1_reps <span class="op">%&gt;%</span></span>
+<span id="cb32-2"><a href="uncertainties.html#cb32-2"></a><span class="st">  </span><span class="kw">select</span>(Al, Si, Ti, Fe, position) <span class="op">%&gt;%</span></span>
+<span id="cb32-3"><a href="uncertainties.html#cb32-3"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> position, <span class="dt">y =</span> Fe)) <span class="op">+</span></span>
+<span id="cb32-4"><a href="uncertainties.html#cb32-4"></a><span class="st">  </span><span class="kw">geom_ribbon</span>(<span class="kw">aes</span>(<span class="dt">ymin =</span> <span class="kw">errors_min</span>(Fe), <span class="dt">ymax =</span> <span class="kw">errors_max</span>(Fe)), <span class="dt">fill =</span> <span class="st">&quot;black&quot;</span>) <span class="op">+</span></span>
+<span id="cb32-5"><a href="uncertainties.html#cb32-5"></a><span class="st">  </span><span class="kw">scale_x_reverse</span>()</span></code></pre></div>
+<pre><code>## Warning: In &#39;&lt;&#39; : boolean operators not defined for &#39;errors&#39; objects,
+## uncertainty dropped</code></pre>
+<p><img src="itraxBook_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="metadata.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="optical-images.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="correcting-grain-size.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="high-signal-to-noise-ratios.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
