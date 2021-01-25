@@ -124,3 +124,33 @@ Grain size variations are known the affect the detection of some elements. Grain
 ## High Signal-to-noise Ratios
 
 The inclusion of an element in an XRF dataset does not necessarily mean that the element is well-detected, and some elements will be so poorly detected that those data can be removed.
+
+## Reversing Data
+
+Sometimes a core section goes in the scanner backwards! If this has happened, the functions below simply re-map the `position` and `depth` data for the radiograph, the optical image and the xrf data. These functions can either be called at the same time as the data itself (for example in a plot), or used to over-write the original data itself.
+
+```{r reverse_functions}
+# for xrf data
+reverse_xrf <- function(xrf = itrax_import()){
+  xrf %>% 
+    mutate(depth = rev(depth),
+           position = rev(position)) %>%
+    arrange(position) %>%
+    return()
+}
+
+# for images
+reverse_image <- function(image = A1$rgb$image){
+  image <- image[dim(image)[1]:1, , ]
+  row.names(image) <- rev(row.names(image))
+  return(image)
+}
+
+# for radiographs
+reverse_radio <- function(image = A1$rad$image){
+  image <- image[dim(image)[1]:1, ]
+  row.names(image) <- rev(row.names(image))
+  return(image)
+}
+```
+
