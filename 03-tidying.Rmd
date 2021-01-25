@@ -121,6 +121,56 @@ Water content can be corrected for as a simple dilution effect, for example, if 
 
 Grain size variations are known the affect the detection of some elements. Grain size determinations made using analytical equipment (e.g. a laser granulometer) can be used to correct for grain size. 
 
+## Uncertainties
+
+The best way to quantify the uncertainties in the XRF data is in repeat measurements. The example dataset contains short sections of repeat measurements. An example might begin by reading in the repeat scan data, as below. 
+
+```{r uncertainties}
+CD166_19_S1_REP1 <- itrax_import("CD166_19_S1/CD166_19_S1_REP1/Results.txt") %>%
+  select(any_of(c(elementsList, "position"))) %>%
+  mutate(scan = "scan1")
+CD166_19_S1_REP2 <- itrax_import("CD166_19_S1/CD166_19_S1_REP2/Results.txt") %>%
+  select(any_of(c(elementsList, "position"))) %>%
+  mutate(scan = "scan2")
+CD166_19_S1_REP3 <- CD166_19_S1$xrf %>%
+  filter(position >= min(c(CD166_19_S1_REP1$position, CD166_19_S1_REP2$position)) & 
+           position <= max(c(CD166_19_S1_REP1$position, CD166_19_S1_REP2$position))) %>%
+  select(any_of(c(elementsList, "position"))) %>%
+  mutate(scan = "scan3")
+```
+
+It should then be combined into a single dataset. 
+
+```{r}
+S1_reps <- list(CD166_19_S1_REP1, CD166_19_S1_REP2, CD166_19_S1_REP3) %>%
+  reduce(full_join) %>%
+  select(scan, position, everything())
+rm(CD166_19_S1_REP1, CD166_19_S1_REP2, CD166_19_S1_REP3)
+```
+
+Finally, a function to calculate the uncertainties. The `errors` package is used to create an output that can combine both the value and the associated uncertainty. It is a really neat way of working with quantities. 
+
+```{r}
+library(errors)
+S1_reps <- S1_reps %>%
+  group_by(position) %>%
+  summarise(across(any_of(elementsList), 
+                   function(x){set_errors(x = mean(x, na.rm = TRUE), 
+                                          value = sd(x, na.rm = TRUE))}
+                   )
+            )
+```
+
+These can be plotted using the mean and standard deviation instead of a single value using `errors::errors_min()` and `errors::errors_max()` really easily. 
+
+```{r}
+S1_reps %>%
+  select(Al, Si, Ti, Fe, position) %>%
+  ggplot(aes(x = position, y = Fe)) +
+  geom_ribbon(aes(ymin = errors_min(Fe), ymax = errors_max(Fe)), fill = "black") +
+  scale_x_reverse()
+```
+
 ## High Signal-to-noise Ratios
 
 The inclusion of an element in an XRF dataset does not necessarily mean that the element is well-detected, and some elements will be so poorly detected that those data can be removed.
@@ -140,14 +190,14 @@ reverse_xrf <- function(xrf = itrax_import()){
 }
 
 # for images
-reverse_image <- function(image = A1$rgb$image){
+reverse_image <- function(image = itrax_image()){
   image <- image[dim(image)[1]:1, , ]
   row.names(image) <- rev(row.names(image))
   return(image)
 }
 
 # for radiographs
-reverse_radio <- function(image = A1$rad$image){
+reverse_radio <- function(image = itrax_radiograph()){
   image <- image[dim(image)[1]:1, ]
   row.names(image) <- rev(row.names(image))
   return(image)
