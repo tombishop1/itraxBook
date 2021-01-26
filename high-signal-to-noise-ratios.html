@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-01-25" />
+<meta name="date" content="2021-01-26" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -177,7 +177,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="5" data-path="transforming-data.html"><a href="transforming-data.html"><i class="fa fa-check"></i><b>5</b> Transforming Data</a><ul>
 <li class="chapter" data-level="5.1" data-path="ratios-and-normalisation.html"><a href="ratios-and-normalisation.html"><i class="fa fa-check"></i><b>5.1</b> Ratios and Normalisation</a></li>
-<li class="chapter" data-level="5.2" data-path="preparing-data-for-multivariate-data-analysis.html"><a href="preparing-data-for-multivariate-data-analysis.html"><i class="fa fa-check"></i><b>5.2</b> Preparing Data for Multivariate Data Analysis</a></li>
+<li class="chapter" data-level="5.2" data-path="running-mean-and-other-window-functions.html"><a href="running-mean-and-other-window-functions.html"><i class="fa fa-check"></i><b>5.2</b> Running Mean and Other Window Functions</a></li>
+<li class="chapter" data-level="5.3" data-path="preparing-data-for-multivariate-data-analysis.html"><a href="preparing-data-for-multivariate-data-analysis.html"><i class="fa fa-check"></i><b>5.3</b> Preparing Data for Multivariate Data Analysis</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="multivariate-methods.html"><a href="multivariate-methods.html"><i class="fa fa-check"></i><b>6</b> Multivariate Methods</a><ul>
 <li class="chapter" data-level="6.1" data-path="correlation-coefficients.html"><a href="correlation-coefficients.html"><i class="fa fa-check"></i><b>6.1</b> Correlation Coefficients</a></li>
@@ -215,7 +216,27 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="high-signal-to-noise-ratios" class="section level2">
 <h2><span class="header-section-number">3.9</span> High Signal-to-noise Ratios</h2>
-<p>The inclusion of an element in an XRF dataset does not necessarily mean that the element is well-detected, and some elements will be so poorly detected that those data can be removed.</p>
+<p>It is not always possible to do repeat scans for entire scanning projects, and as such it may be necessary to look at others ways of identifying problematic noisy data. Much of this can be done by good judgement on the part of the analyst, and will depend on the requirements of the projects. However, there are some analytical tools that can help. One method is to look at the autocorrelation of a time-series. We can use the auto-correlation factor (ACF) to explore this for our data.</p>
+<p>We might begin with examples for just two elements, Ca and Pb. It is clear from these plots that whereas Ca has the expected pattern of autocorrelation, Pb has generally much lower and a more disordered pattern of autocorrelation.</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="high-signal-to-noise-ratios.html#cb31-1"></a><span class="kw">library</span>(forecast)</span>
+<span id="cb31-2"><a href="high-signal-to-noise-ratios.html#cb31-2"></a>egg<span class="op">::</span><span class="kw">ggarrange</span>(</span>
+<span id="cb31-3"><a href="high-signal-to-noise-ratios.html#cb31-3"></a>  <span class="kw">ggAcf</span>(CD166_<span class="dv">19</span>_xrf<span class="op">$</span>Ca) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb31-4"><a href="high-signal-to-noise-ratios.html#cb31-4"></a><span class="st">    </span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="ot">NA</span>,<span class="dv">1</span>)),</span>
+<span id="cb31-5"><a href="high-signal-to-noise-ratios.html#cb31-5"></a>  <span class="kw">ggAcf</span>(CD166_<span class="dv">19</span>_xrf<span class="op">$</span>Pb) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb31-6"><a href="high-signal-to-noise-ratios.html#cb31-6"></a><span class="st">    </span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="ot">NA</span>,<span class="dv">1</span>)),</span>
+<span id="cb31-7"><a href="high-signal-to-noise-ratios.html#cb31-7"></a>  <span class="dt">nrow =</span> <span class="dv">1</span>)</span></code></pre></div>
+<p><img src="itraxBook_files/figure-html/unnamed-chunk-5-1.png" width="672" />
+Now we might move on to making calculations for the entirety of the data. In the example below we apply the <code>Acf()</code> function to each of the elements. We might then explore the data by sorting for an arbitrary lag, or by plotting the results together for inspection. In this case, the elements have been sorted by the autocorrelation value at a lag of 5. Although the visualisation is a bit messy with all the elements plotting over one another, it is clear that some elements exhibit very low autocorrelation (e.g. I, Pb, Sc, Ge, Cs, P) and could be possible candidates for exclusion.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="high-signal-to-noise-ratios.html#cb32-1"></a><span class="kw">apply</span>(CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">any_of</span>(elementsList)), <span class="dv">2</span>, <span class="dt">FUN =</span> <span class="cf">function</span>(x){<span class="kw">round</span>(<span class="kw">Acf</span>(x, <span class="dt">plot =</span> F)<span class="op">$</span>acf, <span class="dv">3</span>)}) <span class="op">%&gt;%</span></span>
+<span id="cb32-2"><a href="high-signal-to-noise-ratios.html#cb32-2"></a><span class="st">  </span><span class="kw">as_tibble</span>(<span class="dt">rownames =</span> <span class="st">&quot;lag&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb32-3"><a href="high-signal-to-noise-ratios.html#cb32-3"></a><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="op">!</span><span class="kw">c</span>(<span class="st">&quot;lag&quot;</span>), <span class="dt">names_to =</span> <span class="st">&quot;elements&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;value&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb32-4"><a href="high-signal-to-noise-ratios.html#cb32-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">lag =</span> <span class="kw">as.numeric</span>(lag),</span>
+<span id="cb32-5"><a href="high-signal-to-noise-ratios.html#cb32-5"></a>         <span class="dt">elements =</span> <span class="kw">factor</span>(elements, <span class="dt">levels =</span> <span class="kw">filter</span>(., lag <span class="op">==</span><span class="st"> </span><span class="dv">5</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(<span class="kw">desc</span>(value)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(elements))) <span class="op">%&gt;%</span></span>
+<span id="cb32-6"><a href="high-signal-to-noise-ratios.html#cb32-6"></a><span class="st">  </span><span class="kw">group_by</span>(elements) <span class="op">%&gt;%</span></span>
+<span id="cb32-7"><a href="high-signal-to-noise-ratios.html#cb32-7"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> lag, <span class="dt">y =</span> value, <span class="dt">col =</span> elements)) <span class="op">+</span></span>
+<span id="cb32-8"><a href="high-signal-to-noise-ratios.html#cb32-8"></a><span class="st">  </span><span class="kw">geom_line</span>()</span></code></pre></div>
+<p><img src="itraxBook_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>It is worth noting that this analysis has been performed on the entirety of the data, but there is no reason why the data could be problematic for some facies and acceptable for others. It may be necessary to perform some facies analysis and perform these analyses per facies.</p>
 </div>
             </section>
 

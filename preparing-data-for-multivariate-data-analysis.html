@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>5.2 Preparing Data for Multivariate Data Analysis | Using Itrax Data in R</title>
+  <title>5.3 Preparing Data for Multivariate Data Analysis | Using Itrax Data in R</title>
   <meta name="description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="5.2 Preparing Data for Multivariate Data Analysis | Using Itrax Data in R" />
+  <meta property="og:title" content="5.3 Preparing Data for Multivariate Data Analysis | Using Itrax Data in R" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="5.2 Preparing Data for Multivariate Data Analysis | Using Itrax Data in R" />
+  <meta name="twitter:title" content="5.3 Preparing Data for Multivariate Data Analysis | Using Itrax Data in R" />
   
   <meta name="twitter:description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
   
@@ -24,14 +24,14 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-01-25" />
+<meta name="date" content="2021-01-26" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="ratios-and-normalisation.html"/>
+<link rel="prev" href="running-mean-and-other-window-functions.html"/>
 <link rel="next" href="multivariate-methods.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -177,7 +177,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="5" data-path="transforming-data.html"><a href="transforming-data.html"><i class="fa fa-check"></i><b>5</b> Transforming Data</a><ul>
 <li class="chapter" data-level="5.1" data-path="ratios-and-normalisation.html"><a href="ratios-and-normalisation.html"><i class="fa fa-check"></i><b>5.1</b> Ratios and Normalisation</a></li>
-<li class="chapter" data-level="5.2" data-path="preparing-data-for-multivariate-data-analysis.html"><a href="preparing-data-for-multivariate-data-analysis.html"><i class="fa fa-check"></i><b>5.2</b> Preparing Data for Multivariate Data Analysis</a></li>
+<li class="chapter" data-level="5.2" data-path="running-mean-and-other-window-functions.html"><a href="running-mean-and-other-window-functions.html"><i class="fa fa-check"></i><b>5.2</b> Running Mean and Other Window Functions</a></li>
+<li class="chapter" data-level="5.3" data-path="preparing-data-for-multivariate-data-analysis.html"><a href="preparing-data-for-multivariate-data-analysis.html"><i class="fa fa-check"></i><b>5.3</b> Preparing Data for Multivariate Data Analysis</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="multivariate-methods.html"><a href="multivariate-methods.html"><i class="fa fa-check"></i><b>6</b> Multivariate Methods</a><ul>
 <li class="chapter" data-level="6.1" data-path="correlation-coefficients.html"><a href="correlation-coefficients.html"><i class="fa fa-check"></i><b>6.1</b> Correlation Coefficients</a></li>
@@ -214,7 +215,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
             <section class="normal" id="section-">
 <div id="preparing-data-for-multivariate-data-analysis" class="section level2">
-<h2><span class="header-section-number">5.2</span> Preparing Data for Multivariate Data Analysis</h2>
+<h2><span class="header-section-number">5.3</span> Preparing Data for Multivariate Data Analysis</h2>
 <p>Where multivariate methods (cluster analysis, principle components analysis, correlation matrices) are required, it is usually necessary to transform data. This is because the statistical assumptions that underlie these methods are often not met when dealing with compositional data like that from an XRF core-scanner. There is no “right” or ideal way to deal with these issues, but a common method is to use a form of log transformation. Here we use a centred log transformation, which cannot be performed on zero values.</p>
 <pre><code>df %&gt;% chemometrics::clr(df)</code></pre>
 <p>There are a number of possible solutions to this problem of zero values, none ideal, but the most common are to add an arbitrary number to the entirety of the data, or to replace zero values with a very small number, perhaps the limit of precision or the limit of detection. In the example shown, the limit of precision for the peak area intensity or counts is used (<code>0.001</code> or <code>1</code> respectively).</p>
@@ -241,7 +242,7 @@ row.names(input) &lt;- rowlabels</code></pre>
           </div>
         </div>
       </div>
-<a href="ratios-and-normalisation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="running-mean-and-other-window-functions.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="multivariate-methods.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>

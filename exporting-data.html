@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-01-25" />
+<meta name="date" content="2021-01-26" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -177,7 +177,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="5" data-path="transforming-data.html"><a href="transforming-data.html"><i class="fa fa-check"></i><b>5</b> Transforming Data</a><ul>
 <li class="chapter" data-level="5.1" data-path="ratios-and-normalisation.html"><a href="ratios-and-normalisation.html"><i class="fa fa-check"></i><b>5.1</b> Ratios and Normalisation</a></li>
-<li class="chapter" data-level="5.2" data-path="preparing-data-for-multivariate-data-analysis.html"><a href="preparing-data-for-multivariate-data-analysis.html"><i class="fa fa-check"></i><b>5.2</b> Preparing Data for Multivariate Data Analysis</a></li>
+<li class="chapter" data-level="5.2" data-path="running-mean-and-other-window-functions.html"><a href="running-mean-and-other-window-functions.html"><i class="fa fa-check"></i><b>5.2</b> Running Mean and Other Window Functions</a></li>
+<li class="chapter" data-level="5.3" data-path="preparing-data-for-multivariate-data-analysis.html"><a href="preparing-data-for-multivariate-data-analysis.html"><i class="fa fa-check"></i><b>5.3</b> Preparing Data for Multivariate Data Analysis</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="multivariate-methods.html"><a href="multivariate-methods.html"><i class="fa fa-check"></i><b>6</b> Multivariate Methods</a><ul>
 <li class="chapter" data-level="6.1" data-path="correlation-coefficients.html"><a href="correlation-coefficients.html"><i class="fa fa-check"></i><b>6.1</b> Correlation Coefficients</a></li>
@@ -216,11 +217,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="exporting-data" class="section level1">
 <h1><span class="header-section-number">Chapter 8</span> Exporting Data</h1>
 <p>Data is easy to export from <code>R</code>. Tables can be exported by piping to <code>readr::write_csv()</code>. For diagrams created in <code>ggplot2</code>, pipe to <code>ggsave()</code>. Sometimes it is necessary to reduce the resolution of Itrax XRF data, usually to facilitate direct comparison with some other lower resolution data. For example, if calibrating using ICP-MS sub-samples taken at 10 mm intervals, but the Itrax XRF scan is at 0.2 mm, it will be necessary to average 50 Itrax measurements for each ICP-MS measurement. This is facilitated using the <code>itrax_reduce()</code> function. The example below demonstrates calculating the averages for contiguous 20 mm chunks of the XRF data.</p>
-<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="exporting-data.html#cb60-1"></a><span class="co"># get the data as 20 mm intervals</span></span>
-<span id="cb60-2"><a href="exporting-data.html#cb60-2"></a><span class="kw">itrax_reduce</span>(CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">drop_na</span>(), <span class="dt">by =</span> <span class="dv">20</span>) <span class="op">%&gt;%</span></span>
-<span id="cb60-3"><a href="exporting-data.html#cb60-3"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>label) <span class="op">%&gt;%</span></span>
-<span id="cb60-4"><a href="exporting-data.html#cb60-4"></a><span class="st">  </span><span class="kw">head</span>() <span class="op">%&gt;%</span></span>
-<span id="cb60-5"><a href="exporting-data.html#cb60-5"></a><span class="st">  </span><span class="kw">kable</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="exporting-data.html#cb59-1"></a><span class="co"># get the data as 20 mm intervals</span></span>
+<span id="cb59-2"><a href="exporting-data.html#cb59-2"></a><span class="kw">itrax_reduce</span>(CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">drop_na</span>(), <span class="dt">by =</span> <span class="dv">20</span>) <span class="op">%&gt;%</span></span>
+<span id="cb59-3"><a href="exporting-data.html#cb59-3"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>label) <span class="op">%&gt;%</span></span>
+<span id="cb59-4"><a href="exporting-data.html#cb59-4"></a><span class="st">  </span><span class="kw">head</span>() <span class="op">%&gt;%</span></span>
+<span id="cb59-5"><a href="exporting-data.html#cb59-5"></a><span class="st">  </span><span class="kw">kable</span>()</span></code></pre></div>
 <table>
 <thead>
 <tr>

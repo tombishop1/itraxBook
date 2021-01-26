@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-01-25" />
+<meta name="date" content="2021-01-26" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="transforming-data.html"/>
-<link rel="next" href="preparing-data-for-multivariate-data-analysis.html"/>
+<link rel="next" href="running-mean-and-other-window-functions.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -177,7 +177,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="5" data-path="transforming-data.html"><a href="transforming-data.html"><i class="fa fa-check"></i><b>5</b> Transforming Data</a><ul>
 <li class="chapter" data-level="5.1" data-path="ratios-and-normalisation.html"><a href="ratios-and-normalisation.html"><i class="fa fa-check"></i><b>5.1</b> Ratios and Normalisation</a></li>
-<li class="chapter" data-level="5.2" data-path="preparing-data-for-multivariate-data-analysis.html"><a href="preparing-data-for-multivariate-data-analysis.html"><i class="fa fa-check"></i><b>5.2</b> Preparing Data for Multivariate Data Analysis</a></li>
+<li class="chapter" data-level="5.2" data-path="running-mean-and-other-window-functions.html"><a href="running-mean-and-other-window-functions.html"><i class="fa fa-check"></i><b>5.2</b> Running Mean and Other Window Functions</a></li>
+<li class="chapter" data-level="5.3" data-path="preparing-data-for-multivariate-data-analysis.html"><a href="preparing-data-for-multivariate-data-analysis.html"><i class="fa fa-check"></i><b>5.3</b> Preparing Data for Multivariate Data Analysis</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="multivariate-methods.html"><a href="multivariate-methods.html"><i class="fa fa-check"></i><b>6</b> Multivariate Methods</a><ul>
 <li class="chapter" data-level="6.1" data-path="correlation-coefficients.html"><a href="correlation-coefficients.html"><i class="fa fa-check"></i><b>6.1</b> Correlation Coefficients</a></li>
@@ -217,26 +218,1205 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">5.1</span> Ratios and Normalisation</h2>
 <p>These data are compositional, and represent the changes in the relative proportions of all components of the matrix, measured and un-measured. As such it is likely the data will need transforming for certain types of multivariate analysis. As previously mentioned, these data are dimensionless, and as such do not represent a quantity, but are directly related to the absolute amount of a particular element in the matrix. It is often the case that ratios of elements are used to represent changes in composition — this is sometimes referred to as normalisation, or normalising one element against another.</p>
 <p>It is trivial to calculate element ratios, to the extent that these can often simply be calculated where they are required rather than saving them to memory. For example, if a plot of the Compton divided by the Rayleigh scatter was desired, there is no need to save the computed value to a new variable (e.g. <code>coh_inc &lt;- df$Mo.coh/df$Mo.inc</code>) — simply define the calculation during plotting. To calculate ratios for all elements at once, use <code>mutate(across(any_ofelementsList))</code>, where <code>elementsList</code> is a list of chemical elements extracted from <code>data(PeriodicTable)</code>.</p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="ratios-and-normalisation.html#cb47-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
-<span id="cb47-2"><a href="ratios-and-normalisation.html#cb47-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">any_of</span>(elementsList)) <span class="op">/</span><span class="st">`</span><span class="dt">Mo inc</span><span class="st">`</span>) <span class="op">%&gt;%</span></span>
-<span id="cb47-3"><a href="ratios-and-normalisation.html#cb47-3"></a><span class="st">  </span><span class="kw">head</span>()</span></code></pre></div>
-<pre><code>## [90m# A tibble: 6 x 56[39m
-##   depth   MSE   cps validity      Al      Si     P       S     Cl     Ar      K
-##   [3m[90m&lt;dbl&gt;[39m[23m [3m[90m&lt;dbl&gt;[39m[23m [3m[90m&lt;dbl&gt;[39m[23m [3m[90m&lt;lgl&gt;[39m[23m      [3m[90m&lt;dbl&gt;[39m[23m   [3m[90m&lt;dbl&gt;[39m[23m [3m[90m&lt;dbl&gt;[39m[23m   [3m[90m&lt;dbl&gt;[39m[23m  [3m[90m&lt;dbl&gt;[39m[23m  [3m[90m&lt;dbl&gt;[39m[23m  [3m[90m&lt;dbl&gt;[39m[23m
-## [90m1[39m     1  1.41 [4m3[24m[4m4[24m525 TRUE     2.89[90me[39m[31m-3[39m 0.010[4m4[24m      0 3.80[90me[39m[31m-4[39m 0.050[4m1[24m 0.022[4m9[24m 0.097[4m4[24m
-## [90m2[39m     2  1.57 [4m3[24m[4m8[24m370 TRUE     2.13[90me[39m[31m-3[39m 0.011[4m4[24m      0 0.  [90m [39m   0.056[4m5[24m 0.022[4m2[24m 0.098[4m1[24m
-## [90m3[39m     3  1.55 [4m3[24m[4m9[24m796 TRUE     2.79[90me[39m[31m-3[39m 0.012[4m4[24m      0 1.21[90me[39m[31m-3[39m 0.055[4m4[24m 0.019[4m1[24m 0.089[4m6[24m
-## [90m4[39m     4  1.41 [4m4[24m[4m0[24m022 TRUE     9.18[90me[39m[31m-4[39m 0.007[4m2[24m[4m8[24m     0 7.42[90me[39m[31m-4[39m 0.046[4m3[24m 0.019[4m6[24m 0.080[4m0[24m
-## [90m5[39m     5  1.41 [4m4[24m[4m1[24m973 TRUE     1.69[90me[39m[31m-3[39m 0.007[4m4[24m[4m3[24m     0 1.18[90me[39m[31m-3[39m 0.055[4m5[24m 0.018[4m8[24m 0.094[4m0[24m
-## [90m6[39m     6  1.36 [4m4[24m[4m1[24m268 TRUE     8.81[90me[39m[31m-4[39m 0.011[4m3[24m      0 9.14[90me[39m[31m-4[39m 0.051[4m5[24m 0.016[4m5[24m 0.104 
-## [90m# … with 45 more variables: Ca [3m[90m&lt;dbl&gt;[90m[23m, Sc [3m[90m&lt;dbl&gt;[90m[23m, Ti [3m[90m&lt;dbl&gt;[90m[23m, V [3m[90m&lt;dbl&gt;[90m[23m, Cr [3m[90m&lt;dbl&gt;[90m[23m,[39m
-## [90m#   Mn [3m[90m&lt;dbl&gt;[90m[23m, Fe [3m[90m&lt;dbl&gt;[90m[23m, Ni [3m[90m&lt;dbl&gt;[90m[23m, Cu [3m[90m&lt;dbl&gt;[90m[23m, Zn [3m[90m&lt;dbl&gt;[90m[23m, Ga [3m[90m&lt;dbl&gt;[90m[23m, Ge [3m[90m&lt;dbl&gt;[90m[23m,[39m
-## [90m#   Br [3m[90m&lt;dbl&gt;[90m[23m, Rb [3m[90m&lt;dbl&gt;[90m[23m, Sr [3m[90m&lt;dbl&gt;[90m[23m, Y [3m[90m&lt;dbl&gt;[90m[23m, Zr [3m[90m&lt;dbl&gt;[90m[23m, Pd [3m[90m&lt;dbl&gt;[90m[23m, Cd [3m[90m&lt;dbl&gt;[90m[23m,[39m
-## [90m#   I [3m[90m&lt;dbl&gt;[90m[23m, Cs [3m[90m&lt;dbl&gt;[90m[23m, Ba [3m[90m&lt;dbl&gt;[90m[23m, Nd [3m[90m&lt;dbl&gt;[90m[23m, Sm [3m[90m&lt;dbl&gt;[90m[23m, Yb [3m[90m&lt;dbl&gt;[90m[23m, Ta [3m[90m&lt;dbl&gt;[90m[23m,[39m
-## [90m#   W [3m[90m&lt;dbl&gt;[90m[23m, Pb [3m[90m&lt;dbl&gt;[90m[23m, Bi [3m[90m&lt;dbl&gt;[90m[23m, `Mo inc` [3m[90m&lt;dbl&gt;[90m[23m, `Mo coh` [3m[90m&lt;dbl&gt;[90m[23m,[39m
-## [90m#   filename [3m[90m&lt;chr&gt;[90m[23m, position [3m[90m&lt;dbl&gt;[90m[23m, `sample surface` [3m[90m&lt;dbl&gt;[90m[23m, `E-gain` [3m[90m&lt;dbl&gt;[90m[23m,[39m
-## [90m#   `E-offset` [3m[90m&lt;dbl&gt;[90m[23m, `F-slope` [3m[90m&lt;dbl&gt;[90m[23m, `F-offset` [3m[90m&lt;dbl&gt;[90m[23m, `Fe a*2` [3m[90m&lt;dbl&gt;[90m[23m, `Fe[39m
-## [90m#   a+b` [3m[90m&lt;dbl&gt;[90m[23m, S1 [3m[90m&lt;dbl&gt;[90m[23m, S2 [3m[90m&lt;dbl&gt;[90m[23m, S3 [3m[90m&lt;dbl&gt;[90m[23m, Dt [3m[90m&lt;dbl&gt;[90m[23m, label [3m[90m&lt;chr&gt;[90m[23m[39m</code></pre>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="ratios-and-normalisation.html#cb46-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
+<span id="cb46-2"><a href="ratios-and-normalisation.html#cb46-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">any_of</span>(elementsList)) <span class="op">/</span><span class="st">`</span><span class="dt">Mo inc</span><span class="st">`</span>) <span class="op">%&gt;%</span></span>
+<span id="cb46-3"><a href="ratios-and-normalisation.html#cb46-3"></a><span class="st">  </span><span class="kw">head</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kable</span>()</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align:right;">
+depth
+</th>
+<th style="text-align:right;">
+MSE
+</th>
+<th style="text-align:right;">
+cps
+</th>
+<th style="text-align:left;">
+validity
+</th>
+<th style="text-align:right;">
+Al
+</th>
+<th style="text-align:right;">
+Si
+</th>
+<th style="text-align:right;">
+P
+</th>
+<th style="text-align:right;">
+S
+</th>
+<th style="text-align:right;">
+Cl
+</th>
+<th style="text-align:right;">
+Ar
+</th>
+<th style="text-align:right;">
+K
+</th>
+<th style="text-align:right;">
+Ca
+</th>
+<th style="text-align:right;">
+Sc
+</th>
+<th style="text-align:right;">
+Ti
+</th>
+<th style="text-align:right;">
+V
+</th>
+<th style="text-align:right;">
+Cr
+</th>
+<th style="text-align:right;">
+Mn
+</th>
+<th style="text-align:right;">
+Fe
+</th>
+<th style="text-align:right;">
+Ni
+</th>
+<th style="text-align:right;">
+Cu
+</th>
+<th style="text-align:right;">
+Zn
+</th>
+<th style="text-align:right;">
+Ga
+</th>
+<th style="text-align:right;">
+Ge
+</th>
+<th style="text-align:right;">
+Br
+</th>
+<th style="text-align:right;">
+Rb
+</th>
+<th style="text-align:right;">
+Sr
+</th>
+<th style="text-align:right;">
+Y
+</th>
+<th style="text-align:right;">
+Zr
+</th>
+<th style="text-align:right;">
+Pd
+</th>
+<th style="text-align:right;">
+Cd
+</th>
+<th style="text-align:right;">
+I
+</th>
+<th style="text-align:right;">
+Cs
+</th>
+<th style="text-align:right;">
+Ba
+</th>
+<th style="text-align:right;">
+Nd
+</th>
+<th style="text-align:right;">
+Sm
+</th>
+<th style="text-align:right;">
+Yb
+</th>
+<th style="text-align:right;">
+Ta
+</th>
+<th style="text-align:right;">
+W
+</th>
+<th style="text-align:right;">
+Pb
+</th>
+<th style="text-align:right;">
+Bi
+</th>
+<th style="text-align:right;">
+Mo inc
+</th>
+<th style="text-align:right;">
+Mo coh
+</th>
+<th style="text-align:left;">
+filename
+</th>
+<th style="text-align:right;">
+position
+</th>
+<th style="text-align:right;">
+sample surface
+</th>
+<th style="text-align:right;">
+E-gain
+</th>
+<th style="text-align:right;">
+E-offset
+</th>
+<th style="text-align:right;">
+F-slope
+</th>
+<th style="text-align:right;">
+F-offset
+</th>
+<th style="text-align:right;">
+Fe a*2
+</th>
+<th style="text-align:right;">
+Fe a+b
+</th>
+<th style="text-align:right;">
+S1
+</th>
+<th style="text-align:right;">
+S2
+</th>
+<th style="text-align:right;">
+S3
+</th>
+<th style="text-align:right;">
+Dt
+</th>
+<th style="text-align:left;">
+label
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1.41
+</td>
+<td style="text-align:right;">
+34525
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+<td style="text-align:right;">
+0.0028872
+</td>
+<td style="text-align:right;">
+0.0104471
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.0003799
+</td>
+<td style="text-align:right;">
+0.0500703
+</td>
+<td style="text-align:right;">
+0.0229457
+</td>
+<td style="text-align:right;">
+0.0974433
+</td>
+<td style="text-align:right;">
+4.282718
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0631007
+</td>
+<td style="text-align:right;">
+0.0019375
+</td>
+<td style="text-align:right;">
+0.0098013
+</td>
+<td style="text-align:right;">
+0.0192987
+</td>
+<td style="text-align:right;">
+1.336018
+</td>
+<td style="text-align:right;">
+0.0046727
+</td>
+<td style="text-align:right;">
+0.0105231
+</td>
+<td style="text-align:right;">
+0.0077879
+</td>
+<td style="text-align:right;">
+0.0001520
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0186529
+</td>
+<td style="text-align:right;">
+0.0124986
+</td>
+<td style="text-align:right;">
+0.3155415
+</td>
+<td style="text-align:right;">
+0.0005698
+</td>
+<td style="text-align:right;">
+0.0096873
+</td>
+<td style="text-align:right;">
+0.0011777
+</td>
+<td style="text-align:right;">
+0.0004939
+</td>
+<td style="text-align:right;">
+0.0014436
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.0023933
+</td>
+<td style="text-align:right;">
+0.0006458
+</td>
+<td style="text-align:right;">
+0.0016336
+</td>
+<td style="text-align:right;">
+0.0054705
+</td>
+<td style="text-align:right;">
+0.0299738
+</td>
+<td style="text-align:right;">
+0.0756753
+</td>
+<td style="text-align:right;">
+0.0029252
+</td>
+<td style="text-align:right;">
+0.0027353
+</td>
+<td style="text-align:right;">
+26323
+</td>
+<td style="text-align:right;">
+8799
+</td>
+<td style="text-align:left;">
+C:166_19_(2020)_processed166_19_S1166_19_S1data000001.spe
+</td>
+<td style="text-align:right;">
+32.54
+</td>
+<td style="text-align:right;">
+6.39
+</td>
+<td style="text-align:right;">
+0.010267
+</td>
+<td style="text-align:right;">
+-0.009931
+</td>
+<td style="text-align:right;">
+0.0099
+</td>
+<td style="text-align:right;">
+0.077115
+</td>
+<td style="text-align:right;">
+80
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+366
+</td>
+<td style="text-align:right;">
+179
+</td>
+<td style="text-align:right;">
+235
+</td>
+<td style="text-align:right;">
+0.106
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+1.57
+</td>
+<td style="text-align:right;">
+38370
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+<td style="text-align:right;">
+0.0021286
+</td>
+<td style="text-align:right;">
+0.0114273
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0565016
+</td>
+<td style="text-align:right;">
+0.0222197
+</td>
+<td style="text-align:right;">
+0.0981403
+</td>
+<td style="text-align:right;">
+5.388267
+</td>
+<td style="text-align:right;">
+0.0005228
+</td>
+<td style="text-align:right;">
+0.0674434
+</td>
+<td style="text-align:right;">
+0.0032863
+</td>
+<td style="text-align:right;">
+0.0121742
+</td>
+<td style="text-align:right;">
+0.0208753
+</td>
+<td style="text-align:right;">
+1.362835
+</td>
+<td style="text-align:right;">
+0.0038838
+</td>
+<td style="text-align:right;">
+0.0085891
+</td>
+<td style="text-align:right;">
+0.0100082
+</td>
+<td style="text-align:right;">
+0.0017925
+</td>
+<td style="text-align:right;">
+0.0014938
+</td>
+<td style="text-align:right;">
+0.0225932
+</td>
+<td style="text-align:right;">
+0.0028382
+</td>
+<td style="text-align:right;">
+0.3428561
+</td>
+<td style="text-align:right;">
+0.0052282
+</td>
+<td style="text-align:right;">
+0.0120248
+</td>
+<td style="text-align:right;">
+0.0029128
+</td>
+<td style="text-align:right;">
+0.0012697
+</td>
+<td style="text-align:right;">
+0.0017925
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.0017925
+</td>
+<td style="text-align:right;">
+0.0025021
+</td>
+<td style="text-align:right;">
+0.0017178
+</td>
+<td style="text-align:right;">
+0.0105310
+</td>
+<td style="text-align:right;">
+0.0289790
+</td>
+<td style="text-align:right;">
+0.0753977
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0050788
+</td>
+<td style="text-align:right;">
+26778
+</td>
+<td style="text-align:right;">
+9117
+</td>
+<td style="text-align:left;">
+C:166_19_(2020)_processed166_19_S1166_19_S1data000002.spe
+</td>
+<td style="text-align:right;">
+33.54
+</td>
+<td style="text-align:right;">
+6.42
+</td>
+<td style="text-align:right;">
+0.010267
+</td>
+<td style="text-align:right;">
+-0.009931
+</td>
+<td style="text-align:right;">
+0.0099
+</td>
+<td style="text-align:right;">
+0.077115
+</td>
+<td style="text-align:right;">
+209
+</td>
+<td style="text-align:right;">
+531
+</td>
+<td style="text-align:right;">
+256
+</td>
+<td style="text-align:right;">
+242
+</td>
+<td style="text-align:right;">
+302
+</td>
+<td style="text-align:right;">
+0.104
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+1.55
+</td>
+<td style="text-align:right;">
+39796
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+<td style="text-align:right;">
+0.0027872
+</td>
+<td style="text-align:right;">
+0.0124294
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.0012053
+</td>
+<td style="text-align:right;">
+0.0553672
+</td>
+<td style="text-align:right;">
+0.0190584
+</td>
+<td style="text-align:right;">
+0.0895669
+</td>
+<td style="text-align:right;">
+6.137024
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0798870
+</td>
+<td style="text-align:right;">
+0.0008286
+</td>
+<td style="text-align:right;">
+0.0113371
+</td>
+<td style="text-align:right;">
+0.0181921
+</td>
+<td style="text-align:right;">
+1.354124
+</td>
+<td style="text-align:right;">
+0.0050471
+</td>
+<td style="text-align:right;">
+0.0056497
+</td>
+<td style="text-align:right;">
+0.0046328
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0016196
+</td>
+<td style="text-align:right;">
+0.0207156
+</td>
+<td style="text-align:right;">
+0.0111111
+</td>
+<td style="text-align:right;">
+0.3632392
+</td>
+<td style="text-align:right;">
+0.0044821
+</td>
+<td style="text-align:right;">
+0.0105461
+</td>
+<td style="text-align:right;">
+0.0028249
+</td>
+<td style="text-align:right;">
+0.0020716
+</td>
+<td style="text-align:right;">
+0.0030132
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.0009416
+</td>
+<td style="text-align:right;">
+0.0016573
+</td>
+<td style="text-align:right;">
+0.0014689
+</td>
+<td style="text-align:right;">
+0.0059510
+</td>
+<td style="text-align:right;">
+0.0264783
+</td>
+<td style="text-align:right;">
+0.0759322
+</td>
+<td style="text-align:right;">
+0.0004896
+</td>
+<td style="text-align:right;">
+0.0074953
+</td>
+<td style="text-align:right;">
+26550
+</td>
+<td style="text-align:right;">
+9303
+</td>
+<td style="text-align:left;">
+C:166_19_(2020)_processed166_19_S1166_19_S1data000003.spe
+</td>
+<td style="text-align:right;">
+34.54
+</td>
+<td style="text-align:right;">
+6.42
+</td>
+<td style="text-align:right;">
+0.010267
+</td>
+<td style="text-align:right;">
+-0.009931
+</td>
+<td style="text-align:right;">
+0.0099
+</td>
+<td style="text-align:right;">
+0.077115
+</td>
+<td style="text-align:right;">
+127
+</td>
+<td style="text-align:right;">
+59
+</td>
+<td style="text-align:right;">
+302
+</td>
+<td style="text-align:right;">
+190
+</td>
+<td style="text-align:right;">
+270
+</td>
+<td style="text-align:right;">
+0.104
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+1.41
+</td>
+<td style="text-align:right;">
+40022
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+<td style="text-align:right;">
+0.0009184
+</td>
+<td style="text-align:right;">
+0.0072766
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.0007418
+</td>
+<td style="text-align:right;">
+0.0463440
+</td>
+<td style="text-align:right;">
+0.0196044
+</td>
+<td style="text-align:right;">
+0.0800071
+</td>
+<td style="text-align:right;">
+5.411303
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0717414
+</td>
+<td style="text-align:right;">
+0.0026492
+</td>
+<td style="text-align:right;">
+0.0108089
+</td>
+<td style="text-align:right;">
+0.0171318
+</td>
+<td style="text-align:right;">
+1.254398
+</td>
+<td style="text-align:right;">
+0.0050865
+</td>
+<td style="text-align:right;">
+0.0072766
+</td>
+<td style="text-align:right;">
+0.0084422
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0215118
+</td>
+<td style="text-align:right;">
+0.0110562
+</td>
+<td style="text-align:right;">
+0.3511127
+</td>
+<td style="text-align:right;">
+0.0037796
+</td>
+<td style="text-align:right;">
+0.0167785
+</td>
+<td style="text-align:right;">
+0.0023313
+</td>
+<td style="text-align:right;">
+0.0008478
+</td>
+<td style="text-align:right;">
+0.0023667
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.0021194
+</td>
+<td style="text-align:right;">
+0.0026492
+</td>
+<td style="text-align:right;">
+0.0022607
+</td>
+<td style="text-align:right;">
+0.0077005
+</td>
+<td style="text-align:right;">
+0.0280466
+</td>
+<td style="text-align:right;">
+0.0762981
+</td>
+<td style="text-align:right;">
+0.0053691
+</td>
+<td style="text-align:right;">
+0.0047333
+</td>
+<td style="text-align:right;">
+28310
+</td>
+<td style="text-align:right;">
+9886
+</td>
+<td style="text-align:left;">
+C:166_19_(2020)_processed166_19_S1166_19_S1data000004.spe
+</td>
+<td style="text-align:right;">
+35.54
+</td>
+<td style="text-align:right;">
+6.43
+</td>
+<td style="text-align:right;">
+0.010267
+</td>
+<td style="text-align:right;">
+-0.009931
+</td>
+<td style="text-align:right;">
+0.0099
+</td>
+<td style="text-align:right;">
+0.077115
+</td>
+<td style="text-align:right;">
+106
+</td>
+<td style="text-align:right;">
+149
+</td>
+<td style="text-align:right;">
+257
+</td>
+<td style="text-align:right;">
+291
+</td>
+<td style="text-align:right;">
+305
+</td>
+<td style="text-align:right;">
+0.108
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+1.41
+</td>
+<td style="text-align:right;">
+41973
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+<td style="text-align:right;">
+0.0016903
+</td>
+<td style="text-align:right;">
+0.0074308
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.0011800
+</td>
+<td style="text-align:right;">
+0.0554918
+</td>
+<td style="text-align:right;">
+0.0188481
+</td>
+<td style="text-align:right;">
+0.0939852
+</td>
+<td style="text-align:right;">
+4.333429
+</td>
+<td style="text-align:right;">
+0.0033805
+</td>
+<td style="text-align:right;">
+0.0582345
+</td>
+<td style="text-align:right;">
+0.0028384
+</td>
+<td style="text-align:right;">
+0.0140324
+</td>
+<td style="text-align:right;">
+0.0235362
+</td>
+<td style="text-align:right;">
+1.412903
+</td>
+<td style="text-align:right;">
+0.0052940
+</td>
+<td style="text-align:right;">
+0.0088021
+</td>
+<td style="text-align:right;">
+0.0076540
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0210167
+</td>
+<td style="text-align:right;">
+0.0096951
+</td>
+<td style="text-align:right;">
+0.3280712
+</td>
+<td style="text-align:right;">
+0.0057405
+</td>
+<td style="text-align:right;">
+0.0051027
+</td>
+<td style="text-align:right;">
+0.0009886
+</td>
+<td style="text-align:right;">
+0.0010843
+</td>
+<td style="text-align:right;">
+0.0007335
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.0042097
+</td>
+<td style="text-align:right;">
+0.0013395
+</td>
+<td style="text-align:right;">
+0.0011481
+</td>
+<td style="text-align:right;">
+0.0051984
+</td>
+<td style="text-align:right;">
+0.0293086
+</td>
+<td style="text-align:right;">
+0.0747544
+</td>
+<td style="text-align:right;">
+0.0017222
+</td>
+<td style="text-align:right;">
+0.0050070
+</td>
+<td style="text-align:right;">
+31356
+</td>
+<td style="text-align:right;">
+10140
+</td>
+<td style="text-align:left;">
+C:166_19_(2020)_processed166_19_S1166_19_S1data000005.spe
+</td>
+<td style="text-align:right;">
+36.54
+</td>
+<td style="text-align:right;">
+6.44
+</td>
+<td style="text-align:right;">
+0.010267
+</td>
+<td style="text-align:right;">
+-0.009931
+</td>
+<td style="text-align:right;">
+0.0099
+</td>
+<td style="text-align:right;">
+0.077115
+</td>
+<td style="text-align:right;">
+116
+</td>
+<td style="text-align:right;">
+18
+</td>
+<td style="text-align:right;">
+325
+</td>
+<td style="text-align:right;">
+311
+</td>
+<td style="text-align:right;">
+380
+</td>
+<td style="text-align:right;">
+0.111
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+1.36
+</td>
+<td style="text-align:right;">
+41268
+</td>
+<td style="text-align:left;">
+TRUE
+</td>
+<td style="text-align:right;">
+0.0008815
+</td>
+<td style="text-align:right;">
+0.0113284
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.0009141
+</td>
+<td style="text-align:right;">
+0.0514511
+</td>
+<td style="text-align:right;">
+0.0164539
+</td>
+<td style="text-align:right;">
+0.1037837
+</td>
+<td style="text-align:right;">
+4.315334
+</td>
+<td style="text-align:right;">
+0.0004571
+</td>
+<td style="text-align:right;">
+0.0627795
+</td>
+<td style="text-align:right;">
+0.0034932
+</td>
+<td style="text-align:right;">
+0.0130913
+</td>
+<td style="text-align:right;">
+0.0258562
+</td>
+<td style="text-align:right;">
+1.478339
+</td>
+<td style="text-align:right;">
+0.0049296
+</td>
+<td style="text-align:right;">
+0.0081617
+</td>
+<td style="text-align:right;">
+0.0095981
+</td>
+<td style="text-align:right;">
+0.0013059
+</td>
+<td style="text-align:right;">
+0.0015670
+</td>
+<td style="text-align:right;">
+0.0231465
+</td>
+<td style="text-align:right;">
+0.0103816
+</td>
+<td style="text-align:right;">
+0.3237570
+</td>
+<td style="text-align:right;">
+0.0034605
+</td>
+<td style="text-align:right;">
+0.0101858
+</td>
+<td style="text-align:right;">
+0.0023506
+</td>
+<td style="text-align:right;">
+0.0009141
+</td>
+<td style="text-align:right;">
+0.0018935
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.0030361
+</td>
+<td style="text-align:right;">
+0.0031667
+</td>
+<td style="text-align:right;">
+0.0003918
+</td>
+<td style="text-align:right;">
+0.0060070
+</td>
+<td style="text-align:right;">
+0.0278150
+</td>
+<td style="text-align:right;">
+0.0762626
+</td>
+<td style="text-align:right;">
+0.0017629
+</td>
+<td style="text-align:right;">
+0.0059417
+</td>
+<td style="text-align:right;">
+30631
+</td>
+<td style="text-align:right;">
+9968
+</td>
+<td style="text-align:left;">
+C:166_19_(2020)_processed166_19_S1166_19_S1data000006.spe
+</td>
+<td style="text-align:right;">
+37.54
+</td>
+<td style="text-align:right;">
+6.46
+</td>
+<td style="text-align:right;">
+0.010267
+</td>
+<td style="text-align:right;">
+-0.009931
+</td>
+<td style="text-align:right;">
+0.0099
+</td>
+<td style="text-align:right;">
+0.077115
+</td>
+<td style="text-align:right;">
+77
+</td>
+<td style="text-align:right;">
+114
+</td>
+<td style="text-align:right;">
+406
+</td>
+<td style="text-align:right;">
+296
+</td>
+<td style="text-align:right;">
+345
+</td>
+<td style="text-align:right;">
+0.111
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+</tbody>
+</table>
 </div>
             </section>
 
@@ -244,7 +1424,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
         </div>
       </div>
 <a href="transforming-data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="preparing-data-for-multivariate-data-analysis.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="running-mean-and-other-window-functions.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
