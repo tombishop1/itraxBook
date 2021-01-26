@@ -9,7 +9,25 @@ It is trivial to calculate element ratios, to the extent that these can often si
 ```{r divide_by_inc}
 CD166_19_xrf %>%
   mutate(across(any_of(elementsList)) /`Mo inc`) %>%
-  head()
+  head() %>% kable()
+```
+
+## Running Mean and Other Window Functions
+
+Where a signal is noisy but appears to exhibit some signal it may be appropriate to use a running mean to "smooth" the signal. However, considerable caution should be exercised in the use of this tool. It is rare for an analysis to be genuinely improved by the use of running means, although it can artificially improve statistics for some tests. When visualising data using a running mean the original, unmodified data should always be shown alongside to avoid any misunderstanding. This method can be used for any suitable window function (e.g. `min()`, `max()`, `range()` and `sd`.)
+
+```{r warning=FALSE}
+CD166_19_xrf %>%
+  # uses a 50 point running mean (50 mm for this data); 25 before, 25 after
+  mutate(across(any_of(elementsList), 
+                function(x){unlist(slider::slide(x, mean, .before = 25, .after = 25))}
+                )
+         ) %>%
+  ggplot(mapping = aes(x = depth, y = Ca)) + 
+  geom_line(data = CD166_19_xrf, col = "grey80") + 
+  geom_line() + 
+  scale_x_reverse() +
+  theme_paleo()
 ```
 
 ## Preparing Data for Multivariate Data Analysis

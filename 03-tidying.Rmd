@@ -123,57 +123,92 @@ Grain size variations are known the affect the detection of some elements. Grain
 
 ## Uncertainties
 
-The best way to quantify the uncertainties in the XRF data is in repeat measurements. The example dataset contains short sections of repeat measurements. An example might begin by reading in the repeat scan data, as below. 
+The best way to quantify the uncertainties in the XRF data is in repeat measurements. The example dataset contains short sections of repeat measurements. An example might begin by reading in the repeat scan data, as below for `CD166_19_S1`. 
 
 ```{r uncertainties}
 CD166_19_S1_REP1 <- itrax_import("CD166_19_S1/CD166_19_S1_REP1/Results.txt") %>%
-  select(any_of(c(elementsList, "position"))) %>%
+  select(any_of(c(elementsList, "position", "Mo inc", "Mo coh"))) %>%
   mutate(scan = "scan1")
 CD166_19_S1_REP2 <- itrax_import("CD166_19_S1/CD166_19_S1_REP2/Results.txt") %>%
-  select(any_of(c(elementsList, "position"))) %>%
+  select(any_of(c(elementsList, "position", "Mo inc", "Mo coh"))) %>%
   mutate(scan = "scan2")
 CD166_19_S1_REP3 <- CD166_19_S1$xrf %>%
   filter(position >= min(c(CD166_19_S1_REP1$position, CD166_19_S1_REP2$position)) & 
            position <= max(c(CD166_19_S1_REP1$position, CD166_19_S1_REP2$position))) %>%
-  select(any_of(c(elementsList, "position"))) %>%
+  select(any_of(c(elementsList, "position", "Mo inc", "Mo coh"))) %>%
   mutate(scan = "scan3")
 ```
 
-It should then be combined into a single dataset. 
+It should then be combined into a single dataset, and finally, a function to calculate the uncertainties is called (here we use `sd()`). The `errors` package is used to create an output that can combine both the value and the associated uncertainty. It is a really neat way of working with quantities and ensures the uncertainties are correctly propagated throughout the work. 
 
-```{r}
+```{r message=FALSE}
 S1_reps <- list(CD166_19_S1_REP1, CD166_19_S1_REP2, CD166_19_S1_REP3) %>%
   reduce(full_join) %>%
-  select(scan, position, everything())
+  select(scan, position, everything()) %>%
+  group_by(position) %>%
+  summarise(across(any_of(c(elementsList, "Mo inc", "Mo coh")), 
+                   function(x){set_errors(x = mean(x, na.rm = TRUE), 
+                                          value = sd(x, na.rm = TRUE))}))
+```
+
+```{r include=FALSE}
 rm(CD166_19_S1_REP1, CD166_19_S1_REP2, CD166_19_S1_REP3)
 ```
-
-Finally, a function to calculate the uncertainties. The `errors` package is used to create an output that can combine both the value and the associated uncertainty. It is a really neat way of working with quantities. 
-
-```{r}
-library(errors)
-S1_reps <- S1_reps %>%
-  group_by(position) %>%
-  summarise(across(any_of(elementsList), 
-                   function(x){set_errors(x = mean(x, na.rm = TRUE), 
-                                          value = sd(x, na.rm = TRUE))}
-                   )
-            )
-```
-
-These can be plotted using the mean and standard deviation instead of a single value using `errors::errors_min()` and `errors::errors_max()` really easily. 
+ 
+These can be plotted using the mean and standard deviation instead of a single value using `errors::errors_min()` and `errors::errors_max()` really easily. Note that the errors are propagated through any arithmetic - in the example below, where the ratio of coherent Mo and incoherent Mo peak area is calculated.
 
 ```{r}
 S1_reps %>%
-  select(Al, Si, Ti, Fe, position) %>%
-  ggplot(aes(x = position, y = Fe)) +
-  geom_ribbon(aes(ymin = errors_min(Fe), ymax = errors_max(Fe)), fill = "black") +
-  scale_x_reverse()
+  mutate(`coh/inc` = `Mo coh`/`Mo inc`) %>%
+  select(Al, Si, Ti, Fe, Pb, Ca, `coh/inc`, position) %>%
+  pivot_longer(!c("position"), names_to = "elements", values_to = "peakarea") %>% 
+  drop_na() %>%
+  mutate(elements = factor(elements, levels = c(elementsList, "coh/inc"))) %>%
+
+  ggplot(aes(x = peakarea, y = position)) +
+  scale_y_reverse() + 
+  geom_ribbonh(aes(xmin = errors_min(peakarea), xmax = errors_max(peakarea)), fill = "grey80") +
+  geom_lineh() + 
+  scale_x_continuous(n.breaks = 3) +
+  facet_wrap(vars(elements), scales = "free_x", nrow = 1) + 
+  theme_paleo()
+```
+
+This information can be used to inform decisions about the inclusion and treatment of the remainder of the data - where there are unacceptably high uncertainties that element might be considered for exclusion from further analysis. 
+
+```{r include=FALSE}
+rm(S1_reps)
 ```
 
 ## High Signal-to-noise Ratios
 
-The inclusion of an element in an XRF dataset does not necessarily mean that the element is well-detected, and some elements will be so poorly detected that those data can be removed.
+It is not always possible to do repeat scans for entire scanning projects, and as such it may be necessary to look at others ways of identifying problematic noisy data. Much of this can be done by good judgement on the part of the analyst, and will depend on the requirements of the projects. However, there are some analytical tools that can help. One method is to look at the autocorrelation of a time-series. We can use the auto-correlation factor (ACF) to explore this for our data. 
+
+We might begin with examples for just two elements, Ca and Pb. It is clear from these plots that whereas Ca has the expected pattern of autocorrelation, Pb has generally much lower and a more disordered pattern of autocorrelation. 
+
+```{r}
+library(forecast)
+egg::ggarrange(
+  ggAcf(CD166_19_xrf$Ca) + 
+    ylim(c(NA,1)),
+  ggAcf(CD166_19_xrf$Pb) + 
+    ylim(c(NA,1)),
+  nrow = 1)
+```
+Now we might move on to making calculations for the entirety of the data. In the example below we apply the `Acf()` function to each of the elements. We might then explore the data by sorting for an arbitrary lag, or by plotting the results together for inspection. In this case, the elements have been sorted by the autocorrelation value at a lag of 5. Although the visualisation is a bit messy with all the elements plotting over one another, it is clear that some elements exhibit very low autocorrelation (e.g. I, Pb, Sc, Ge, Cs, P) and could be possible candidates for exclusion. 
+
+```{r warning=FALSE}
+apply(CD166_19_xrf %>% select(any_of(elementsList)), 2, FUN = function(x){round(Acf(x, plot = F)$acf, 3)}) %>%
+  as_tibble(rownames = "lag") %>%
+  pivot_longer(!c("lag"), names_to = "elements", values_to = "value") %>%
+  mutate(lag = as.numeric(lag),
+         elements = factor(elements, levels = filter(., lag == 5) %>% arrange(desc(value)) %>% pull(elements))) %>%
+  group_by(elements) %>%
+  ggplot(aes(x = lag, y = value, col = elements)) +
+  geom_line()
+```
+
+It is worth noting that this analysis has been performed on the entirety of the data, but there is no reason why the data could be problematic for some facies and acceptable for others. It may be necessary to perform some facies analysis and perform these analyses per facies. 
 
 ## Reversing Data
 
