@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-01-26" />
+<meta name="date" content="2021-02-26" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -220,21 +220,52 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3><span class="header-section-number">2.2.1</span> Processed Data</h3>
 <p>This is the data most commonly used in analysis and it can be quickly imported using <code>itraxR::itrax_import()</code>. Note that, like for the example data, it is possible to have more than one processed data file. Typically cores have at least two, one created at the time of the scan based on settings for a single point near the top of the sequence, and another from a holistic re-analysis of the sequence.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="xrf-data-1.html#cb4-1"></a><span class="kw">itrax_import</span>(<span class="st">&quot;CD166_19_S1/CD166_19_S1/Results.txt&quot;</span>, <span class="dt">depth =</span> <span class="dv">0</span>) <span class="op">%&gt;%</span></span>
-<span id="cb4-2"><a href="xrf-data-1.html#cb4-2"></a><span class="st">  </span><span class="kw">head</span>()</span></code></pre></div>
-<pre><code>## [90m# A tibble: 6 x 43[39m
-##   depth   MSE   cps validity    Al    Si     P     S    Cl    Ar     K     Ca
-##   [3m[90m&lt;dbl&gt;[39m[23m [3m[90m&lt;dbl&gt;[39m[23m [3m[90m&lt;dbl&gt;[39m[23m [3m[90m&lt;lgl&gt;[39m[23m    [3m[90m&lt;dbl&gt;[39m[23m [3m[90m&lt;dbl&gt;[39m[23m [3m[90m&lt;dbl&gt;[39m[23m [3m[90m&lt;dbl&gt;[39m[23m [3m[90m&lt;dbl&gt;[39m[23m [3m[90m&lt;dbl&gt;[39m[23m [3m[90m&lt;dbl&gt;[39m[23m  [3m[90m&lt;dbl&gt;[39m[23m
-## [90m1[39m     1  1.41 [4m3[24m[4m4[24m525 TRUE        76   275     0    10  [4m1[24m318   604  [4m2[24m565 [4m1[24m[4m1[24m[4m2[24m734
-## [90m2[39m     2  1.57 [4m3[24m[4m8[24m370 TRUE        57   306     0     0  [4m1[24m513   595  [4m2[24m628 [4m1[24m[4m4[24m[4m4[24m287
-## [90m3[39m     3  1.55 [4m3[24m[4m9[24m796 TRUE        74   330     0    32  [4m1[24m470   506  [4m2[24m378 [4m1[24m[4m6[24m[4m2[24m938
-## [90m4[39m     4  1.41 [4m4[24m[4m0[24m022 TRUE        26   206     0    21  [4m1[24m312   555  [4m2[24m265 [4m1[24m[4m5[24m[4m3[24m194
-## [90m5[39m     5  1.41 [4m4[24m[4m1[24m973 TRUE        53   233     0    37  [4m1[24m740   591  [4m2[24m947 [4m1[24m[4m3[24m[4m5[24m879
-## [90m6[39m     6  1.36 [4m4[24m[4m1[24m268 TRUE        27   347     0    28  [4m1[24m576   504  [4m3[24m179 [4m1[24m[4m3[24m[4m2[24m183
-## [90m# … with 31 more variables: Sc [3m[90m&lt;dbl&gt;[90m[23m, Ti [3m[90m&lt;dbl&gt;[90m[23m, V [3m[90m&lt;dbl&gt;[90m[23m, Cr [3m[90m&lt;dbl&gt;[90m[23m, Mn [3m[90m&lt;dbl&gt;[90m[23m,[39m
-## [90m#   Fe [3m[90m&lt;dbl&gt;[90m[23m, Ni [3m[90m&lt;dbl&gt;[90m[23m, Cu [3m[90m&lt;dbl&gt;[90m[23m, Zn [3m[90m&lt;dbl&gt;[90m[23m, Ga [3m[90m&lt;dbl&gt;[90m[23m, Ge [3m[90m&lt;dbl&gt;[90m[23m, Br [3m[90m&lt;dbl&gt;[90m[23m,[39m
-## [90m#   Rb [3m[90m&lt;dbl&gt;[90m[23m, Sr [3m[90m&lt;dbl&gt;[90m[23m, Y [3m[90m&lt;dbl&gt;[90m[23m, Zr [3m[90m&lt;dbl&gt;[90m[23m, Pd [3m[90m&lt;dbl&gt;[90m[23m, Cd [3m[90m&lt;dbl&gt;[90m[23m, I [3m[90m&lt;dbl&gt;[90m[23m,[39m
-## [90m#   Cs [3m[90m&lt;dbl&gt;[90m[23m, Ba [3m[90m&lt;dbl&gt;[90m[23m, Nd [3m[90m&lt;dbl&gt;[90m[23m, Sm [3m[90m&lt;dbl&gt;[90m[23m, Yb [3m[90m&lt;dbl&gt;[90m[23m, Ta [3m[90m&lt;dbl&gt;[90m[23m, W [3m[90m&lt;dbl&gt;[90m[23m,[39m
-## [90m#   Pb [3m[90m&lt;dbl&gt;[90m[23m, Bi [3m[90m&lt;dbl&gt;[90m[23m, `Mo inc` [3m[90m&lt;dbl&gt;[90m[23m, `Mo coh` [3m[90m&lt;dbl&gt;[90m[23m, position [3m[90m&lt;dbl&gt;[90m[23m[39m</code></pre>
+<span id="cb4-2"><a href="xrf-data-1.html#cb4-2"></a><span class="st">  </span><span class="kw">glimpse</span>()</span></code></pre></div>
+<pre><code>## Rows: 1,281
+## Columns: 43
+## $ depth    &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18…
+## $ MSE      &lt;dbl&gt; 1.41, 1.57, 1.55, 1.41, 1.41, 1.36, 1.52, 1.38, 1.58, 1.52, 1…
+## $ cps      &lt;dbl&gt; 34525, 38370, 39796, 40022, 41973, 41268, 40977, 41104, 41408…
+## $ validity &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, T…
+## $ Al       &lt;dbl&gt; 76, 57, 74, 26, 53, 27, 72, 78, 69, 70, 61, 45, 41, 51, 90, 7…
+## $ Si       &lt;dbl&gt; 275, 306, 330, 206, 233, 347, 337, 346, 403, 381, 301, 491, 5…
+## $ P        &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
+## $ S        &lt;dbl&gt; 10, 0, 32, 21, 37, 28, 59, 19, 44, 30, 0, 54, 48, 0, 28, 35, …
+## $ Cl       &lt;dbl&gt; 1318, 1513, 1470, 1312, 1740, 1576, 1605, 1559, 1503, 1428, 1…
+## $ Ar       &lt;dbl&gt; 604, 595, 506, 555, 591, 504, 584, 489, 597, 512, 547, 592, 6…
+## $ K        &lt;dbl&gt; 2565, 2628, 2378, 2265, 2947, 3179, 3376, 3193, 3220, 2732, 2…
+## $ Ca       &lt;dbl&gt; 112734, 144287, 162938, 153194, 135879, 132183, 134094, 13857…
+## $ Sc       &lt;dbl&gt; 0, 14, 0, 0, 106, 14, 0, 46, 0, 0, 33, 0, 0, 0, 28, 22, 0, 0,…
+## $ Ti       &lt;dbl&gt; 1661, 1806, 2121, 2031, 1826, 1923, 2059, 2443, 2701, 2442, 2…
+## $ V        &lt;dbl&gt; 51, 88, 22, 75, 89, 107, 0, 71, 23, 91, 55, 66, 64, 62, 143, …
+## $ Cr       &lt;dbl&gt; 258, 326, 301, 306, 440, 401, 440, 407, 449, 336, 329, 443, 4…
+## $ Mn       &lt;dbl&gt; 508, 559, 483, 485, 738, 792, 799, 868, 794, 647, 680, 813, 8…
+## $ Fe       &lt;dbl&gt; 35168, 36494, 35952, 35512, 44303, 45283, 45694, 46506, 47859…
+## $ Ni       &lt;dbl&gt; 123, 104, 134, 144, 166, 151, 125, 157, 180, 147, 132, 160, 1…
+## $ Cu       &lt;dbl&gt; 277, 230, 150, 206, 276, 250, 217, 178, 191, 197, 189, 187, 2…
+## $ Zn       &lt;dbl&gt; 205, 268, 123, 239, 240, 294, 284, 238, 230, 211, 210, 226, 1…
+## $ Ga       &lt;dbl&gt; 4, 48, 0, 0, 0, 40, 8, 22, 26, 0, 47, 57, 0, 125, 0, 0, 0, 39…
+## $ Ge       &lt;dbl&gt; 0, 40, 43, 0, 0, 48, 115, 100, 80, 164, 110, 132, 98, 90, 68,…
+## $ Br       &lt;dbl&gt; 491, 605, 550, 609, 659, 709, 583, 582, 635, 545, 678, 535, 4…
+## $ Rb       &lt;dbl&gt; 329, 76, 295, 313, 304, 318, 337, 323, 223, 306, 168, 252, 24…
+## $ Sr       &lt;dbl&gt; 8306, 9181, 9644, 9940, 10287, 9917, 9931, 9897, 9209, 9869, …
+## $ Y        &lt;dbl&gt; 15, 140, 119, 107, 180, 106, 52, 77, 112, 144, 237, 151, 188,…
+## $ Zr       &lt;dbl&gt; 255, 322, 280, 475, 160, 312, 319, 319, 552, 484, 373, 634, 7…
+## $ Pd       &lt;dbl&gt; 31, 78, 75, 66, 31, 72, 31, 54, 58, 70, 55, 81, 43, 6, 42, 79…
+## $ Cd       &lt;dbl&gt; 13, 34, 55, 24, 34, 28, 56, 62, 96, 79, 41, 84, 64, 43, 75, 5…
+## $ I        &lt;dbl&gt; 38, 48, 80, 67, 23, 58, 30, 53, 93, 43, 36, 126, 58, 85, 28, …
+## $ Cs       &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
+## $ Ba       &lt;dbl&gt; 63, 48, 25, 60, 132, 93, 172, 108, 108, 22, 74, 123, 82, 67, …
+## $ Nd       &lt;dbl&gt; 17, 67, 44, 75, 42, 97, 92, 68, 56, 59, 41, 50, 73, 56, 78, 4…
+## $ Sm       &lt;dbl&gt; 43, 46, 39, 64, 36, 12, 24, 69, 68, 17, 47, 59, 37, 45, 28, 4…
+## $ Yb       &lt;dbl&gt; 144, 282, 158, 218, 163, 184, 248, 166, 188, 169, 247, 216, 1…
+## $ Ta       &lt;dbl&gt; 789, 776, 703, 794, 919, 852, 926, 840, 847, 790, 736, 805, 6…
+## $ W        &lt;dbl&gt; 1992, 2019, 2016, 2160, 2344, 2336, 2243, 2267, 2185, 2203, 2…
+## $ Pb       &lt;dbl&gt; 77, 0, 13, 152, 54, 54, 75, 111, 78, 0, 92, 22, 0, 81, 19, 71…
+## $ Bi       &lt;dbl&gt; 72, 136, 199, 134, 157, 182, 151, 185, 116, 164, 141, 135, 16…
+## $ `Mo inc` &lt;dbl&gt; 26323, 26778, 26550, 28310, 31356, 30631, 29040, 29104, 27932…
+## $ `Mo coh` &lt;dbl&gt; 8799, 9117, 9303, 9886, 10140, 9968, 9973, 9701, 9751, 9639, …
+## $ position &lt;dbl&gt; 32.54, 33.54, 34.54, 35.54, 36.54, 37.54, 38.54, 39.54, 40.54…</code></pre>
 </div>
 <div id="joining-xrf-data" class="section level3">
 <h3><span class="header-section-number">2.2.2</span> Joining XRF Data</h3>
@@ -251,9 +282,54 @@ df &lt;- lapply(names(mylist), function(i) within(mylist[[i]], {label &lt;- i}))
 <span id="cb7-4"><a href="xrf-data-1.html#cb7-4"></a>CD166_<span class="dv">19</span>_S3 &lt;-<span class="st"> </span><span class="kw">itrax_import</span>(<span class="st">&quot;CD166_19_S3/CD166_19_S3/Results.txt&quot;</span>, <span class="dt">depth_top =</span> <span class="kw">max</span>(CD166_<span class="dv">19</span>_S2<span class="op">$</span>depth))</span>
 <span id="cb7-5"><a href="xrf-data-1.html#cb7-5"></a><span class="co">#join them together</span></span>
 <span id="cb7-6"><a href="xrf-data-1.html#cb7-6"></a>CD166_<span class="dv">19</span> &lt;-<span class="st"> </span><span class="kw">itrax_join</span>(<span class="kw">list</span>(<span class="dt">S1 =</span> CD166_<span class="dv">19</span>_S1, <span class="dt">S2 =</span> CD166_<span class="dv">19</span>_S2, <span class="dt">S3 =</span> CD166_<span class="dv">19</span>_S3))</span>
-<span id="cb7-7"><a href="xrf-data-1.html#cb7-7"></a><span class="kw">dim</span>(CD166_<span class="dv">19</span>)</span></code></pre></div>
-<pre><code>## [1] 4206   44</code></pre>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="xrf-data-1.html#cb9-1"></a><span class="kw">rm</span>(CD166_<span class="dv">19</span>_S1, CD166_<span class="dv">19</span>_S2, CD166_<span class="dv">19</span>_S3)</span></code></pre></div>
+<span id="cb7-7"><a href="xrf-data-1.html#cb7-7"></a><span class="kw">rm</span>(CD166_<span class="dv">19</span>_S1, CD166_<span class="dv">19</span>_S2, CD166_<span class="dv">19</span>_S3)</span>
+<span id="cb7-8"><a href="xrf-data-1.html#cb7-8"></a><span class="kw">glimpse</span>(CD166_<span class="dv">19</span>)</span></code></pre></div>
+<pre><code>## Rows: 4,206
+## Columns: 44
+## $ depth    &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18…
+## $ MSE      &lt;dbl&gt; 1.41, 1.57, 1.55, 1.41, 1.41, 1.36, 1.52, 1.38, 1.58, 1.52, 1…
+## $ cps      &lt;dbl&gt; 34525, 38370, 39796, 40022, 41973, 41268, 40977, 41104, 41408…
+## $ validity &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, T…
+## $ Al       &lt;dbl&gt; 76, 57, 74, 26, 53, 27, 72, 78, 69, 70, 61, 45, 41, 51, 90, 7…
+## $ Si       &lt;dbl&gt; 275, 306, 330, 206, 233, 347, 337, 346, 403, 381, 301, 491, 5…
+## $ P        &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
+## $ S        &lt;dbl&gt; 10, 0, 32, 21, 37, 28, 59, 19, 44, 30, 0, 54, 48, 0, 28, 35, …
+## $ Cl       &lt;dbl&gt; 1318, 1513, 1470, 1312, 1740, 1576, 1605, 1559, 1503, 1428, 1…
+## $ Ar       &lt;dbl&gt; 604, 595, 506, 555, 591, 504, 584, 489, 597, 512, 547, 592, 6…
+## $ K        &lt;dbl&gt; 2565, 2628, 2378, 2265, 2947, 3179, 3376, 3193, 3220, 2732, 2…
+## $ Ca       &lt;dbl&gt; 112734, 144287, 162938, 153194, 135879, 132183, 134094, 13857…
+## $ Sc       &lt;dbl&gt; 0, 14, 0, 0, 106, 14, 0, 46, 0, 0, 33, 0, 0, 0, 28, 22, 0, 0,…
+## $ Ti       &lt;dbl&gt; 1661, 1806, 2121, 2031, 1826, 1923, 2059, 2443, 2701, 2442, 2…
+## $ V        &lt;dbl&gt; 51, 88, 22, 75, 89, 107, 0, 71, 23, 91, 55, 66, 64, 62, 143, …
+## $ Cr       &lt;dbl&gt; 258, 326, 301, 306, 440, 401, 440, 407, 449, 336, 329, 443, 4…
+## $ Mn       &lt;dbl&gt; 508, 559, 483, 485, 738, 792, 799, 868, 794, 647, 680, 813, 8…
+## $ Fe       &lt;dbl&gt; 35168, 36494, 35952, 35512, 44303, 45283, 45694, 46506, 47859…
+## $ Ni       &lt;dbl&gt; 123, 104, 134, 144, 166, 151, 125, 157, 180, 147, 132, 160, 1…
+## $ Cu       &lt;dbl&gt; 277, 230, 150, 206, 276, 250, 217, 178, 191, 197, 189, 187, 2…
+## $ Zn       &lt;dbl&gt; 205, 268, 123, 239, 240, 294, 284, 238, 230, 211, 210, 226, 1…
+## $ Ga       &lt;dbl&gt; 4, 48, 0, 0, 0, 40, 8, 22, 26, 0, 47, 57, 0, 125, 0, 0, 0, 39…
+## $ Ge       &lt;dbl&gt; 0, 40, 43, 0, 0, 48, 115, 100, 80, 164, 110, 132, 98, 90, 68,…
+## $ Br       &lt;dbl&gt; 491, 605, 550, 609, 659, 709, 583, 582, 635, 545, 678, 535, 4…
+## $ Rb       &lt;dbl&gt; 329, 76, 295, 313, 304, 318, 337, 323, 223, 306, 168, 252, 24…
+## $ Sr       &lt;dbl&gt; 8306, 9181, 9644, 9940, 10287, 9917, 9931, 9897, 9209, 9869, …
+## $ Y        &lt;dbl&gt; 15, 140, 119, 107, 180, 106, 52, 77, 112, 144, 237, 151, 188,…
+## $ Zr       &lt;dbl&gt; 255, 322, 280, 475, 160, 312, 319, 319, 552, 484, 373, 634, 7…
+## $ Pd       &lt;dbl&gt; 31, 78, 75, 66, 31, 72, 31, 54, 58, 70, 55, 81, 43, 6, 42, 79…
+## $ Cd       &lt;dbl&gt; 13, 34, 55, 24, 34, 28, 56, 62, 96, 79, 41, 84, 64, 43, 75, 5…
+## $ I        &lt;dbl&gt; 38, 48, 80, 67, 23, 58, 30, 53, 93, 43, 36, 126, 58, 85, 28, …
+## $ Cs       &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
+## $ Ba       &lt;dbl&gt; 63, 48, 25, 60, 132, 93, 172, 108, 108, 22, 74, 123, 82, 67, …
+## $ Nd       &lt;dbl&gt; 17, 67, 44, 75, 42, 97, 92, 68, 56, 59, 41, 50, 73, 56, 78, 4…
+## $ Sm       &lt;dbl&gt; 43, 46, 39, 64, 36, 12, 24, 69, 68, 17, 47, 59, 37, 45, 28, 4…
+## $ Yb       &lt;dbl&gt; 144, 282, 158, 218, 163, 184, 248, 166, 188, 169, 247, 216, 1…
+## $ Ta       &lt;dbl&gt; 789, 776, 703, 794, 919, 852, 926, 840, 847, 790, 736, 805, 6…
+## $ W        &lt;dbl&gt; 1992, 2019, 2016, 2160, 2344, 2336, 2243, 2267, 2185, 2203, 2…
+## $ Pb       &lt;dbl&gt; 77, 0, 13, 152, 54, 54, 75, 111, 78, 0, 92, 22, 0, 81, 19, 71…
+## $ Bi       &lt;dbl&gt; 72, 136, 199, 134, 157, 182, 151, 185, 116, 164, 141, 135, 16…
+## $ `Mo inc` &lt;dbl&gt; 26323, 26778, 26550, 28310, 31356, 30631, 29040, 29104, 27932…
+## $ `Mo coh` &lt;dbl&gt; 8799, 9117, 9303, 9886, 10140, 9968, 9973, 9701, 9751, 9639, …
+## $ position &lt;dbl&gt; 32.54, 33.54, 34.54, 35.54, 36.54, 37.54, 38.54, 39.54, 40.54…
+## $ label    &lt;chr&gt; &quot;S1&quot;, &quot;S1&quot;, &quot;S1&quot;, &quot;S1&quot;, &quot;S1&quot;, &quot;S1&quot;, &quot;S1&quot;, &quot;S1&quot;, &quot;S1&quot;, &quot;S1&quot;, &quot;…</code></pre>
 </div>
 <div id="raw-data" class="section level3">
 <h3><span class="header-section-number">2.2.3</span> Raw Data</h3>

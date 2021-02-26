@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-01-26" />
+<meta name="date" content="2021-02-26" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -217,34 +217,34 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="dead-time" class="section level2">
 <h2><span class="header-section-number">3.5</span> Dead Time</h2>
 <p>In silicone drift ED-XRF detectors the electronics are only so fast. This limits the flux of photons into the detector that can be measured. When the count rate is high, the detector will not be making observations whilst the electronics “catch-up”; this is the dead-time, and here it is expressed as a fraction of the overall dwell time. When the system is optimised variations in dead-time are usually small enough to be ignored, but where the matrix or configuration leads to large variations in dead-time they should be corrected for.</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="dead-time.html#cb24-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> CD166_<span class="dv">19</span>_xrf, <span class="kw">aes</span>(<span class="dt">x =</span> depth, <span class="dt">y =</span> Dt)) <span class="op">+</span></span>
-<span id="cb24-2"><a href="dead-time.html#cb24-2"></a><span class="st">  </span><span class="kw">scale_x_reverse</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb24-3"><a href="dead-time.html#cb24-3"></a><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">sec.axis =</span> <span class="kw">sec_axis</span>( <span class="dt">trans=</span><span class="op">~</span>(.<span class="op">+</span>(<span class="dv">1</span><span class="op">-</span><span class="kw">mean</span>(CD166_<span class="dv">19</span>_xrf<span class="op">$</span>Dt, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))), <span class="dt">name=</span><span class="st">&quot;Correction Factor&quot;</span>)) <span class="op">+</span></span>
-<span id="cb24-4"><a href="dead-time.html#cb24-4"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span></span>
-<span id="cb24-5"><a href="dead-time.html#cb24-5"></a><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="kw">mean</span>(CD166_<span class="dv">19</span>_xrf<span class="op">$</span>Dt, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dt">linetype =</span> <span class="st">&quot;dotted&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="dead-time.html#cb23-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> CD166_<span class="dv">19</span>_xrf, <span class="kw">aes</span>(<span class="dt">x =</span> depth, <span class="dt">y =</span> Dt)) <span class="op">+</span></span>
+<span id="cb23-2"><a href="dead-time.html#cb23-2"></a><span class="st">  </span><span class="kw">scale_x_reverse</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb23-3"><a href="dead-time.html#cb23-3"></a><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">sec.axis =</span> <span class="kw">sec_axis</span>( <span class="dt">trans=</span><span class="op">~</span>(.<span class="op">+</span>(<span class="dv">1</span><span class="op">-</span><span class="kw">mean</span>(CD166_<span class="dv">19</span>_xrf<span class="op">$</span>Dt, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))), <span class="dt">name=</span><span class="st">&quot;Correction Factor&quot;</span>)) <span class="op">+</span></span>
+<span id="cb23-4"><a href="dead-time.html#cb23-4"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span></span>
+<span id="cb23-5"><a href="dead-time.html#cb23-5"></a><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="kw">mean</span>(CD166_<span class="dv">19</span>_xrf<span class="op">$</span>Dt, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dt">linetype =</span> <span class="st">&quot;dotted&quot;</span>)</span></code></pre></div>
 <p><img src="itraxBook_files/figure-html/deadtime-1.png" width="672" /></p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="dead-time.html#cb25-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
-<span id="cb25-2"><a href="dead-time.html#cb25-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">newDt =</span> Dt<span class="op">+</span>(<span class="dv">1</span><span class="op">-</span><span class="kw">mean</span>(CD166_<span class="dv">19</span>_xrf<span class="op">$</span>Dt, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb25-3"><a href="dead-time.html#cb25-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">any_of</span>(elementsList)) <span class="op">*</span><span class="st"> </span>newDt) <span class="op">%&gt;%</span></span>
-<span id="cb25-4"><a href="dead-time.html#cb25-4"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>newDt) <span class="op">%&gt;%</span></span>
-<span id="cb25-5"><a href="dead-time.html#cb25-5"></a><span class="st">  </span><span class="kw">head</span>()</span></code></pre></div>
-<pre><code>## [90m# A tibble: 6 x 56[39m
-##   depth   MSE   cps validity    Al    Si     P     S    Cl    Ar     K     Ca
-##   [3m[90m&lt;dbl&gt;[39m[23m [3m[90m&lt;dbl&gt;[39m[23m [3m[90m&lt;dbl&gt;[39m[23m [3m[90m&lt;lgl&gt;[39m[23m    [3m[90m&lt;dbl&gt;[39m[23m [3m[90m&lt;dbl&gt;[39m[23m [3m[90m&lt;dbl&gt;[39m[23m [3m[90m&lt;dbl&gt;[39m[23m [3m[90m&lt;dbl&gt;[39m[23m [3m[90m&lt;dbl&gt;[39m[23m [3m[90m&lt;dbl&gt;[39m[23m  [3m[90m&lt;dbl&gt;[39m[23m
-## [90m1[39m     1  1.41 [4m3[24m[4m4[24m525 TRUE      76.2  276.     0  10.0 [4m1[24m322.  606. [4m2[24m573. 1.13[90me[39m5
-## [90m2[39m     2  1.57 [4m3[24m[4m8[24m370 TRUE      57.1  306.     0   0   [4m1[24m514.  596. [4m2[24m631. 1.44[90me[39m5
-## [90m3[39m     3  1.55 [4m3[24m[4m9[24m796 TRUE      74.1  330.     0  32.0 [4m1[24m471.  506. [4m2[24m380. 1.63[90me[39m5
-## [90m4[39m     4  1.41 [4m4[24m[4m0[24m022 TRUE      26.1  207.     0  21.1 [4m1[24m319.  558. [4m2[24m276. 1.54[90me[39m5
-## [90m5[39m     5  1.41 [4m4[24m[4m1[24m973 TRUE      53.4  235.     0  37.3 [4m1[24m754.  596. [4m2[24m970. 1.37[90me[39m5
-## [90m6[39m     6  1.36 [4m4[24m[4m1[24m268 TRUE      27.2  350.     0  28.2 [4m1[24m589.  508. [4m3[24m204. 1.33[90me[39m5
-## [90m# … with 44 more variables: Sc [3m[90m&lt;dbl&gt;[90m[23m, Ti [3m[90m&lt;dbl&gt;[90m[23m, V [3m[90m&lt;dbl&gt;[90m[23m, Cr [3m[90m&lt;dbl&gt;[90m[23m, Mn [3m[90m&lt;dbl&gt;[90m[23m,[39m
-## [90m#   Fe [3m[90m&lt;dbl&gt;[90m[23m, Ni [3m[90m&lt;dbl&gt;[90m[23m, Cu [3m[90m&lt;dbl&gt;[90m[23m, Zn [3m[90m&lt;dbl&gt;[90m[23m, Ga [3m[90m&lt;dbl&gt;[90m[23m, Ge [3m[90m&lt;dbl&gt;[90m[23m, Br [3m[90m&lt;dbl&gt;[90m[23m,[39m
-## [90m#   Rb [3m[90m&lt;dbl&gt;[90m[23m, Sr [3m[90m&lt;dbl&gt;[90m[23m, Y [3m[90m&lt;dbl&gt;[90m[23m, Zr [3m[90m&lt;dbl&gt;[90m[23m, Pd [3m[90m&lt;dbl&gt;[90m[23m, Cd [3m[90m&lt;dbl&gt;[90m[23m, I [3m[90m&lt;dbl&gt;[90m[23m,[39m
-## [90m#   Cs [3m[90m&lt;dbl&gt;[90m[23m, Ba [3m[90m&lt;dbl&gt;[90m[23m, Nd [3m[90m&lt;dbl&gt;[90m[23m, Sm [3m[90m&lt;dbl&gt;[90m[23m, Yb [3m[90m&lt;dbl&gt;[90m[23m, Ta [3m[90m&lt;dbl&gt;[90m[23m, W [3m[90m&lt;dbl&gt;[90m[23m,[39m
-## [90m#   Pb [3m[90m&lt;dbl&gt;[90m[23m, Bi [3m[90m&lt;dbl&gt;[90m[23m, `Mo inc` [3m[90m&lt;dbl&gt;[90m[23m, `Mo coh` [3m[90m&lt;dbl&gt;[90m[23m, filename [3m[90m&lt;chr&gt;[90m[23m,[39m
-## [90m#   position [3m[90m&lt;dbl&gt;[90m[23m, `sample surface` [3m[90m&lt;dbl&gt;[90m[23m, `E-gain` [3m[90m&lt;dbl&gt;[90m[23m, `E-offset` [3m[90m&lt;dbl&gt;[90m[23m,[39m
-## [90m#   `F-slope` [3m[90m&lt;dbl&gt;[90m[23m, `F-offset` [3m[90m&lt;dbl&gt;[90m[23m, `Fe a*2` [3m[90m&lt;dbl&gt;[90m[23m, `Fe a+b` [3m[90m&lt;dbl&gt;[90m[23m,[39m
-## [90m#   S1 [3m[90m&lt;dbl&gt;[90m[23m, S2 [3m[90m&lt;dbl&gt;[90m[23m, S3 [3m[90m&lt;dbl&gt;[90m[23m, Dt [3m[90m&lt;dbl&gt;[90m[23m, label [3m[90m&lt;chr&gt;[90m[23m[39m</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="dead-time.html#cb24-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
+<span id="cb24-2"><a href="dead-time.html#cb24-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">newDt =</span> Dt<span class="op">+</span>(<span class="dv">1</span><span class="op">-</span><span class="kw">mean</span>(CD166_<span class="dv">19</span>_xrf<span class="op">$</span>Dt, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb24-3"><a href="dead-time.html#cb24-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">any_of</span>(elementsList)) <span class="op">*</span><span class="st"> </span>newDt) <span class="op">%&gt;%</span></span>
+<span id="cb24-4"><a href="dead-time.html#cb24-4"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>newDt) <span class="op">%&gt;%</span></span>
+<span id="cb24-5"><a href="dead-time.html#cb24-5"></a><span class="st">  </span><span class="kw">head</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 6 x 56
+##   depth   MSE   cps validity    Al    Si     P     S    Cl    Ar     K      Ca
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+## 1     1  1.41 34525 TRUE      76.2  276.     0  10.0 1322.  606. 2573. 113068.
+## 2     2  1.57 38370 TRUE      57.1  306.     0   0   1514.  596. 2631. 144425.
+## 3     3  1.55 39796 TRUE      74.1  330.     0  32.0 1471.  506. 2380. 163094.
+## 4     4  1.41 40022 TRUE      26.1  207.     0  21.1 1319.  558. 2276. 153954.
+## 5     5  1.41 41973 TRUE      53.4  235.     0  37.3 1754.  596. 2970. 136960.
+## 6     6  1.36 41268 TRUE      27.2  350.     0  28.2 1589.  508. 3204. 133235.
+## # … with 44 more variables: Sc &lt;dbl&gt;, Ti &lt;dbl&gt;, V &lt;dbl&gt;, Cr &lt;dbl&gt;, Mn &lt;dbl&gt;,
+## #   Fe &lt;dbl&gt;, Ni &lt;dbl&gt;, Cu &lt;dbl&gt;, Zn &lt;dbl&gt;, Ga &lt;dbl&gt;, Ge &lt;dbl&gt;, Br &lt;dbl&gt;,
+## #   Rb &lt;dbl&gt;, Sr &lt;dbl&gt;, Y &lt;dbl&gt;, Zr &lt;dbl&gt;, Pd &lt;dbl&gt;, Cd &lt;dbl&gt;, I &lt;dbl&gt;,
+## #   Cs &lt;dbl&gt;, Ba &lt;dbl&gt;, Nd &lt;dbl&gt;, Sm &lt;dbl&gt;, Yb &lt;dbl&gt;, Ta &lt;dbl&gt;, W &lt;dbl&gt;,
+## #   Pb &lt;dbl&gt;, Bi &lt;dbl&gt;, Mo inc &lt;dbl&gt;, Mo coh &lt;dbl&gt;, filename &lt;chr&gt;,
+## #   position &lt;dbl&gt;, sample surface &lt;dbl&gt;, E-gain &lt;dbl&gt;, E-offset &lt;dbl&gt;,
+## #   F-slope &lt;dbl&gt;, F-offset &lt;dbl&gt;, Fe a*2 &lt;dbl&gt;, Fe a+b &lt;dbl&gt;, S1 &lt;dbl&gt;,
+## #   S2 &lt;dbl&gt;, S3 &lt;dbl&gt;, Dt &lt;dbl&gt;, label &lt;chr&gt;</code></pre>
 </div>
             </section>
 

@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-01-26" />
+<meta name="date" content="2021-02-26" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -217,9 +217,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="radiographic-images-1" class="section level2">
 <h2><span class="header-section-number">2.4</span> Radiographic Images</h2>
 <p>The function <code>itraxR::itrax_radio()</code> imports the processed radiographic images (<code>*.tif</code>) in a very similar way to that for the optical images, the main difference being the matrix only has two dimensions (length and width) as the image is greyscale.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="radiographic-images-1.html#cb12-1"></a><span class="kw">itrax_radiograph</span>(<span class="dt">file =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1_RAD/radiograph0.tif&quot;</span>,</span>
-<span id="cb12-2"><a href="radiographic-images-1.html#cb12-2"></a>                 <span class="dt">meta =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1_RAD/document.txt&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb12-3"><a href="radiographic-images-1.html#cb12-3"></a><span class="st">  </span><span class="kw">str</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="radiographic-images-1.html#cb11-1"></a><span class="kw">itrax_radiograph</span>(<span class="dt">file =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1_RAD/radiograph0.tif&quot;</span>,</span>
+<span id="cb11-2"><a href="radiographic-images-1.html#cb11-2"></a>                 <span class="dt">meta =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1_RAD/document.txt&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb11-3"><a href="radiographic-images-1.html#cb11-3"></a><span class="st">  </span><span class="kw">str</span>()</span></code></pre></div>
 <pre><code>## List of 2
 ##  $ image: num [1:6570, 1:67] 1 1 0.755 0.686 0.755 ...
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 2

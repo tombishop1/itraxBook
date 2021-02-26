@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-01-26" />
+<meta name="date" content="2021-02-26" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -217,10 +217,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="optical-images-1" class="section level2">
 <h2><span class="header-section-number">2.3</span> Optical Images</h2>
 <p>In order to make the images usable for plotting alongside other data, they need to be cropped to the scanned area and referenced to the <code>position</code> or a <code>depth</code> variable. The initial crop can be supressed using <code>trim = FALSE</code> if the whole image is desired. Images in <code>R</code> are read in as a matrix with 3 dimensions (length, width, and the three colours). The data can be imported using <code>itraxR::itrax_image()</code>. This function can produce a basic diagram (shown in subsequent section), but here we focus on the structure of the imported object. <code>$image</code> is a three dimensional array, the first two dimensions are the length of the core and the width, respectively. Those two dimensions have <code>"dimnames"</code> (<code>rownames()</code> and <code>colnames()</code> respectively). For the <code>rownames()</code>, this is an interpolated position, in mm, and for the <code>colnames()</code> this is the width in mm, and always begins at 0. The last dimension always has a length of three, and comprises of the red, green and blue values for each of the pixels. <code>$meta</code> is a table containing selected data from the scan metadata relevant to the image.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="optical-images-1.html#cb10-1"></a><span class="kw">itrax_image</span>(<span class="dt">file =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1/optical.tif&quot;</span>,</span>
-<span id="cb10-2"><a href="optical-images-1.html#cb10-2"></a>            <span class="dt">meta =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1/document.txt&quot;</span>,</span>
-<span id="cb10-3"><a href="optical-images-1.html#cb10-3"></a>              <span class="dt">trim =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb10-4"><a href="optical-images-1.html#cb10-4"></a><span class="st">  </span><span class="kw">str</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="optical-images-1.html#cb9-1"></a><span class="kw">itrax_image</span>(<span class="dt">file =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1/optical.tif&quot;</span>,</span>
+<span id="cb9-2"><a href="optical-images-1.html#cb9-2"></a>            <span class="dt">meta =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1/document.txt&quot;</span>,</span>
+<span id="cb9-3"><a href="optical-images-1.html#cb9-3"></a>              <span class="dt">trim =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb9-4"><a href="optical-images-1.html#cb9-4"></a><span class="st">  </span><span class="kw">str</span>()</span></code></pre></div>
 <pre><code>## List of 2
 ##  $ image: num [1:7452, 1:524, 1:3] 0.0706 0.0706 0.0706 0.0784 0.0784 ...
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 3

@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-01-26" />
+<meta name="date" content="2021-02-26" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -217,17 +217,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="running-mean-and-other-window-functions" class="section level2">
 <h2><span class="header-section-number">5.2</span> Running Mean and Other Window Functions</h2>
 <p>Where a signal is noisy but appears to exhibit some signal it may be appropriate to use a running mean to “smooth” the signal. However, considerable caution should be exercised in the use of this tool. It is rare for an analysis to be genuinely improved by the use of running means, although it can artificially improve statistics for some tests. When visualising data using a running mean the original, unmodified data should always be shown alongside to avoid any misunderstanding. This method can be used for any suitable window function (e.g. <code>min()</code>, <code>max()</code>, <code>range()</code> and <code>sd</code>.)</p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="running-mean-and-other-window-functions.html#cb47-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
-<span id="cb47-2"><a href="running-mean-and-other-window-functions.html#cb47-2"></a><span class="st">  </span><span class="co"># uses a 50 point running mean (50 mm for this data); 25 before, 25 after</span></span>
-<span id="cb47-3"><a href="running-mean-and-other-window-functions.html#cb47-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">any_of</span>(elementsList), </span>
-<span id="cb47-4"><a href="running-mean-and-other-window-functions.html#cb47-4"></a>                <span class="cf">function</span>(x){<span class="kw">unlist</span>(slider<span class="op">::</span><span class="kw">slide</span>(x, mean, <span class="dt">.before =</span> <span class="dv">25</span>, <span class="dt">.after =</span> <span class="dv">25</span>))}</span>
-<span id="cb47-5"><a href="running-mean-and-other-window-functions.html#cb47-5"></a>                )</span>
-<span id="cb47-6"><a href="running-mean-and-other-window-functions.html#cb47-6"></a>         ) <span class="op">%&gt;%</span></span>
-<span id="cb47-7"><a href="running-mean-and-other-window-functions.html#cb47-7"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> depth, <span class="dt">y =</span> Ca)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb47-8"><a href="running-mean-and-other-window-functions.html#cb47-8"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data =</span> CD166_<span class="dv">19</span>_xrf, <span class="dt">col =</span> <span class="st">&quot;grey80&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb47-9"><a href="running-mean-and-other-window-functions.html#cb47-9"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb47-10"><a href="running-mean-and-other-window-functions.html#cb47-10"></a><span class="st">  </span><span class="kw">scale_x_reverse</span>() <span class="op">+</span></span>
-<span id="cb47-11"><a href="running-mean-and-other-window-functions.html#cb47-11"></a><span class="st">  </span><span class="kw">theme_paleo</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="running-mean-and-other-window-functions.html#cb46-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
+<span id="cb46-2"><a href="running-mean-and-other-window-functions.html#cb46-2"></a><span class="st">  </span><span class="co"># uses a 50 point running mean (50 mm for this data); 25 before, 25 after</span></span>
+<span id="cb46-3"><a href="running-mean-and-other-window-functions.html#cb46-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">any_of</span>(elementsList), </span>
+<span id="cb46-4"><a href="running-mean-and-other-window-functions.html#cb46-4"></a>                <span class="cf">function</span>(x){<span class="kw">unlist</span>(slider<span class="op">::</span><span class="kw">slide</span>(x, mean, <span class="dt">.before =</span> <span class="dv">25</span>, <span class="dt">.after =</span> <span class="dv">25</span>))}</span>
+<span id="cb46-5"><a href="running-mean-and-other-window-functions.html#cb46-5"></a>                )</span>
+<span id="cb46-6"><a href="running-mean-and-other-window-functions.html#cb46-6"></a>         ) <span class="op">%&gt;%</span></span>
+<span id="cb46-7"><a href="running-mean-and-other-window-functions.html#cb46-7"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> depth, <span class="dt">y =</span> Ca)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb46-8"><a href="running-mean-and-other-window-functions.html#cb46-8"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data =</span> CD166_<span class="dv">19</span>_xrf, <span class="dt">col =</span> <span class="st">&quot;grey80&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb46-9"><a href="running-mean-and-other-window-functions.html#cb46-9"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb46-10"><a href="running-mean-and-other-window-functions.html#cb46-10"></a><span class="st">  </span><span class="kw">scale_x_reverse</span>() <span class="op">+</span></span>
+<span id="cb46-11"><a href="running-mean-and-other-window-functions.html#cb46-11"></a><span class="st">  </span><span class="kw">theme_paleo</span>()</span></code></pre></div>
 <p><img src="itraxBook_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 </div>
             </section>
