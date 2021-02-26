@@ -103,7 +103,7 @@ CD166_19_S2 <- list(metadata   = itrax_meta("CD166_19_S2/CD166_19_S2/document.tx
                                               parameters = "all"),
                     image      = itrax_image(file = "CD166_19_S2/CD166_19_S2/optical.tif",
                                              meta = "CD166_19_S2/CD166_19_S2/document.txt"),
-                    radiograph = itrax_radiograph(file = "CD166_19_S2/CD166_19_S2_RAD/radiograph.tif",
+                    radiograph = itrax_radiograph(file = "CD166_19_S2/CD166_19_S2_RAD/radiograph0.tif",
                                                   meta = "CD166_19_S2/CD166_19_S2_RAD/document.txt",
                                                   trim = as.numeric(itrax_meta("CD166_19_S2/CD166_19_S2/document.txt")[6:7,2])))
 
@@ -113,7 +113,7 @@ CD166_19_S3 <- list(metadata   = itrax_meta("CD166_19_S3/CD166_19_S3/document.tx
                                               parameters = "all"),
                     image      = itrax_image(file = "CD166_19_S3/CD166_19_S3/optical.tif",
                                              meta = "CD166_19_S3/CD166_19_S3/document.txt"),
-                    radiograph = itrax_radiograph(file = "CD166_19_S3/CD166_19_S3_RAD/radiograph.tif",
+                    radiograph = itrax_radiograph(file = "CD166_19_S3/CD166_19_S3_RAD/radiograph0.tif",
                                                   meta = "CD166_19_S3/CD166_19_S3_RAD/document.txt",
                                                   trim = as.numeric(itrax_meta("CD166_19_S3/CD166_19_S3/document.txt")[6:7,2])))
 

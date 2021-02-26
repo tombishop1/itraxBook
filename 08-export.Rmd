@@ -6,6 +6,5 @@ Data is easy to export from `R`. Tables can be exported by piping to `readr::wri
 # get the data as 20 mm intervals
 itrax_reduce(CD166_19_xrf %>% drop_na(), by = 20) %>%
   select(-label) %>%
-  head() %>%
-  kable()
+  head()
 ```

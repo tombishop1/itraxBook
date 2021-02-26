@@ -9,7 +9,7 @@ It is trivial to calculate element ratios, to the extent that these can often si
 ```{r divide_by_inc}
 CD166_19_xrf %>%
   mutate(across(any_of(elementsList)) /`Mo inc`) %>%
-  head() %>% kable()
+  head()
 ```
 
 ## Running Mean and Other Window Functions

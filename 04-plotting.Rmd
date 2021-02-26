@@ -40,11 +40,10 @@ print(xrfStrat)
 Notice that in the previous example the data must be converted to "long-form" from "short-form" for `tidypaleo`, using `tidyr::pivot_longer`. "Short-form" data has observations as rows, and variables as columns, whereas "long-form" data has a column for `names`, which in this case are the elements, and a column for `values`, in this case the peak intensities. This results in many rows, but few columns. 
 
 ```{r longform}
-glimpse(
 CD166_19_xrf %>% 
   select(any_of(elementsList), depth, label) %>%
-  tidyr::pivot_longer(!c("depth", "label"), names_to = "elements", values_to = "peakarea") 
-)
+  tidyr::pivot_longer(!c("depth", "label"), names_to = "elements", values_to = "peakarea") %>%
+  glimpse()
 ```
 
 ## Plotting Images
