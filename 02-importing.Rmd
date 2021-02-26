@@ -24,7 +24,7 @@ This is the data most commonly used in analysis and it can be quickly imported u
 
 ```{r proc_data_table}
 itrax_import("CD166_19_S1/CD166_19_S1/Results.txt", depth = 0) %>%
-  head()
+  glimpse()
 ```
 
 ### Joining XRF Data
@@ -49,8 +49,8 @@ CD166_19_S2 <- itrax_import("CD166_19_S2/CD166_19_S2/Results.txt", depth_top = m
 CD166_19_S3 <- itrax_import("CD166_19_S3/CD166_19_S3/Results.txt", depth_top = max(CD166_19_S2$depth))
 #join them together
 CD166_19 <- itrax_join(list(S1 = CD166_19_S1, S2 = CD166_19_S2, S3 = CD166_19_S3))
-dim(CD166_19)
 rm(CD166_19_S1, CD166_19_S2, CD166_19_S3)
+glimpse(CD166_19)
 ```
 
 ### Raw Data
