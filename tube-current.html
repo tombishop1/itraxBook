@@ -217,12 +217,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="tube-current" class="section level2">
 <h2><span class="header-section-number">3.4</span> Tube current</h2>
 <p>Although element peak areas are not exactly linearly related to tube current, they can be approximated to a linear relationship (see <span class="citation">Jarvis, Croudace, and Rothwell (<a href="#ref-Jarvis2015" role="doc-biblioref">2015</a>)</span>). The <code>Q-Spec</code> software can report either peak areas (n) or intensities (n/mA), and it is easy to tell which you are using: peak areas are always integers, but intensities are always fractions. It is easy to adjust from one to the other:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="tube-current.html#cb20-1"></a>current &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(CD166_<span class="dv">19</span>_S1<span class="op">$</span>metadata[<span class="dv">18</span>, <span class="dv">2</span>])</span>
-<span id="cb20-2"><a href="tube-current.html#cb20-2"></a>  CD166_<span class="dv">19</span>_S1<span class="op">$</span>xrf <span class="op">%&gt;%</span></span>
-<span id="cb20-3"><a href="tube-current.html#cb20-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">intensity_Fe =</span> <span class="kw">round</span>(Fe<span class="op">/</span>current, <span class="dv">3</span>)) <span class="op">%&gt;%</span><span class="st">        </span><span class="co"># convert to intensity</span></span>
-<span id="cb20-4"><a href="tube-current.html#cb20-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">peakarea_Fe  =</span> <span class="kw">round</span>(intensity_Fe<span class="op">*</span>current)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># convert to peak area</span></span>
-<span id="cb20-5"><a href="tube-current.html#cb20-5"></a><span class="st">  </span><span class="kw">select</span>(Fe, intensity_Fe, peakarea_Fe) <span class="op">%&gt;%</span></span>
-<span id="cb20-6"><a href="tube-current.html#cb20-6"></a><span class="st">  </span><span class="kw">head</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="tube-current.html#cb21-1"></a>current &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(CD166_<span class="dv">19</span>_S1<span class="op">$</span>metadata[<span class="dv">18</span>, <span class="dv">2</span>])</span>
+<span id="cb21-2"><a href="tube-current.html#cb21-2"></a>  CD166_<span class="dv">19</span>_S1<span class="op">$</span>xrf <span class="op">%&gt;%</span></span>
+<span id="cb21-3"><a href="tube-current.html#cb21-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">intensity_Fe =</span> <span class="kw">round</span>(Fe<span class="op">/</span>current, <span class="dv">3</span>)) <span class="op">%&gt;%</span><span class="st">        </span><span class="co"># convert to intensity</span></span>
+<span id="cb21-4"><a href="tube-current.html#cb21-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">peakarea_Fe  =</span> <span class="kw">round</span>(intensity_Fe<span class="op">*</span>current)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># convert to peak area</span></span>
+<span id="cb21-5"><a href="tube-current.html#cb21-5"></a><span class="st">  </span><span class="kw">select</span>(Fe, intensity_Fe, peakarea_Fe) <span class="op">%&gt;%</span></span>
+<span id="cb21-6"><a href="tube-current.html#cb21-6"></a><span class="st">  </span><span class="kw">head</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 6 x 3
 ##      Fe intensity_Fe peakarea_Fe
 ##   &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;
@@ -232,7 +232,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 4 35512        1184.       35512
 ## 5 44303        1477.       44303
 ## 6 45283        1509.       45283</code></pre>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="tube-current.html#cb22-1"></a><span class="kw">rm</span>(current)</span></code></pre></div>
 </div>
 <h3>References</h3>
 <div id="refs" class="references">
