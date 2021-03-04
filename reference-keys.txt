@@ -39,7 +39,7 @@ preparing-data-for-multivariate-data-analysis
 multivariate-methods
 correlation-coefficients
 unconstrained-cluster-analysis
-constrained-cluster-analaysis
+constrained-cluster-analysis
 principle-components-analysis
 calibrating-data
 suitable-methods
