@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-03-04" />
+<meta name="date" content="2021-03-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -218,53 +218,53 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">7.2</span> Preparing Data</h2>
 <p>In order to perform empirical calibration it is necessary to have some quantitative data that relates directly to the Itrax XRF data. The quantitative data is unlikely to be at the same resolution as the Itrax XRF data. For example, it is typical to scan cores at between 0.2 and 1 mm, but typical to sub-sample for WD-XRF or ICP at between 5 - 10 mm. In addition, where Itrax scans are contiguous, sub-samples may not be, for example a 10 mm sub-sample might be taken every 80 mm.</p>
 <p>The function <code>itraxR::itrax_reduction()</code> can be used to reduce the data to match the resolution of some other data. The example below uses the hypothetical example of some determinations of Ti on sub-samples on the core sequence that are 10 mm in size, taken every 50 mm. Here is the hypothetical data:</p>
-<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="preparing-data.html#cb61-1"></a><span class="kw">glimpse</span>(icp)</span></code></pre></div>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="preparing-data.html#cb63-1"></a><span class="kw">glimpse</span>(icp)</span></code></pre></div>
 <pre><code>## Rows: 84
 ## Columns: 4
 ## $ SampleID &lt;chr&gt; &quot;ICP_ID_1&quot;, &quot;ICP_ID_2&quot;, &quot;ICP_ID_3&quot;, &quot;ICP_ID_4&quot;, &quot;ICP_ID_5&quot;, &quot;…
 ## $ top      &lt;dbl&gt; 1, 51, 101, 151, 201, 251, 301, 351, 401, 451, 501, 551, 601,…
 ## $ bot      &lt;dbl&gt; 11, 61, 111, 161, 211, 261, 311, 361, 411, 461, 511, 561, 611…
-## $ Ti       &lt;dbl&gt; 1.11869290, 0.25493904, -0.82781201, -0.01579092, -0.64505566…</code></pre>
+## $ Ti       &lt;dbl&gt; 0.13954255, -0.71627486, -0.48444492, 0.34957397, 1.12201666,…</code></pre>
 <p>And here is the use of <code>itrax_reduce()</code> to reduce our Itrax XRF data (<code>CD166_19_xrf</code>), using the shape of the “icp” data (in <code>icp</code>).</p>
-<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="preparing-data.html#cb63-1"></a>xrf_icp &lt;-<span class="st"> </span>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
-<span id="cb63-2"><a href="preparing-data.html#cb63-2"></a><span class="st">  </span><span class="kw">drop_na</span>() <span class="op">%&gt;%</span></span>
-<span id="cb63-3"><a href="preparing-data.html#cb63-3"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(label, filename)) <span class="op">%&gt;%</span></span>
-<span id="cb63-4"><a href="preparing-data.html#cb63-4"></a><span class="st">  </span><span class="kw">itrax_reduce</span>(<span class="dt">names =</span> icp<span class="op">$</span>SampleID,</span>
-<span id="cb63-5"><a href="preparing-data.html#cb63-5"></a>               <span class="dt">breaks_lower =</span> icp<span class="op">$</span>top,</span>
-<span id="cb63-6"><a href="preparing-data.html#cb63-6"></a>               <span class="dt">breaks_upper =</span> icp<span class="op">$</span>bot) <span class="op">%&gt;%</span></span>
-<span id="cb63-7"><a href="preparing-data.html#cb63-7"></a><span class="st">  </span><span class="kw">select</span>(resample_names, Ti) <span class="op">%&gt;%</span></span>
-<span id="cb63-8"><a href="preparing-data.html#cb63-8"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">Ti_XRF =</span> Ti,</span>
-<span id="cb63-9"><a href="preparing-data.html#cb63-9"></a>         <span class="dt">SampleID =</span> resample_names) <span class="op">%&gt;%</span></span>
-<span id="cb63-10"><a href="preparing-data.html#cb63-10"></a><span class="st">  </span></span>
-<span id="cb63-11"><a href="preparing-data.html#cb63-11"></a><span class="st">  </span><span class="kw">inner_join</span>(., icp, <span class="dt">by =</span> <span class="st">&quot;SampleID&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb63-12"><a href="preparing-data.html#cb63-12"></a><span class="st">  </span><span class="kw">select</span>(SampleID, Ti, Ti_XRF, <span class="kw">everything</span>())</span>
-<span id="cb63-13"><a href="preparing-data.html#cb63-13"></a></span>
-<span id="cb63-14"><a href="preparing-data.html#cb63-14"></a>xrf_icp <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">glimpse</span>()</span></code></pre></div>
-<pre><code>## Rows: 84
-## Columns: 5
-## $ SampleID &lt;chr&gt; &quot;ICP_ID_1&quot;, &quot;ICP_ID_2&quot;, &quot;ICP_ID_3&quot;, &quot;ICP_ID_4&quot;, &quot;ICP_ID_5&quot;, &quot;…
-## $ Ti       &lt;dbl&gt; 1.11869290, 0.25493904, -0.82781201, -0.01579092, -0.64505566…
-## $ Ti_XRF   &lt;dbl&gt; 2101.300, 2401.300, 3410.100, 5984.286, 2571.200, 1873.500, 1…
-## $ top      &lt;dbl&gt; 1, 51, 101, 151, 201, 251, 301, 351, 401, 451, 501, 551, 601,…
-## $ bot      &lt;dbl&gt; 11, 61, 111, 161, 211, 261, 311, 361, 411, 461, 511, 561, 611…</code></pre>
-<p>Note the requirement to remove text based columns (in this case <code>file</code> and <code>label</code>) from the data before this step is performed - if the reducing function cannot handle a data type (e.g. passing characters to <code>mean()</code>), errors will occur. If we wanted to add the standard deviation alongside the mean for each chunk, this can be done my modifying the default reducing function (<code>mean()</code>) to <code>sd()</code>, for example:</p>
-<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="preparing-data.html#cb65-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="preparing-data.html#cb65-1"></a>xrf_icp &lt;-<span class="st"> </span>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
 <span id="cb65-2"><a href="preparing-data.html#cb65-2"></a><span class="st">  </span><span class="kw">drop_na</span>() <span class="op">%&gt;%</span></span>
 <span id="cb65-3"><a href="preparing-data.html#cb65-3"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(label, filename)) <span class="op">%&gt;%</span></span>
 <span id="cb65-4"><a href="preparing-data.html#cb65-4"></a><span class="st">  </span><span class="kw">itrax_reduce</span>(<span class="dt">names =</span> icp<span class="op">$</span>SampleID,</span>
 <span id="cb65-5"><a href="preparing-data.html#cb65-5"></a>               <span class="dt">breaks_lower =</span> icp<span class="op">$</span>top,</span>
-<span id="cb65-6"><a href="preparing-data.html#cb65-6"></a>               <span class="dt">breaks_upper =</span> icp<span class="op">$</span>bot,</span>
-<span id="cb65-7"><a href="preparing-data.html#cb65-7"></a>               <span class="dt">fun =</span> sd) <span class="op">%&gt;%</span></span>
-<span id="cb65-8"><a href="preparing-data.html#cb65-8"></a><span class="st">  </span><span class="kw">select</span>(resample_names, Ti) <span class="op">%&gt;%</span></span>
-<span id="cb65-9"><a href="preparing-data.html#cb65-9"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">Ti_XRF_sd =</span> Ti,</span>
-<span id="cb65-10"><a href="preparing-data.html#cb65-10"></a>         <span class="dt">SampleID =</span> resample_names) <span class="op">%&gt;%</span></span>
-<span id="cb65-11"><a href="preparing-data.html#cb65-11"></a><span class="st">  </span><span class="kw">inner_join</span>(., xrf_icp, <span class="dt">by =</span> <span class="st">&quot;SampleID&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb65-12"><a href="preparing-data.html#cb65-12"></a><span class="st">  </span><span class="kw">select</span>(SampleID, Ti, Ti_XRF, Ti_XRF_sd, <span class="kw">everything</span>()) <span class="op">%&gt;%</span></span>
-<span id="cb65-13"><a href="preparing-data.html#cb65-13"></a><span class="st">  </span><span class="kw">glimpse</span>()</span></code></pre></div>
+<span id="cb65-6"><a href="preparing-data.html#cb65-6"></a>               <span class="dt">breaks_upper =</span> icp<span class="op">$</span>bot) <span class="op">%&gt;%</span></span>
+<span id="cb65-7"><a href="preparing-data.html#cb65-7"></a><span class="st">  </span><span class="kw">select</span>(resample_names, Ti) <span class="op">%&gt;%</span></span>
+<span id="cb65-8"><a href="preparing-data.html#cb65-8"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">Ti_XRF =</span> Ti,</span>
+<span id="cb65-9"><a href="preparing-data.html#cb65-9"></a>         <span class="dt">SampleID =</span> resample_names) <span class="op">%&gt;%</span></span>
+<span id="cb65-10"><a href="preparing-data.html#cb65-10"></a><span class="st">  </span></span>
+<span id="cb65-11"><a href="preparing-data.html#cb65-11"></a><span class="st">  </span><span class="kw">inner_join</span>(., icp, <span class="dt">by =</span> <span class="st">&quot;SampleID&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb65-12"><a href="preparing-data.html#cb65-12"></a><span class="st">  </span><span class="kw">select</span>(SampleID, Ti, Ti_XRF, <span class="kw">everything</span>())</span>
+<span id="cb65-13"><a href="preparing-data.html#cb65-13"></a></span>
+<span id="cb65-14"><a href="preparing-data.html#cb65-14"></a>xrf_icp <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">glimpse</span>()</span></code></pre></div>
+<pre><code>## Rows: 84
+## Columns: 5
+## $ SampleID &lt;chr&gt; &quot;ICP_ID_1&quot;, &quot;ICP_ID_2&quot;, &quot;ICP_ID_3&quot;, &quot;ICP_ID_4&quot;, &quot;ICP_ID_5&quot;, &quot;…
+## $ Ti       &lt;dbl&gt; 0.13954255, -0.71627486, -0.48444492, 0.34957397, 1.12201666,…
+## $ Ti_XRF   &lt;dbl&gt; 2101.300, 2401.300, 3410.100, 5984.286, 2571.200, 1873.500, 1…
+## $ top      &lt;dbl&gt; 1, 51, 101, 151, 201, 251, 301, 351, 401, 451, 501, 551, 601,…
+## $ bot      &lt;dbl&gt; 11, 61, 111, 161, 211, 261, 311, 361, 411, 461, 511, 561, 611…</code></pre>
+<p>Note the requirement to remove text based columns (in this case <code>file</code> and <code>label</code>) from the data before this step is performed - if the reducing function cannot handle a data type (e.g. passing characters to <code>mean()</code>), errors will occur. If we wanted to add the standard deviation alongside the mean for each chunk, this can be done my modifying the default reducing function (<code>mean()</code>) to <code>sd()</code>, for example:</p>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="preparing-data.html#cb67-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
+<span id="cb67-2"><a href="preparing-data.html#cb67-2"></a><span class="st">  </span><span class="kw">drop_na</span>() <span class="op">%&gt;%</span></span>
+<span id="cb67-3"><a href="preparing-data.html#cb67-3"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(label, filename)) <span class="op">%&gt;%</span></span>
+<span id="cb67-4"><a href="preparing-data.html#cb67-4"></a><span class="st">  </span><span class="kw">itrax_reduce</span>(<span class="dt">names =</span> icp<span class="op">$</span>SampleID,</span>
+<span id="cb67-5"><a href="preparing-data.html#cb67-5"></a>               <span class="dt">breaks_lower =</span> icp<span class="op">$</span>top,</span>
+<span id="cb67-6"><a href="preparing-data.html#cb67-6"></a>               <span class="dt">breaks_upper =</span> icp<span class="op">$</span>bot,</span>
+<span id="cb67-7"><a href="preparing-data.html#cb67-7"></a>               <span class="dt">fun =</span> sd) <span class="op">%&gt;%</span></span>
+<span id="cb67-8"><a href="preparing-data.html#cb67-8"></a><span class="st">  </span><span class="kw">select</span>(resample_names, Ti) <span class="op">%&gt;%</span></span>
+<span id="cb67-9"><a href="preparing-data.html#cb67-9"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">Ti_XRF_sd =</span> Ti,</span>
+<span id="cb67-10"><a href="preparing-data.html#cb67-10"></a>         <span class="dt">SampleID =</span> resample_names) <span class="op">%&gt;%</span></span>
+<span id="cb67-11"><a href="preparing-data.html#cb67-11"></a><span class="st">  </span><span class="kw">inner_join</span>(., xrf_icp, <span class="dt">by =</span> <span class="st">&quot;SampleID&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb67-12"><a href="preparing-data.html#cb67-12"></a><span class="st">  </span><span class="kw">select</span>(SampleID, Ti, Ti_XRF, Ti_XRF_sd, <span class="kw">everything</span>()) <span class="op">%&gt;%</span></span>
+<span id="cb67-13"><a href="preparing-data.html#cb67-13"></a><span class="st">  </span><span class="kw">glimpse</span>()</span></code></pre></div>
 <pre><code>## Rows: 84
 ## Columns: 6
 ## $ SampleID  &lt;chr&gt; &quot;ICP_ID_1&quot;, &quot;ICP_ID_2&quot;, &quot;ICP_ID_3&quot;, &quot;ICP_ID_4&quot;, &quot;ICP_ID_5&quot;, …
-## $ Ti        &lt;dbl&gt; 1.11869290, 0.25493904, -0.82781201, -0.01579092, -0.6450556…
+## $ Ti        &lt;dbl&gt; 0.13954255, -0.71627486, -0.48444492, 0.34957397, 1.12201666…
 ## $ Ti_XRF    &lt;dbl&gt; 2101.300, 2401.300, 3410.100, 5984.286, 2571.200, 1873.500, …
 ## $ Ti_XRF_sd &lt;dbl&gt; 331.36789, 90.61770, 92.66601, 1646.19417, 213.96511, 231.13…
 ## $ top       &lt;dbl&gt; 1, 51, 101, 151, 201, 251, 301, 351, 401, 451, 501, 551, 601…

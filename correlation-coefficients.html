@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-03-04" />
+<meta name="date" content="2021-03-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -217,11 +217,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="correlation-coefficients" class="section level2">
 <h2><span class="header-section-number">6.1</span> Correlation Coefficients</h2>
 <p>The Pearson’s R correlation coefficient is occasionally used to study the relationships between individual elements. It is often useful in conjunction with principle component analysis.</p>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="correlation-coefficients.html#cb56-1"></a><span class="kw">itrax_correlation</span>(CD166_<span class="dv">19</span>_xrf) <span class="op">%&gt;%</span></span>
-<span id="cb56-2"><a href="correlation-coefficients.html#cb56-2"></a><span class="st">  </span>ggcorrplot<span class="op">::</span><span class="kw">ggcorrplot</span>(<span class="dt">hc.order =</span> <span class="ot">TRUE</span>,</span>
-<span id="cb56-3"><a href="correlation-coefficients.html#cb56-3"></a>                         <span class="dt">p.mat =</span> ggcorrplot<span class="op">::</span><span class="kw">cor_pmat</span>(., <span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>),</span>
-<span id="cb56-4"><a href="correlation-coefficients.html#cb56-4"></a>                         <span class="dt">insig =</span> <span class="st">&quot;blank&quot;</span>)</span></code></pre></div>
-<p><img src="itraxBook_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="correlation-coefficients.html#cb58-1"></a><span class="kw">itrax_correlation</span>(CD166_<span class="dv">19</span>_xrf) <span class="op">%&gt;%</span></span>
+<span id="cb58-2"><a href="correlation-coefficients.html#cb58-2"></a><span class="st">  </span>ggcorrplot<span class="op">::</span><span class="kw">ggcorrplot</span>(<span class="dt">hc.order =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb58-3"><a href="correlation-coefficients.html#cb58-3"></a>                         <span class="dt">p.mat =</span> ggcorrplot<span class="op">::</span><span class="kw">cor_pmat</span>(., <span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>),</span>
+<span id="cb58-4"><a href="correlation-coefficients.html#cb58-4"></a>                         <span class="dt">insig =</span> <span class="st">&quot;blank&quot;</span>)</span></code></pre></div>
+<p><img src="itraxBook_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 </div>
             </section>
 
