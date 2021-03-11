@@ -30,6 +30,45 @@ CD166_19_xrf %>%
   theme_paleo()
 ```
 
+To plot the running means in a stratigraphic diagram, the smoothed data has to be labelled and combined with the original data so it can be facetted.
+
+```{r message=FALSE}
+# make the xrf plot with running means
+full_join(y = CD166_19_xrf %>%
+                        as_tibble() %>%
+                        # uses a 50 point running mean (50 mm for this data); 25 before, 25 after
+                        mutate(across(any_of(c(elementsList)), 
+                                      function(x){unlist(slider::slide(x, mean, .before = 25, .after = 25))}
+                                      )
+                               ) %>%
+                        mutate(type = "mean"), 
+                      x = CD166_19_xrf %>% 
+                        as_tibble() %>% 
+                        mutate(type = "raw")
+                      ) %>% 
+  filter(validity == TRUE) %>%
+  select(Fe, Ti, Cu, Pb, Si, MSE, Mn, depth, label, type) %>%
+  tidyr::pivot_longer(!c("depth", "label", "type"), names_to = "elements", values_to = "peakarea") %>% 
+  tidyr::drop_na() %>%
+  mutate(elements = factor(elements, levels = c("MSE", elementsList))) %>%
+  glimpse() %>%
+  mutate(label = as_factor(label),
+         type = as_factor(type)
+         ) %>%
+  
+  ggplot(aes(x = peakarea, y = depth)) +
+  tidypaleo::geom_lineh(aes(colour = type)) +
+  scale_colour_manual(values = rev(c("black", "grey50"))) +
+  scale_y_reverse() +
+  scale_x_continuous(n.breaks = 2) +
+  facet_geochem_gridh(vars(elements)) +
+  labs(x = "peak area", y = "Depth [mm]") +
+  tidypaleo::theme_paleo() +
+  theme(legend.position = "none",
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank())
+```
+
 ## Preparing Data for Multivariate Data Analysis
 Where multivariate methods (cluster analysis, principle components analysis, correlation matrices) are required, it is usually necessary to transform data. This is because the statistical assumptions that underlie these methods are often not met when dealing with compositional data like that from an XRF core-scanner. There is no "right" or ideal way to deal with these issues, but a common method is to use a form of log transformation. Here we use a centred log transformation, which cannot be performed on zero values. 
 
