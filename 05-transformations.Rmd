@@ -30,7 +30,7 @@ CD166_19_xrf %>%
   theme_paleo()
 ```
 
-To plot the running means in a stratigraphic diagram, the smoothed data has to be labelled and combined with the original data so it can be facetted.
+To plot the running means in a stratigraphic diagram, the smoothed data has to be labelled and combined with the original data so it can be faceted.
 
 ```{r message=FALSE}
 # make the xrf plot with running means
@@ -51,14 +51,15 @@ full_join(y = CD166_19_xrf %>%
   tidyr::pivot_longer(!c("depth", "label", "type"), names_to = "elements", values_to = "peakarea") %>% 
   tidyr::drop_na() %>%
   mutate(elements = factor(elements, levels = c("MSE", elementsList))) %>%
-  glimpse() %>%
   mutate(label = as_factor(label),
          type = as_factor(type)
          ) %>%
   
+  glimpse() %>%
+  
   ggplot(aes(x = peakarea, y = depth)) +
-  tidypaleo::geom_lineh(aes(colour = type)) +
-  scale_colour_manual(values = rev(c("black", "grey50"))) +
+  tidypaleo::geom_lineh(aes(group = type, colour = label, alpha = type)) +
+  scale_alpha_manual(values = c(0.1, 1)) +
   scale_y_reverse() +
   scale_x_continuous(n.breaks = 2) +
   facet_geochem_gridh(vars(elements)) +

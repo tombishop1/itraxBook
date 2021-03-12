@@ -24,11 +24,12 @@ Deletion criteria can be on the basis of count rates (excluding very low and hig
 CD166_19_xrf %>%
   mutate(in_tolerance = ifelse(cps <=30000 | cps >=60000 | is.na(cps) == TRUE, FALSE, TRUE)) %>%
   
-  ggplot(mapping = aes(x = depth, y = cps)) + 
-  geom_jitter(aes(col = in_tolerance)) +
+  ggplot(mapping = aes(x = depth, y = cps, col = in_tolerance)) + 
+  geom_line(aes(group = 1)) +
   scale_x_reverse() +
-  geom_hline(yintercept = c(30000, 60000))
-  
+  geom_hline(yintercept = c(30000, 60000)) +
+  geom_rug() +
+  coord_cartesian(clip = "off")
 ```
 
 ## Surface Slope
@@ -40,10 +41,11 @@ CD166_19_xrf %>%
   mutate(slope = `sample surface` - dplyr::lag(`sample surface`)) %>%
   mutate(in_tolerance = ifelse(slope <=-0.1 | slope >=0.1 | is.na(slope) == TRUE, FALSE, TRUE)) %>%
   
-  ggplot(mapping = aes(x = depth, y = slope)) +
+  ggplot(mapping = aes(x = depth, y = slope, col = in_tolerance)) +
   scale_y_continuous(limits = c(-0.15, 0.15), oob = scales::squish) +
-  geom_point(aes(col = in_tolerance)) +
+  geom_line(aes(group = 1)) +
   geom_hline(yintercept = c(-0.1, 0.1)) +
+  geom_rug() +
   scale_x_reverse()
 ```
 
@@ -60,7 +62,11 @@ CD166_19_xrf %>%
   rowwise() %>%
   mutate(validity = !any(c(validity, in_slope_tolerance, in_cps_tolerance) == FALSE)) %>%
   select(-c(in_slope_tolerance, in_cps_tolerance)) %>%
-  head()
+  
+  ggplot(aes(y = depth, x = Fe, col = validity)) + 
+  geom_lineh(aes(group = 1)) +
+  geom_rug(sides = "l") +
+  scale_y_reverse()
 ```
 
 Bear in mind that this doesn't remove observations considered defective, only marks them has `validity == FALSE`. If they are to be excluded from subsequent analysis, they should be removed using `filter(validity == TRUE)`.
