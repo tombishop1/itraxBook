@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-03-11" />
+<meta name="date" content="2021-03-12" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -225,25 +225,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb19-6"><a href="combining-validity-flags.html#cb19-6"></a><span class="st">  </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span></span>
 <span id="cb19-7"><a href="combining-validity-flags.html#cb19-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">validity =</span> <span class="op">!</span><span class="kw">any</span>(<span class="kw">c</span>(validity, in_slope_tolerance, in_cps_tolerance) <span class="op">==</span><span class="st"> </span><span class="ot">FALSE</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb19-8"><a href="combining-validity-flags.html#cb19-8"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(in_slope_tolerance, in_cps_tolerance)) <span class="op">%&gt;%</span></span>
-<span id="cb19-9"><a href="combining-validity-flags.html#cb19-9"></a><span class="st">  </span><span class="kw">head</span>()</span></code></pre></div>
-<pre><code>## # A tibble: 6 x 56
-## # Rowwise: 
-##   depth   MSE   cps validity    Al    Si     P     S    Cl    Ar     K     Ca
-##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-## 1     1  1.41 34525 FALSE       76   275     0    10  1318   604  2565 112734
-## 2     2  1.57 38370 TRUE        57   306     0     0  1513   595  2628 144287
-## 3     3  1.55 39796 TRUE        74   330     0    32  1470   506  2378 162938
-## 4     4  1.41 40022 TRUE        26   206     0    21  1312   555  2265 153194
-## 5     5  1.41 41973 TRUE        53   233     0    37  1740   591  2947 135879
-## 6     6  1.36 41268 TRUE        27   347     0    28  1576   504  3179 132183
-## # … with 44 more variables: Sc &lt;dbl&gt;, Ti &lt;dbl&gt;, V &lt;dbl&gt;, Cr &lt;dbl&gt;, Mn &lt;dbl&gt;,
-## #   Fe &lt;dbl&gt;, Ni &lt;dbl&gt;, Cu &lt;dbl&gt;, Zn &lt;dbl&gt;, Ga &lt;dbl&gt;, Ge &lt;dbl&gt;, Br &lt;dbl&gt;,
-## #   Rb &lt;dbl&gt;, Sr &lt;dbl&gt;, Y &lt;dbl&gt;, Zr &lt;dbl&gt;, Pd &lt;dbl&gt;, Cd &lt;dbl&gt;, I &lt;dbl&gt;,
-## #   Cs &lt;dbl&gt;, Ba &lt;dbl&gt;, Nd &lt;dbl&gt;, Sm &lt;dbl&gt;, Yb &lt;dbl&gt;, Ta &lt;dbl&gt;, W &lt;dbl&gt;,
-## #   Pb &lt;dbl&gt;, Bi &lt;dbl&gt;, Mo inc &lt;dbl&gt;, Mo coh &lt;dbl&gt;, filename &lt;chr&gt;,
-## #   position &lt;dbl&gt;, sample surface &lt;dbl&gt;, E-gain &lt;dbl&gt;, E-offset &lt;dbl&gt;,
-## #   F-slope &lt;dbl&gt;, F-offset &lt;dbl&gt;, Fe a*2 &lt;dbl&gt;, Fe a+b &lt;dbl&gt;, S1 &lt;dbl&gt;,
-## #   S2 &lt;dbl&gt;, S3 &lt;dbl&gt;, Dt &lt;dbl&gt;, label &lt;chr&gt;</code></pre>
+<span id="cb19-9"><a href="combining-validity-flags.html#cb19-9"></a><span class="st">  </span></span>
+<span id="cb19-10"><a href="combining-validity-flags.html#cb19-10"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> depth, <span class="dt">x =</span> Fe, <span class="dt">col =</span> validity)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb19-11"><a href="combining-validity-flags.html#cb19-11"></a><span class="st">  </span><span class="kw">geom_lineh</span>(<span class="kw">aes</span>(<span class="dt">group =</span> <span class="dv">1</span>)) <span class="op">+</span></span>
+<span id="cb19-12"><a href="combining-validity-flags.html#cb19-12"></a><span class="st">  </span><span class="kw">geom_rug</span>(<span class="dt">sides =</span> <span class="st">&quot;l&quot;</span>) <span class="op">+</span></span>
+<span id="cb19-13"><a href="combining-validity-flags.html#cb19-13"></a><span class="st">  </span><span class="kw">scale_y_reverse</span>()</span></code></pre></div>
+<pre><code>## Warning: Removed 2 row(s) containing missing values (geom_path).</code></pre>
+<p><img src="itraxBook_files/figure-html/combined_validity_checks-1.png" width="672" /></p>
 <p>Bear in mind that this doesn’t remove observations considered defective, only marks them has <code>validity == FALSE</code>. If they are to be excluded from subsequent analysis, they should be removed using <code>filter(validity == TRUE)</code>.</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="combining-validity-flags.html#cb21-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
 <span id="cb21-2"><a href="combining-validity-flags.html#cb21-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">slope =</span> <span class="st">`</span><span class="dt">sample surface</span><span class="st">`</span> <span class="op">-</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">lag</span>(<span class="st">`</span><span class="dt">sample surface</span><span class="st">`</span>)) <span class="op">%&gt;%</span></span>
