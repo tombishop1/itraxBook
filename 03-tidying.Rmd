@@ -203,7 +203,7 @@ This information can be used to inform decisions about the inclusion and treatme
 rm(S1_reps)
 ```
 
-## High Signal-to-noise Ratios
+## Noisy Data
 
 It is not always possible to do repeat scans for entire scanning projects, and as such it may be necessary to look at others ways of identifying problematic noisy data. Much of this can be done by good judgement on the part of the analyst, and will depend on the requirements of the projects. However, there are some analytical tools that can help. One method is to look at the autocorrelation of a time-series. We can use the auto-correlation factor (ACF) to explore this for our data. 
 
@@ -232,6 +232,51 @@ apply(CD166_19_xrf %>% select(any_of(elementsList)), 2, FUN = function(x){round(
 ```
 
 It is worth noting that this analysis has been performed on the entirety of the data, but there is no reason why the data could be problematic for some facies and acceptable for others. It may be necessary to perform some facies analysis and perform these analyses per facies. 
+
+Putting all the selection criteria together could look something like the example below. 
+
+```{r warning=FALSE}
+# identify acceptable variables
+apply(CD166_19_xrf %>% select(any_of(elementsList)), 2, FUN = function(x){round(Acf(x, plot = F)$acf, 3)}) %>%
+  as_tibble(rownames = "lag") %>%
+  pivot_longer(!c("lag"), names_to = "elements", values_to = "value") %>%
+  mutate(lag = as.numeric(lag),
+         elements = factor(elements, levels = filter(., lag == 5) %>% arrange(desc(value)) %>% pull(elements))) %>%
+  group_by(elements) %>%
+  filter(lag == 5) %>%
+  filter(value >= 0.8) %>%
+  pull(elements) %>% 
+  ordered() -> myElements
+
+CD166_19_xrf %>% 
+  # identify acceptable observations
+  mutate(slope = `sample surface` - dplyr::lag(`sample surface`)) %>%
+  mutate(in_slope_tolerance = ifelse(slope <=-0.1 | slope >=0.1 | is.na(slope) == TRUE, FALSE, TRUE)) %>%
+  select(-slope) %>%
+  mutate(in_cps_tolerance = ifelse(cps <=30000 | cps >=60000 | is.na(cps) == TRUE, FALSE, TRUE)) %>%
+  mutate(in_mse_tolerance = ifelse(MSE <=2, FALSE, TRUE)) %>%
+  rowwise() %>%
+  mutate(validity = any(c(validity, in_slope_tolerance, in_cps_tolerance, in_mse_tolerance) == FALSE)) %>%
+  select(-c(in_slope_tolerance, in_cps_tolerance, in_mse_tolerance)) %>%
+  filter(validity == TRUE) %>%
+  
+  # pivot long
+  select(any_of(myElements), depth, label) %>% 
+  tidyr::pivot_longer(!c("depth", "label"), names_to = "elements", values_to = "peakarea") %>% 
+  mutate(elements = factor(elements, levels = c(elementsList, "coh/inc"))) %>%
+  
+  # plot
+  ggplot(aes(x = peakarea, y = depth)) +
+    tidypaleo::geom_lineh(aes(color = label)) +
+    scale_y_reverse() +
+    scale_x_continuous(n.breaks = 2) +
+    facet_geochem_gridh(vars(elements)) +
+    labs(x = "peak area", y = "Depth [mm]") +
+    tidypaleo::theme_paleo() +
+    theme(legend.position = "none")
+
+#rm(myElements)
+```
 
 ## Reversing Data
 
