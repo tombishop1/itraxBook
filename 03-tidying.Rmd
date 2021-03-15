@@ -15,21 +15,35 @@ The count rate ("cps", or counts-per-second) is the rate of energy event detecti
 
 ```{r cps, warning=FALSE}
 ggplot(data = CD166_19_xrf, mapping = aes(x = cps, y = `Fe a*2`)) + 
-  geom_point() 
+  geom_point(alpha = 0.1) 
 ```
 
 Deletion criteria can be on the basis of count rates (excluding very low and high values), selected harmonics (e.g. Fe a*2), or both. An example is shown below. 
 
 ```{r cps_deletion}
 CD166_19_xrf %>%
-  mutate(in_tolerance = ifelse(cps <=30000 | cps >=60000 | is.na(cps) == TRUE, FALSE, TRUE)) %>%
+  mutate(in_cps_tolerance = ifelse(cps <=30000 | cps >=60000 | is.na(cps) == TRUE, FALSE, TRUE)) %>%
   
-  ggplot(mapping = aes(x = depth, y = cps, col = in_tolerance)) + 
+  ggplot(mapping = aes(x = depth, y = cps, col = in_cps_tolerance)) + 
   geom_line(aes(group = 1)) +
   scale_x_reverse() +
   geom_hline(yintercept = c(30000, 60000)) +
-  geom_rug() +
-  coord_cartesian(clip = "off")
+  geom_rug(sides = "b", data = . %>% filter(in_cps_tolerance == FALSE)) 
+```
+
+## Model Errors (MSE)
+
+The mean-squared-error (MSE) of the model provides an indication of the goodness-of-fit for the peak fitting model implemented in the Q-Spec software. Operators aim to produce models with the lowest possible MSE, but compromises are sometimes required because normally the same model should be applied to observations that are being compared (for example, for the same core sequence). 
+
+```{r mse}
+CD166_19_xrf %>%
+  mutate(in_mse_tolerance = ifelse(MSE >=2, FALSE, TRUE)) %>%
+  
+  ggplot(mapping = aes(x = depth,  y = MSE, col = in_mse_tolerance)) +
+  geom_line(aes(group = 1)) +
+  scale_x_reverse() +
+  geom_hline(yintercept = 2) +
+  geom_rug(sides = "b", data = . %>% filter(in_mse_tolerance == FALSE)) 
 ```
 
 ## Surface Slope
@@ -45,7 +59,7 @@ CD166_19_xrf %>%
   scale_y_continuous(limits = c(-0.15, 0.15), oob = scales::squish) +
   geom_line(aes(group = 1)) +
   geom_hline(yintercept = c(-0.1, 0.1)) +
-  geom_rug() +
+  geom_rug(data = . %>% filter(validity == FALSE)) +
   scale_x_reverse()
 ```
 
@@ -53,19 +67,20 @@ CD166_19_xrf %>%
 
 It is often desirable to combine all deletion criteria into a single binary variable. This means combining multiple binary variables, returning `FALSE` if any of the values are `FALSE`, but only returning `TRUE` if all of the values are `TRUE`. 
 
-```{r combined_validity_checks}
+```{r combined_validity_checks, warning=FALSE}
 CD166_19_xrf %>%
   mutate(slope = `sample surface` - dplyr::lag(`sample surface`)) %>%
   mutate(in_slope_tolerance = ifelse(slope <=-0.1 | slope >=0.1 | is.na(slope) == TRUE, FALSE, TRUE)) %>%
   select(-slope) %>%
   mutate(in_cps_tolerance = ifelse(cps <=30000 | cps >=60000 | is.na(cps) == TRUE, FALSE, TRUE)) %>%
+  mutate(in_mse_tolerance = ifelse(MSE <=2, FALSE, TRUE)) %>%
   rowwise() %>%
-  mutate(validity = !any(c(validity, in_slope_tolerance, in_cps_tolerance) == FALSE)) %>%
-  select(-c(in_slope_tolerance, in_cps_tolerance)) %>%
+  mutate(validity = any(c(validity, in_slope_tolerance, in_cps_tolerance, in_mse_tolerance) == FALSE)) %>%
+  select(-c(in_slope_tolerance, in_cps_tolerance, in_mse_tolerance)) %>%
   
-  ggplot(aes(y = depth, x = Fe, col = validity)) + 
+  ggplot(data = ., aes(y = depth, x = `Mo inc`/`Mo coh`, col = validity)) + 
   geom_lineh(aes(group = 1)) +
-  geom_rug(sides = "l") +
+  geom_rug(sides = "l", data = . %>% filter(validity == FALSE)) +
   scale_y_reverse()
 ```
 
