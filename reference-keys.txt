@@ -19,6 +19,7 @@ radiographic-images-1
 importing-everything
 tidying-data
 low-count-rates
+model-errors-mse
 surface-slope
 combining-validity-flags
 tube-current
