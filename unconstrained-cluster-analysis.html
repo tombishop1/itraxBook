@@ -228,7 +228,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb62-8"><a href="unconstrained-cluster-analysis.html#cb62-8"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.title.y =</span> <span class="kw">element_blank</span>(),</span>
 <span id="cb62-9"><a href="unconstrained-cluster-analysis.html#cb62-9"></a>        <span class="dt">axis.text.y =</span> <span class="kw">element_blank</span>(),</span>
 <span id="cb62-10"><a href="unconstrained-cluster-analysis.html#cb62-10"></a>        <span class="dt">axis.ticks.y =</span> <span class="kw">element_blank</span>())</span></code></pre></div>
-<p><img src="itraxBook_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p><img src="itraxBook_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
 <p>Given that these groups form the characteristic compositional units, they present good candidates for sampling for quantitative analysis. The second part of this function will report the sample most characteristic of each group. For example, if you can submit 10 samples for quantitative analysis (e.g. ICP-MS), you can input the elements you wish to calibrate for in the <code>elementsonly</code> argument, the number of samples you want to take in the <code>divisions</code> argument, and the function will report the samples that are likely to give the best calibration across all elements. The resolution at which you are able to sub-sample the core may be significantly coarser than the scan, so you may wish to reduce the data first. The example below summarises the data into 50 mm chunks before the cluster analysis.</p>
 <div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="unconstrained-cluster-analysis.html#cb63-1"></a>foo &lt;-<span class="st"> </span>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
 <span id="cb63-2"><a href="unconstrained-cluster-analysis.html#cb63-2"></a><span class="st">  </span><span class="kw">select</span>(<span class="kw">where</span>(is.numeric)) <span class="op">%&gt;%</span></span>
@@ -244,7 +244,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb63-12"><a href="unconstrained-cluster-analysis.html#cb63-12"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.title.y =</span> <span class="kw">element_blank</span>(),</span>
 <span id="cb63-13"><a href="unconstrained-cluster-analysis.html#cb63-13"></a>        <span class="dt">axis.text.y =</span> <span class="kw">element_blank</span>(),</span>
 <span id="cb63-14"><a href="unconstrained-cluster-analysis.html#cb63-14"></a>        <span class="dt">axis.ticks.y =</span> <span class="kw">element_blank</span>())</span></code></pre></div>
-<p><img src="itraxBook_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p><img src="itraxBook_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
 </div>
             </section>
 

@@ -226,7 +226,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb32-5"><a href="noisy-data.html#cb32-5"></a>  <span class="kw">ggAcf</span>(CD166_<span class="dv">19</span>_xrf<span class="op">$</span>Pb) <span class="op">+</span><span class="st"> </span></span>
 <span id="cb32-6"><a href="noisy-data.html#cb32-6"></a><span class="st">    </span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="ot">NA</span>,<span class="dv">1</span>)),</span>
 <span id="cb32-7"><a href="noisy-data.html#cb32-7"></a>  <span class="dt">nrow =</span> <span class="dv">1</span>)</span></code></pre></div>
-<p><img src="itraxBook_files/figure-html/unnamed-chunk-9-1.png" width="672" />
+<p><img src="itraxBook_files/figure-html/unnamed-chunk-8-1.png" width="672" />
 Now we might move on to making calculations for the entirety of the data. In the example below we apply the <code>Acf()</code> function to each of the elements. We might then explore the data by sorting for an arbitrary lag, or by plotting the results together for inspection. In this case, the elements have been sorted by the autocorrelation value at a lag of 5. Although the visualisation is a bit messy with all the elements plotting over one another, it is clear that some elements exhibit very low autocorrelation (e.g. I, Pb, Sc, Ge, Cs, P) and could be possible candidates for exclusion.</p>
 <div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="noisy-data.html#cb33-1"></a><span class="kw">apply</span>(CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">any_of</span>(elementsList)), <span class="dv">2</span>, <span class="dt">FUN =</span> <span class="cf">function</span>(x){<span class="kw">round</span>(<span class="kw">Acf</span>(x, <span class="dt">plot =</span> F)<span class="op">$</span>acf, <span class="dv">3</span>)}) <span class="op">%&gt;%</span></span>
 <span id="cb33-2"><a href="noisy-data.html#cb33-2"></a><span class="st">  </span><span class="kw">as_tibble</span>(<span class="dt">rownames =</span> <span class="st">&quot;lag&quot;</span>) <span class="op">%&gt;%</span></span>
@@ -236,7 +236,7 @@ Now we might move on to making calculations for the entirety of the data. In the
 <span id="cb33-6"><a href="noisy-data.html#cb33-6"></a><span class="st">  </span><span class="kw">group_by</span>(elements) <span class="op">%&gt;%</span></span>
 <span id="cb33-7"><a href="noisy-data.html#cb33-7"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> lag, <span class="dt">y =</span> value, <span class="dt">col =</span> elements)) <span class="op">+</span></span>
 <span id="cb33-8"><a href="noisy-data.html#cb33-8"></a><span class="st">  </span><span class="kw">geom_line</span>()</span></code></pre></div>
-<p><img src="itraxBook_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="itraxBook_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <p>It is worth noting that this analysis has been performed on the entirety of the data, but there is no reason why the data could be problematic for some facies and acceptable for others. It may be necessary to perform some facies analysis and perform these analyses per facies.</p>
 <p>Putting all the selection criteria together could look something like the example below.</p>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="noisy-data.html#cb34-1"></a><span class="co"># identify acceptable variables</span></span>
@@ -277,7 +277,7 @@ Now we might move on to making calculations for the entirety of the data. In the
 <span id="cb34-36"><a href="noisy-data.html#cb34-36"></a><span class="st">    </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;peak area&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Depth [mm]&quot;</span>) <span class="op">+</span></span>
 <span id="cb34-37"><a href="noisy-data.html#cb34-37"></a><span class="st">    </span>tidypaleo<span class="op">::</span><span class="kw">theme_paleo</span>() <span class="op">+</span></span>
 <span id="cb34-38"><a href="noisy-data.html#cb34-38"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>)</span></code></pre></div>
-<p><img src="itraxBook_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><img src="itraxBook_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="noisy-data.html#cb35-1"></a><span class="co">#rm(myElements)</span></span></code></pre></div>
 </div>
             </section>
