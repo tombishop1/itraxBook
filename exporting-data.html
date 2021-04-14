@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-03-15" />
+<meta name="date" content="2021-04-14" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -168,7 +168,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.7" data-path="correcting-for-water-content.html"><a href="correcting-for-water-content.html"><i class="fa fa-check"></i><b>3.7</b> Correcting for Water Content</a></li>
 <li class="chapter" data-level="3.8" data-path="correcting-grain-size.html"><a href="correcting-grain-size.html"><i class="fa fa-check"></i><b>3.8</b> Correcting Grain Size</a></li>
 <li class="chapter" data-level="3.9" data-path="uncertainties.html"><a href="uncertainties.html"><i class="fa fa-check"></i><b>3.9</b> Uncertainties</a></li>
-<li class="chapter" data-level="3.10" data-path="high-signal-to-noise-ratios.html"><a href="high-signal-to-noise-ratios.html"><i class="fa fa-check"></i><b>3.10</b> High Signal-to-noise Ratios</a></li>
+<li class="chapter" data-level="3.10" data-path="noisy-data.html"><a href="noisy-data.html"><i class="fa fa-check"></i><b>3.10</b> Noisy Data</a></li>
 <li class="chapter" data-level="3.11" data-path="reversing-data.html"><a href="reversing-data.html"><i class="fa fa-check"></i><b>3.11</b> Reversing Data</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="plotting.html"><a href="plotting.html"><i class="fa fa-check"></i><b>4</b> Plotting</a><ul>
@@ -218,10 +218,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="exporting-data" class="section level1">
 <h1><span class="header-section-number">Chapter 8</span> Exporting Data</h1>
 <p>Data is easy to export from <code>R</code>. Tables can be exported by piping to <code>readr::write_csv()</code>. For diagrams created in <code>ggplot2</code>, pipe to <code>ggsave()</code>. Sometimes it is necessary to reduce the resolution of Itrax XRF data, usually to facilitate direct comparison with some other lower resolution data. For example, if calibrating using ICP-MS sub-samples taken at 10 mm intervals, but the Itrax XRF scan is at 0.2 mm, it will be necessary to average 50 Itrax measurements for each ICP-MS measurement. This is facilitated using the <code>itrax_reduce()</code> function. The example below demonstrates calculating the averages for contiguous 20 mm chunks of the XRF data.</p>
-<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="exporting-data.html#cb69-1"></a><span class="co"># get the data as 20 mm intervals</span></span>
-<span id="cb69-2"><a href="exporting-data.html#cb69-2"></a><span class="kw">itrax_reduce</span>(CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">drop_na</span>(), <span class="dt">by =</span> <span class="dv">20</span>) <span class="op">%&gt;%</span></span>
-<span id="cb69-3"><a href="exporting-data.html#cb69-3"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>label) <span class="op">%&gt;%</span></span>
-<span id="cb69-4"><a href="exporting-data.html#cb69-4"></a><span class="st">  </span><span class="kw">head</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="exporting-data.html#cb72-1"></a><span class="co"># get the data as 20 mm intervals</span></span>
+<span id="cb72-2"><a href="exporting-data.html#cb72-2"></a><span class="kw">itrax_reduce</span>(CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">drop_na</span>(), <span class="dt">by =</span> <span class="dv">20</span>) <span class="op">%&gt;%</span></span>
+<span id="cb72-3"><a href="exporting-data.html#cb72-3"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>label) <span class="op">%&gt;%</span></span>
+<span id="cb72-4"><a href="exporting-data.html#cb72-4"></a><span class="st">  </span><span class="kw">head</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 6 x 56
 ##   resample_names depth   MSE    cps validity    Al    Si     P     S    Cl    Ar
 ##            &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;

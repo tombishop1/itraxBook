@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-03-15" />
+<meta name="date" content="2021-04-14" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -168,7 +168,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.7" data-path="correcting-for-water-content.html"><a href="correcting-for-water-content.html"><i class="fa fa-check"></i><b>3.7</b> Correcting for Water Content</a></li>
 <li class="chapter" data-level="3.8" data-path="correcting-grain-size.html"><a href="correcting-grain-size.html"><i class="fa fa-check"></i><b>3.8</b> Correcting Grain Size</a></li>
 <li class="chapter" data-level="3.9" data-path="uncertainties.html"><a href="uncertainties.html"><i class="fa fa-check"></i><b>3.9</b> Uncertainties</a></li>
-<li class="chapter" data-level="3.10" data-path="high-signal-to-noise-ratios.html"><a href="high-signal-to-noise-ratios.html"><i class="fa fa-check"></i><b>3.10</b> High Signal-to-noise Ratios</a></li>
+<li class="chapter" data-level="3.10" data-path="noisy-data.html"><a href="noisy-data.html"><i class="fa fa-check"></i><b>3.10</b> Noisy Data</a></li>
 <li class="chapter" data-level="3.11" data-path="reversing-data.html"><a href="reversing-data.html"><i class="fa fa-check"></i><b>3.11</b> Reversing Data</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="plotting.html"><a href="plotting.html"><i class="fa fa-check"></i><b>4</b> Plotting</a><ul>
@@ -218,17 +218,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="dead-time" class="section level2">
 <h2><span class="header-section-number">3.6</span> Dead Time</h2>
 <p>In silicone drift ED-XRF detectors the electronics are only so fast. This limits the flux of photons into the detector that can be measured. When the count rate is high, the detector will not be making observations whilst the electronics “catch-up”; this is the dead-time, and here it is expressed as a fraction of the overall dwell time. When the system is optimised variations in dead-time are usually small enough to be ignored, but where the matrix or configuration leads to large variations in dead-time they should be corrected for.</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="dead-time.html#cb25-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> CD166_<span class="dv">19</span>_xrf, <span class="kw">aes</span>(<span class="dt">x =</span> depth, <span class="dt">y =</span> Dt)) <span class="op">+</span></span>
-<span id="cb25-2"><a href="dead-time.html#cb25-2"></a><span class="st">  </span><span class="kw">scale_x_reverse</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb25-3"><a href="dead-time.html#cb25-3"></a><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">sec.axis =</span> <span class="kw">sec_axis</span>( <span class="dt">trans=</span><span class="op">~</span>(.<span class="op">+</span>(<span class="dv">1</span><span class="op">-</span><span class="kw">mean</span>(CD166_<span class="dv">19</span>_xrf<span class="op">$</span>Dt, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))), <span class="dt">name=</span><span class="st">&quot;Correction Factor&quot;</span>)) <span class="op">+</span></span>
-<span id="cb25-4"><a href="dead-time.html#cb25-4"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span></span>
-<span id="cb25-5"><a href="dead-time.html#cb25-5"></a><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="kw">mean</span>(CD166_<span class="dv">19</span>_xrf<span class="op">$</span>Dt, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dt">linetype =</span> <span class="st">&quot;dotted&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="dead-time.html#cb26-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> CD166_<span class="dv">19</span>_xrf, <span class="kw">aes</span>(<span class="dt">x =</span> depth, <span class="dt">y =</span> Dt)) <span class="op">+</span></span>
+<span id="cb26-2"><a href="dead-time.html#cb26-2"></a><span class="st">  </span><span class="kw">scale_x_reverse</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb26-3"><a href="dead-time.html#cb26-3"></a><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">sec.axis =</span> <span class="kw">sec_axis</span>( <span class="dt">trans=</span><span class="op">~</span>(.<span class="op">+</span>(<span class="dv">1</span><span class="op">-</span><span class="kw">mean</span>(CD166_<span class="dv">19</span>_xrf<span class="op">$</span>Dt, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))), <span class="dt">name=</span><span class="st">&quot;Correction Factor&quot;</span>)) <span class="op">+</span></span>
+<span id="cb26-4"><a href="dead-time.html#cb26-4"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span></span>
+<span id="cb26-5"><a href="dead-time.html#cb26-5"></a><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="kw">mean</span>(CD166_<span class="dv">19</span>_xrf<span class="op">$</span>Dt, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dt">linetype =</span> <span class="st">&quot;dotted&quot;</span>)</span></code></pre></div>
 <p><img src="itraxBook_files/figure-html/deadtime-1.png" width="672" /></p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="dead-time.html#cb26-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
-<span id="cb26-2"><a href="dead-time.html#cb26-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">newDt =</span> Dt<span class="op">+</span>(<span class="dv">1</span><span class="op">-</span><span class="kw">mean</span>(CD166_<span class="dv">19</span>_xrf<span class="op">$</span>Dt, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb26-3"><a href="dead-time.html#cb26-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">any_of</span>(elementsList)) <span class="op">*</span><span class="st"> </span>newDt) <span class="op">%&gt;%</span></span>
-<span id="cb26-4"><a href="dead-time.html#cb26-4"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>newDt) <span class="op">%&gt;%</span></span>
-<span id="cb26-5"><a href="dead-time.html#cb26-5"></a><span class="st">  </span><span class="kw">head</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="dead-time.html#cb27-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
+<span id="cb27-2"><a href="dead-time.html#cb27-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">newDt =</span> Dt<span class="op">+</span>(<span class="dv">1</span><span class="op">-</span><span class="kw">mean</span>(CD166_<span class="dv">19</span>_xrf<span class="op">$</span>Dt, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb27-3"><a href="dead-time.html#cb27-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">any_of</span>(elementsList)) <span class="op">*</span><span class="st"> </span>newDt) <span class="op">%&gt;%</span></span>
+<span id="cb27-4"><a href="dead-time.html#cb27-4"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>newDt) <span class="op">%&gt;%</span></span>
+<span id="cb27-5"><a href="dead-time.html#cb27-5"></a><span class="st">  </span><span class="kw">head</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 6 x 56
 ##   depth   MSE   cps validity    Al    Si     P     S    Cl    Ar     K      Ca
 ##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;

@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-03-15" />
+<meta name="date" content="2021-04-14" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -168,7 +168,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.7" data-path="correcting-for-water-content.html"><a href="correcting-for-water-content.html"><i class="fa fa-check"></i><b>3.7</b> Correcting for Water Content</a></li>
 <li class="chapter" data-level="3.8" data-path="correcting-grain-size.html"><a href="correcting-grain-size.html"><i class="fa fa-check"></i><b>3.8</b> Correcting Grain Size</a></li>
 <li class="chapter" data-level="3.9" data-path="uncertainties.html"><a href="uncertainties.html"><i class="fa fa-check"></i><b>3.9</b> Uncertainties</a></li>
-<li class="chapter" data-level="3.10" data-path="high-signal-to-noise-ratios.html"><a href="high-signal-to-noise-ratios.html"><i class="fa fa-check"></i><b>3.10</b> High Signal-to-noise Ratios</a></li>
+<li class="chapter" data-level="3.10" data-path="noisy-data.html"><a href="noisy-data.html"><i class="fa fa-check"></i><b>3.10</b> Noisy Data</a></li>
 <li class="chapter" data-level="3.11" data-path="reversing-data.html"><a href="reversing-data.html"><i class="fa fa-check"></i><b>3.11</b> Reversing Data</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="plotting.html"><a href="plotting.html"><i class="fa fa-check"></i><b>4</b> Plotting</a><ul>
@@ -219,26 +219,33 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">5.1</span> Ratios and Normalisation</h2>
 <p>These data are compositional, and represent the changes in the relative proportions of all components of the matrix, measured and un-measured. As such it is likely the data will need transforming for certain types of multivariate analysis. As previously mentioned, these data are dimensionless, and as such do not represent a quantity, but are directly related to the absolute amount of a particular element in the matrix. It is often the case that ratios of elements are used to represent changes in composition — this is sometimes referred to as normalisation, or normalising one element against another.</p>
 <p>It is trivial to calculate element ratios, to the extent that these can often simply be calculated where they are required rather than saving them to memory. For example, if a plot of the Compton divided by the Rayleigh scatter was desired, there is no need to save the computed value to a new variable (e.g. <code>coh_inc &lt;- df$Mo.coh/df$Mo.inc</code>) — simply define the calculation during plotting. To calculate ratios for all elements at once, use <code>mutate(across(any_ofelementsList))</code>, where <code>elementsList</code> is a list of chemical elements extracted from <code>data(PeriodicTable)</code>.</p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="ratios-and-normalisation.html#cb46-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
-<span id="cb46-2"><a href="ratios-and-normalisation.html#cb46-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">any_of</span>(elementsList)) <span class="op">/</span><span class="st">`</span><span class="dt">Mo inc</span><span class="st">`</span>) <span class="op">%&gt;%</span></span>
-<span id="cb46-3"><a href="ratios-and-normalisation.html#cb46-3"></a><span class="st">  </span><span class="kw">head</span>()</span></code></pre></div>
-<pre><code>## # A tibble: 6 x 56
-##   depth   MSE   cps validity       Al      Si     P       S     Cl     Ar      K
-##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt;       &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-## 1     1  1.41 34525 TRUE     0.00289  0.0104      0 3.80e-4 0.0501 0.0229 0.0974
-## 2     2  1.57 38370 TRUE     0.00213  0.0114      0 0.      0.0565 0.0222 0.0981
-## 3     3  1.55 39796 TRUE     0.00279  0.0124      0 1.21e-3 0.0554 0.0191 0.0896
-## 4     4  1.41 40022 TRUE     0.000918 0.00728     0 7.42e-4 0.0463 0.0196 0.0800
-## 5     5  1.41 41973 TRUE     0.00169  0.00743     0 1.18e-3 0.0555 0.0188 0.0940
-## 6     6  1.36 41268 TRUE     0.000881 0.0113      0 9.14e-4 0.0515 0.0165 0.104 
-## # … with 45 more variables: Ca &lt;dbl&gt;, Sc &lt;dbl&gt;, Ti &lt;dbl&gt;, V &lt;dbl&gt;, Cr &lt;dbl&gt;,
-## #   Mn &lt;dbl&gt;, Fe &lt;dbl&gt;, Ni &lt;dbl&gt;, Cu &lt;dbl&gt;, Zn &lt;dbl&gt;, Ga &lt;dbl&gt;, Ge &lt;dbl&gt;,
-## #   Br &lt;dbl&gt;, Rb &lt;dbl&gt;, Sr &lt;dbl&gt;, Y &lt;dbl&gt;, Zr &lt;dbl&gt;, Pd &lt;dbl&gt;, Cd &lt;dbl&gt;,
-## #   I &lt;dbl&gt;, Cs &lt;dbl&gt;, Ba &lt;dbl&gt;, Nd &lt;dbl&gt;, Sm &lt;dbl&gt;, Yb &lt;dbl&gt;, Ta &lt;dbl&gt;,
-## #   W &lt;dbl&gt;, Pb &lt;dbl&gt;, Bi &lt;dbl&gt;, Mo inc &lt;dbl&gt;, Mo coh &lt;dbl&gt;, filename &lt;chr&gt;,
-## #   position &lt;dbl&gt;, sample surface &lt;dbl&gt;, E-gain &lt;dbl&gt;, E-offset &lt;dbl&gt;,
-## #   F-slope &lt;dbl&gt;, F-offset &lt;dbl&gt;, Fe a*2 &lt;dbl&gt;, Fe a+b &lt;dbl&gt;, S1 &lt;dbl&gt;,
-## #   S2 &lt;dbl&gt;, S3 &lt;dbl&gt;, Dt &lt;dbl&gt;, label &lt;chr&gt;</code></pre>
+<pre><code>CD166_19_xrf %&gt;% 
+  mutate(across(any_of(elementsList)) /`Mo inc`)</code></pre>
+<p>This can be integrated into the work flow from the dat tidying chapter, for example:</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="ratios-and-normalisation.html#cb50-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb50-2"><a href="ratios-and-normalisation.html#cb50-2"></a><span class="st">  </span><span class="co"># transform</span></span>
+<span id="cb50-3"><a href="ratios-and-normalisation.html#cb50-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">any_of</span>(elementsList)) <span class="op">/</span><span class="st">`</span><span class="dt">Mo inc</span><span class="st">`</span>) <span class="op">%&gt;%</span></span>
+<span id="cb50-4"><a href="ratios-and-normalisation.html#cb50-4"></a><span class="st">  </span></span>
+<span id="cb50-5"><a href="ratios-and-normalisation.html#cb50-5"></a><span class="st">  </span><span class="co"># identify acceptable observations</span></span>
+<span id="cb50-6"><a href="ratios-and-normalisation.html#cb50-6"></a><span class="st">  </span><span class="kw">filter</span>(validity <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb50-7"><a href="ratios-and-normalisation.html#cb50-7"></a><span class="st">  </span></span>
+<span id="cb50-8"><a href="ratios-and-normalisation.html#cb50-8"></a><span class="st">  </span><span class="co"># identify acceptable variables</span></span>
+<span id="cb50-9"><a href="ratios-and-normalisation.html#cb50-9"></a><span class="st">  </span><span class="kw">select</span>(<span class="kw">any_of</span>(myElements), depth, label) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb50-10"><a href="ratios-and-normalisation.html#cb50-10"></a><span class="st">  </span></span>
+<span id="cb50-11"><a href="ratios-and-normalisation.html#cb50-11"></a><span class="st">  </span><span class="co"># pivot</span></span>
+<span id="cb50-12"><a href="ratios-and-normalisation.html#cb50-12"></a><span class="st">  </span>tidyr<span class="op">::</span><span class="kw">pivot_longer</span>(<span class="op">!</span><span class="kw">c</span>(<span class="st">&quot;depth&quot;</span>, <span class="st">&quot;label&quot;</span>), <span class="dt">names_to =</span> <span class="st">&quot;elements&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;peakarea&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb50-13"><a href="ratios-and-normalisation.html#cb50-13"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">elements =</span> <span class="kw">factor</span>(elements, <span class="dt">levels =</span> <span class="kw">c</span>(elementsList, <span class="st">&quot;coh/inc&quot;</span>))) <span class="op">%&gt;%</span></span>
+<span id="cb50-14"><a href="ratios-and-normalisation.html#cb50-14"></a><span class="st">  </span></span>
+<span id="cb50-15"><a href="ratios-and-normalisation.html#cb50-15"></a><span class="st">  </span><span class="co"># plot</span></span>
+<span id="cb50-16"><a href="ratios-and-normalisation.html#cb50-16"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> peakarea, <span class="dt">y =</span> depth)) <span class="op">+</span></span>
+<span id="cb50-17"><a href="ratios-and-normalisation.html#cb50-17"></a><span class="st">    </span>tidypaleo<span class="op">::</span><span class="kw">geom_lineh</span>(<span class="kw">aes</span>(<span class="dt">color =</span> label)) <span class="op">+</span></span>
+<span id="cb50-18"><a href="ratios-and-normalisation.html#cb50-18"></a><span class="st">    </span><span class="kw">scale_y_reverse</span>() <span class="op">+</span></span>
+<span id="cb50-19"><a href="ratios-and-normalisation.html#cb50-19"></a><span class="st">    </span><span class="kw">scale_x_continuous</span>(<span class="dt">n.breaks =</span> <span class="dv">2</span>) <span class="op">+</span></span>
+<span id="cb50-20"><a href="ratios-and-normalisation.html#cb50-20"></a><span class="st">    </span><span class="kw">facet_geochem_gridh</span>(<span class="kw">vars</span>(elements)) <span class="op">+</span></span>
+<span id="cb50-21"><a href="ratios-and-normalisation.html#cb50-21"></a><span class="st">    </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;peak area / Mo. inc.&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Depth [mm]&quot;</span>) <span class="op">+</span></span>
+<span id="cb50-22"><a href="ratios-and-normalisation.html#cb50-22"></a><span class="st">    </span>tidypaleo<span class="op">::</span><span class="kw">theme_paleo</span>() <span class="op">+</span></span>
+<span id="cb50-23"><a href="ratios-and-normalisation.html#cb50-23"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>)</span></code></pre></div>
+<p><img src="itraxBook_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 </div>
             </section>
 

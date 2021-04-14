@@ -27,7 +27,7 @@ dead-time
 correcting-for-water-content
 correcting-grain-size
 uncertainties
-high-signal-to-noise-ratios
+noisy-data
 reversing-data
 plotting
 plotting-xrf-data
