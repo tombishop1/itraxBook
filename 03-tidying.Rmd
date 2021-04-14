@@ -48,7 +48,7 @@ CD166_19_xrf %>%
 
 A useful tool for investigating areas of high errors is to visualise the raw spectral data. This shows a heat map of the spectra, and can be used to identify areas where particular spectral lines appear and disappear along the core.
 
-```{r}
+```{r restspectra}
 spectra <- itrax_restspectra("CD166_19_S1/CD166_19_S1/XRF data/")
 ```
 ```{r include=FALSE}
