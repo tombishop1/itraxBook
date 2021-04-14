@@ -46,6 +46,15 @@ CD166_19_xrf %>%
   geom_rug(sides = "b", data = . %>% filter(in_mse_tolerance == FALSE)) 
 ```
 
+A useful tool for investigating areas of high errors is to visualise the raw spectral data. This shows a heat map of the spectra, and can be used to identify areas where particular spectral lines appear and disappear along the core.
+
+```{r}
+spectra <- itrax_restspectra("CD166_19_S1/CD166_19_S1/XRF data/")
+```
+```{r include=FALSE}
+rm(spectra)
+```
+
 ## Surface Slope
 
 There is a relationship between the slope of the surface of the core material and the intensity for most elements. Hence areas with a large slope may produce an increase or decrease in a particular element intensity regardless of any actual change in the abundance of an element. This can be corrected for where the effect can be quantified experimentally, but @Jarvis2015 report results of experiments where the slope varies from -0.3 to +0.3 causing variation of around 120 to 80% of the true value. As such, we might initially seek to exclude areas of the core with a high slope. By default, `itraxR::itrax_import()` doesn't import the `sample surface` variable, so the parameter `parameters = "all"` should be passed to access it. The computation is simple to perform using `dplyr::lag()`, and could be used as part of a conditional expression that would mark all measurements with a slope beyond a certain tolerance as having `validity == FALSE`. For example, the example below marks all values with a slope (in either direction) greater than 0.1 mm/200 μm (1:5) as being invalid. As shown for the core below, the core slope is well within the defined tolerances.
