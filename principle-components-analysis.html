@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-04-14" />
+<meta name="date" content="2021-04-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -170,6 +170,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.9" data-path="uncertainties.html"><a href="uncertainties.html"><i class="fa fa-check"></i><b>3.9</b> Uncertainties</a></li>
 <li class="chapter" data-level="3.10" data-path="noisy-data.html"><a href="noisy-data.html"><i class="fa fa-check"></i><b>3.10</b> Noisy Data</a></li>
 <li class="chapter" data-level="3.11" data-path="reversing-data.html"><a href="reversing-data.html"><i class="fa fa-check"></i><b>3.11</b> Reversing Data</a></li>
+<li class="chapter" data-level="3.12" data-path="visualising-raw-data.html"><a href="visualising-raw-data.html"><i class="fa fa-check"></i><b>3.12</b> Visualising Raw Data</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="plotting.html"><a href="plotting.html"><i class="fa fa-check"></i><b>4</b> Plotting</a><ul>
 <li class="chapter" data-level="4.1" data-path="plotting-xrf-data.html"><a href="plotting-xrf-data.html"><i class="fa fa-check"></i><b>4.1</b> Plotting XRF Data</a></li>
@@ -218,23 +219,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="principle-components-analysis" class="section level2">
 <h2><span class="header-section-number">6.4</span> Principle Components Analysis</h2>
 <p>Principle components analysis can be used for exploring patterns in these data.</p>
-<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="principle-components-analysis.html#cb64-1"></a><span class="kw">library</span>(ggfortify)</span>
-<span id="cb64-2"><a href="principle-components-analysis.html#cb64-2"></a></span>
-<span id="cb64-3"><a href="principle-components-analysis.html#cb64-3"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
-<span id="cb64-4"><a href="principle-components-analysis.html#cb64-4"></a><span class="st">  </span><span class="kw">itrax_ordination</span>() <span class="op">%&gt;%</span></span>
-<span id="cb64-5"><a href="principle-components-analysis.html#cb64-5"></a><span class="st">  </span><span class="kw">pluck</span>(<span class="st">&quot;pca&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb64-6"><a href="principle-components-analysis.html#cb64-6"></a><span class="st">  </span><span class="kw">autoplot</span>(<span class="dt">loadings =</span> <span class="ot">TRUE</span>, <span class="dt">loadings.label =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="principle-components-analysis.html#cb66-1"></a><span class="kw">library</span>(ggfortify)</span>
+<span id="cb66-2"><a href="principle-components-analysis.html#cb66-2"></a></span>
+<span id="cb66-3"><a href="principle-components-analysis.html#cb66-3"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
+<span id="cb66-4"><a href="principle-components-analysis.html#cb66-4"></a><span class="st">  </span><span class="kw">itrax_ordination</span>() <span class="op">%&gt;%</span></span>
+<span id="cb66-5"><a href="principle-components-analysis.html#cb66-5"></a><span class="st">  </span><span class="kw">pluck</span>(<span class="st">&quot;pca&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb66-6"><a href="principle-components-analysis.html#cb66-6"></a><span class="st">  </span><span class="kw">autoplot</span>(<span class="dt">loadings =</span> <span class="ot">TRUE</span>, <span class="dt">loadings.label =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<p><img src="itraxBook_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="principle-components-analysis.html#cb67-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
+<span id="cb67-2"><a href="principle-components-analysis.html#cb67-2"></a><span class="st">  </span><span class="kw">itrax_ordination</span>() <span class="op">%&gt;%</span></span>
+<span id="cb67-3"><a href="principle-components-analysis.html#cb67-3"></a><span class="st">  </span><span class="kw">pluck</span>(<span class="st">&quot;data&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb67-4"><a href="principle-components-analysis.html#cb67-4"></a><span class="st">  </span><span class="kw">select</span>(depth, label, position, <span class="kw">starts_with</span>(<span class="st">&quot;.fittedPC&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb67-5"><a href="principle-components-analysis.html#cb67-5"></a><span class="st">  </span><span class="kw">drop_na</span>() <span class="op">%&gt;%</span></span>
+<span id="cb67-6"><a href="principle-components-analysis.html#cb67-6"></a></span>
+<span id="cb67-7"><a href="principle-components-analysis.html#cb67-7"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> depth, <span class="dt">y =</span> .fittedPC1, <span class="dt">colour =</span> label)) <span class="op">+</span></span>
+<span id="cb67-8"><a href="principle-components-analysis.html#cb67-8"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb67-9"><a href="principle-components-analysis.html#cb67-9"></a><span class="st">  </span><span class="kw">scale_x_reverse</span>()</span></code></pre></div>
 <p><img src="itraxBook_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
-<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="principle-components-analysis.html#cb65-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
-<span id="cb65-2"><a href="principle-components-analysis.html#cb65-2"></a><span class="st">  </span><span class="kw">itrax_ordination</span>() <span class="op">%&gt;%</span></span>
-<span id="cb65-3"><a href="principle-components-analysis.html#cb65-3"></a><span class="st">  </span><span class="kw">pluck</span>(<span class="st">&quot;data&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb65-4"><a href="principle-components-analysis.html#cb65-4"></a><span class="st">  </span><span class="kw">select</span>(depth, label, position, <span class="kw">starts_with</span>(<span class="st">&quot;.fittedPC&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb65-5"><a href="principle-components-analysis.html#cb65-5"></a><span class="st">  </span><span class="kw">drop_na</span>() <span class="op">%&gt;%</span></span>
-<span id="cb65-6"><a href="principle-components-analysis.html#cb65-6"></a></span>
-<span id="cb65-7"><a href="principle-components-analysis.html#cb65-7"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> depth, <span class="dt">y =</span> .fittedPC1, <span class="dt">colour =</span> label)) <span class="op">+</span></span>
-<span id="cb65-8"><a href="principle-components-analysis.html#cb65-8"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb65-9"><a href="principle-components-analysis.html#cb65-9"></a><span class="st">  </span><span class="kw">scale_x_reverse</span>()</span></code></pre></div>
-<p><img src="itraxBook_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
 
 </div>
 <!-- </div> -->

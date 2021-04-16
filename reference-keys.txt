@@ -29,6 +29,7 @@ correcting-grain-size
 uncertainties
 noisy-data
 reversing-data
+visualising-raw-data
 plotting
 plotting-xrf-data
 plotting-images

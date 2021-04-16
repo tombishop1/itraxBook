@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-04-14" />
+<meta name="date" content="2021-04-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="noisy-data.html"/>
-<link rel="next" href="plotting.html"/>
+<link rel="next" href="visualising-raw-data.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -170,6 +170,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.9" data-path="uncertainties.html"><a href="uncertainties.html"><i class="fa fa-check"></i><b>3.9</b> Uncertainties</a></li>
 <li class="chapter" data-level="3.10" data-path="noisy-data.html"><a href="noisy-data.html"><i class="fa fa-check"></i><b>3.10</b> Noisy Data</a></li>
 <li class="chapter" data-level="3.11" data-path="reversing-data.html"><a href="reversing-data.html"><i class="fa fa-check"></i><b>3.11</b> Reversing Data</a></li>
+<li class="chapter" data-level="3.12" data-path="visualising-raw-data.html"><a href="visualising-raw-data.html"><i class="fa fa-check"></i><b>3.12</b> Visualising Raw Data</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="plotting.html"><a href="plotting.html"><i class="fa fa-check"></i><b>4</b> Plotting</a><ul>
 <li class="chapter" data-level="4.1" data-path="plotting-xrf-data.html"><a href="plotting-xrf-data.html"><i class="fa fa-check"></i><b>4.1</b> Plotting XRF Data</a></li>
@@ -218,38 +219,36 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="reversing-data" class="section level2">
 <h2><span class="header-section-number">3.11</span> Reversing Data</h2>
 <p>Sometimes a core section goes in the scanner backwards! If this has happened, the functions below simply re-map the <code>position</code> and <code>depth</code> data for the radiograph, the optical image and the xrf data. These functions can either be called at the same time as the data itself (for example in a plot), or used to over-write the original data itself.</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="reversing-data.html#cb36-1"></a><span class="co"># for xrf data</span></span>
-<span id="cb36-2"><a href="reversing-data.html#cb36-2"></a>reverse_xrf &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">xrf =</span> <span class="kw">itrax_import</span>()){</span>
-<span id="cb36-3"><a href="reversing-data.html#cb36-3"></a>  xrf <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb36-4"><a href="reversing-data.html#cb36-4"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">depth =</span> <span class="kw">rev</span>(depth),</span>
-<span id="cb36-5"><a href="reversing-data.html#cb36-5"></a>           <span class="dt">position =</span> <span class="kw">rev</span>(position)) <span class="op">%&gt;%</span></span>
-<span id="cb36-6"><a href="reversing-data.html#cb36-6"></a><span class="st">    </span><span class="kw">arrange</span>(position) <span class="op">%&gt;%</span></span>
-<span id="cb36-7"><a href="reversing-data.html#cb36-7"></a><span class="st">    </span><span class="kw">return</span>()</span>
-<span id="cb36-8"><a href="reversing-data.html#cb36-8"></a>}</span>
-<span id="cb36-9"><a href="reversing-data.html#cb36-9"></a></span>
-<span id="cb36-10"><a href="reversing-data.html#cb36-10"></a><span class="co"># for images</span></span>
-<span id="cb36-11"><a href="reversing-data.html#cb36-11"></a>reverse_image &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">image =</span> <span class="kw">itrax_image</span>()){</span>
-<span id="cb36-12"><a href="reversing-data.html#cb36-12"></a>  image &lt;-<span class="st"> </span>image[<span class="kw">dim</span>(image)[<span class="dv">1</span>]<span class="op">:</span><span class="dv">1</span>, , ]</span>
-<span id="cb36-13"><a href="reversing-data.html#cb36-13"></a>  <span class="kw">row.names</span>(image) &lt;-<span class="st"> </span><span class="kw">rev</span>(<span class="kw">row.names</span>(image))</span>
-<span id="cb36-14"><a href="reversing-data.html#cb36-14"></a>  <span class="kw">return</span>(image)</span>
-<span id="cb36-15"><a href="reversing-data.html#cb36-15"></a>}</span>
-<span id="cb36-16"><a href="reversing-data.html#cb36-16"></a></span>
-<span id="cb36-17"><a href="reversing-data.html#cb36-17"></a><span class="co"># for radiographs</span></span>
-<span id="cb36-18"><a href="reversing-data.html#cb36-18"></a>reverse_radio &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">image =</span> <span class="kw">itrax_radiograph</span>()){</span>
-<span id="cb36-19"><a href="reversing-data.html#cb36-19"></a>  image &lt;-<span class="st"> </span>image[<span class="kw">dim</span>(image)[<span class="dv">1</span>]<span class="op">:</span><span class="dv">1</span>, ]</span>
-<span id="cb36-20"><a href="reversing-data.html#cb36-20"></a>  <span class="kw">row.names</span>(image) &lt;-<span class="st"> </span><span class="kw">rev</span>(<span class="kw">row.names</span>(image))</span>
-<span id="cb36-21"><a href="reversing-data.html#cb36-21"></a>  <span class="kw">return</span>(image)</span>
-<span id="cb36-22"><a href="reversing-data.html#cb36-22"></a>}</span></code></pre></div>
-
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="reversing-data.html#cb35-1"></a><span class="co"># for xrf data</span></span>
+<span id="cb35-2"><a href="reversing-data.html#cb35-2"></a>reverse_xrf &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">xrf =</span> <span class="kw">itrax_import</span>()){</span>
+<span id="cb35-3"><a href="reversing-data.html#cb35-3"></a>  xrf <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb35-4"><a href="reversing-data.html#cb35-4"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">depth =</span> <span class="kw">rev</span>(depth),</span>
+<span id="cb35-5"><a href="reversing-data.html#cb35-5"></a>           <span class="dt">position =</span> <span class="kw">rev</span>(position)) <span class="op">%&gt;%</span></span>
+<span id="cb35-6"><a href="reversing-data.html#cb35-6"></a><span class="st">    </span><span class="kw">arrange</span>(position) <span class="op">%&gt;%</span></span>
+<span id="cb35-7"><a href="reversing-data.html#cb35-7"></a><span class="st">    </span><span class="kw">return</span>()</span>
+<span id="cb35-8"><a href="reversing-data.html#cb35-8"></a>}</span>
+<span id="cb35-9"><a href="reversing-data.html#cb35-9"></a></span>
+<span id="cb35-10"><a href="reversing-data.html#cb35-10"></a><span class="co"># for images</span></span>
+<span id="cb35-11"><a href="reversing-data.html#cb35-11"></a>reverse_image &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">image =</span> <span class="kw">itrax_image</span>()){</span>
+<span id="cb35-12"><a href="reversing-data.html#cb35-12"></a>  image &lt;-<span class="st"> </span>image[<span class="kw">dim</span>(image)[<span class="dv">1</span>]<span class="op">:</span><span class="dv">1</span>, , ]</span>
+<span id="cb35-13"><a href="reversing-data.html#cb35-13"></a>  <span class="kw">row.names</span>(image) &lt;-<span class="st"> </span><span class="kw">rev</span>(<span class="kw">row.names</span>(image))</span>
+<span id="cb35-14"><a href="reversing-data.html#cb35-14"></a>  <span class="kw">return</span>(image)</span>
+<span id="cb35-15"><a href="reversing-data.html#cb35-15"></a>}</span>
+<span id="cb35-16"><a href="reversing-data.html#cb35-16"></a></span>
+<span id="cb35-17"><a href="reversing-data.html#cb35-17"></a><span class="co"># for radiographs</span></span>
+<span id="cb35-18"><a href="reversing-data.html#cb35-18"></a>reverse_radio &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">image =</span> <span class="kw">itrax_radiograph</span>()){</span>
+<span id="cb35-19"><a href="reversing-data.html#cb35-19"></a>  image &lt;-<span class="st"> </span>image[<span class="kw">dim</span>(image)[<span class="dv">1</span>]<span class="op">:</span><span class="dv">1</span>, ]</span>
+<span id="cb35-20"><a href="reversing-data.html#cb35-20"></a>  <span class="kw">row.names</span>(image) &lt;-<span class="st"> </span><span class="kw">rev</span>(<span class="kw">row.names</span>(image))</span>
+<span id="cb35-21"><a href="reversing-data.html#cb35-21"></a>  <span class="kw">return</span>(image)</span>
+<span id="cb35-22"><a href="reversing-data.html#cb35-22"></a>}</span></code></pre></div>
 </div>
-<!-- </div> -->
             </section>
 
           </div>
         </div>
       </div>
 <a href="noisy-data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="plotting.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="visualising-raw-data.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
