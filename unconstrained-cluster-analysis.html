@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>6.2 Unconstrained Cluster Analysis | Using Itrax Data in R</title>
   <meta name="description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
-  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
   <meta property="og:title" content="6.2 Unconstrained Cluster Analysis | Using Itrax Data in R" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-04-16" />
+<meta name="date" content="2021-04-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -51,6 +51,8 @@
 
 
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
 <style type="text/css">
@@ -117,6 +119,7 @@ code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
+
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -219,33 +222,33 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="unconstrained-cluster-analysis" class="section level2">
 <h2><span class="header-section-number">6.2</span> Unconstrained Cluster Analysis</h2>
 <p>Unconstrained cluster analysis will group each measurement by similarity, returning an arbitrary number of groups as defined by the function. This is useful in identifying recurring compositional units, or identifying candidate samples for quantitative analysis.</p>
-<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="unconstrained-cluster-analysis.html#cb64-1"></a><span class="kw">itrax_section</span>(CD166_<span class="dv">19</span>_S1<span class="op">$</span>xrf, </span>
-<span id="cb64-2"><a href="unconstrained-cluster-analysis.html#cb64-2"></a>              <span class="dt">elementsonly =</span> <span class="kw">c</span>(<span class="st">&quot;Ti&quot;</span>, <span class="st">&quot;Si&quot;</span>, <span class="st">&quot;S&quot;</span>, <span class="st">&quot;K&quot;</span>, <span class="st">&quot;Ca&quot;</span>), <span class="dt">divisions =</span> <span class="dv">10</span>) <span class="op">%&gt;%</span></span>
-<span id="cb64-3"><a href="unconstrained-cluster-analysis.html#cb64-3"></a><span class="st">  </span><span class="kw">pluck</span>(<span class="st">&quot;groups&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb64-4"><a href="unconstrained-cluster-analysis.html#cb64-4"></a></span>
-<span id="cb64-5"><a href="unconstrained-cluster-analysis.html#cb64-5"></a><span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb64-6"><a href="unconstrained-cluster-analysis.html#cb64-6"></a><span class="st">  </span><span class="kw">geom_tile</span>(<span class="kw">aes</span>(<span class="dt">x =</span> depth, <span class="dt">y =</span> <span class="dv">1</span>, <span class="dt">fill =</span> group)) <span class="op">+</span></span>
-<span id="cb64-7"><a href="unconstrained-cluster-analysis.html#cb64-7"></a><span class="st">  </span><span class="kw">scale_x_reverse</span>() <span class="op">+</span></span>
-<span id="cb64-8"><a href="unconstrained-cluster-analysis.html#cb64-8"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.title.y =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb64-9"><a href="unconstrained-cluster-analysis.html#cb64-9"></a>        <span class="dt">axis.text.y =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb64-10"><a href="unconstrained-cluster-analysis.html#cb64-10"></a>        <span class="dt">axis.ticks.y =</span> <span class="kw">element_blank</span>())</span></code></pre></div>
-<p><img src="itraxBook_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
-<p>Given that these groups form the characteristic compositional units, they present good candidates for sampling for quantitative analysis. The second part of this function will report the sample most characteristic of each group. For example, if you can submit 10 samples for quantitative analysis (e.g. ICP-MS), you can input the elements you wish to calibrate for in the <code>elementsonly</code> argument, the number of samples you want to take in the <code>divisions</code> argument, and the function will report the samples that are likely to give the best calibration across all elements. The resolution at which you are able to sub-sample the core may be significantly coarser than the scan, so you may wish to reduce the data first. The example below summarises the data into 50 mm chunks before the cluster analysis.</p>
-<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="unconstrained-cluster-analysis.html#cb65-1"></a>foo &lt;-<span class="st"> </span>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
-<span id="cb65-2"><a href="unconstrained-cluster-analysis.html#cb65-2"></a><span class="st">  </span><span class="kw">select</span>(<span class="kw">where</span>(is.numeric)) <span class="op">%&gt;%</span></span>
-<span id="cb65-3"><a href="unconstrained-cluster-analysis.html#cb65-3"></a><span class="st">  </span><span class="kw">itrax_reduce</span>(<span class="dt">by =</span> <span class="dv">50</span>) <span class="op">%&gt;%</span></span>
-<span id="cb65-4"><a href="unconstrained-cluster-analysis.html#cb65-4"></a><span class="st">  </span><span class="kw">itrax_section</span>(<span class="dt">elementsonly =</span> <span class="kw">c</span>(<span class="st">&quot;Ti&quot;</span>, <span class="st">&quot;Si&quot;</span>, <span class="st">&quot;S&quot;</span>, <span class="st">&quot;K&quot;</span>, <span class="st">&quot;Ca&quot;</span>), <span class="dt">divisions =</span> <span class="dv">10</span>)</span>
-<span id="cb65-5"><a href="unconstrained-cluster-analysis.html#cb65-5"></a></span>
-<span id="cb65-6"><a href="unconstrained-cluster-analysis.html#cb65-6"></a><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb65-7"><a href="unconstrained-cluster-analysis.html#cb65-7"></a><span class="st">  </span><span class="kw">geom_tile</span>(<span class="dt">data =</span> foo <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pluck</span>(<span class="st">&quot;groups&quot;</span>), </span>
-<span id="cb65-8"><a href="unconstrained-cluster-analysis.html#cb65-8"></a>            <span class="kw">aes</span>(<span class="dt">x =</span> depth, <span class="dt">y =</span> <span class="dv">1</span>, <span class="dt">fill =</span> group, <span class="dt">width =</span> <span class="dv">50</span>)) <span class="op">+</span><span class="st"> </span><span class="co"># width here needs to be set to the resampling interval</span></span>
-<span id="cb65-9"><a href="unconstrained-cluster-analysis.html#cb65-9"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> foo <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pluck</span>(<span class="st">&quot;samples&quot;</span>), </span>
-<span id="cb65-10"><a href="unconstrained-cluster-analysis.html#cb65-10"></a>             <span class="kw">aes</span>(<span class="dt">x =</span> depth, <span class="dt">y =</span> <span class="dv">1</span>)) <span class="op">+</span></span>
-<span id="cb65-11"><a href="unconstrained-cluster-analysis.html#cb65-11"></a><span class="st">  </span><span class="kw">scale_x_reverse</span>() <span class="op">+</span></span>
-<span id="cb65-12"><a href="unconstrained-cluster-analysis.html#cb65-12"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.title.y =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb65-13"><a href="unconstrained-cluster-analysis.html#cb65-13"></a>        <span class="dt">axis.text.y =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb65-14"><a href="unconstrained-cluster-analysis.html#cb65-14"></a>        <span class="dt">axis.ticks.y =</span> <span class="kw">element_blank</span>())</span></code></pre></div>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="unconstrained-cluster-analysis.html#cb65-1"></a><span class="kw">itrax_section</span>(CD166_<span class="dv">19</span>_S1<span class="op">$</span>xrf, </span>
+<span id="cb65-2"><a href="unconstrained-cluster-analysis.html#cb65-2"></a>              <span class="dt">elementsonly =</span> <span class="kw">c</span>(<span class="st">&quot;Ti&quot;</span>, <span class="st">&quot;Si&quot;</span>, <span class="st">&quot;S&quot;</span>, <span class="st">&quot;K&quot;</span>, <span class="st">&quot;Ca&quot;</span>), <span class="dt">divisions =</span> <span class="dv">10</span>) <span class="op">%&gt;%</span></span>
+<span id="cb65-3"><a href="unconstrained-cluster-analysis.html#cb65-3"></a><span class="st">  </span><span class="kw">pluck</span>(<span class="st">&quot;groups&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb65-4"><a href="unconstrained-cluster-analysis.html#cb65-4"></a></span>
+<span id="cb65-5"><a href="unconstrained-cluster-analysis.html#cb65-5"></a><span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb65-6"><a href="unconstrained-cluster-analysis.html#cb65-6"></a><span class="st">  </span><span class="kw">geom_tile</span>(<span class="kw">aes</span>(<span class="dt">x =</span> depth, <span class="dt">y =</span> <span class="dv">1</span>, <span class="dt">fill =</span> group)) <span class="op">+</span></span>
+<span id="cb65-7"><a href="unconstrained-cluster-analysis.html#cb65-7"></a><span class="st">  </span><span class="kw">scale_x_reverse</span>() <span class="op">+</span></span>
+<span id="cb65-8"><a href="unconstrained-cluster-analysis.html#cb65-8"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.title.y =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb65-9"><a href="unconstrained-cluster-analysis.html#cb65-9"></a>        <span class="dt">axis.text.y =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb65-10"><a href="unconstrained-cluster-analysis.html#cb65-10"></a>        <span class="dt">axis.ticks.y =</span> <span class="kw">element_blank</span>())</span></code></pre></div>
 <p><img src="itraxBook_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p>Given that these groups form the characteristic compositional units, they present good candidates for sampling for quantitative analysis. The second part of this function will report the sample most characteristic of each group. For example, if you can submit 10 samples for quantitative analysis (e.g. ICP-MS), you can input the elements you wish to calibrate for in the <code>elementsonly</code> argument, the number of samples you want to take in the <code>divisions</code> argument, and the function will report the samples that are likely to give the best calibration across all elements. The resolution at which you are able to sub-sample the core may be significantly coarser than the scan, so you may wish to reduce the data first. The example below summarises the data into 50 mm chunks before the cluster analysis.</p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="unconstrained-cluster-analysis.html#cb66-1"></a>foo &lt;-<span class="st"> </span>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
+<span id="cb66-2"><a href="unconstrained-cluster-analysis.html#cb66-2"></a><span class="st">  </span><span class="kw">select</span>(<span class="kw">where</span>(is.numeric)) <span class="op">%&gt;%</span></span>
+<span id="cb66-3"><a href="unconstrained-cluster-analysis.html#cb66-3"></a><span class="st">  </span><span class="kw">itrax_reduce</span>(<span class="dt">by =</span> <span class="dv">50</span>) <span class="op">%&gt;%</span></span>
+<span id="cb66-4"><a href="unconstrained-cluster-analysis.html#cb66-4"></a><span class="st">  </span><span class="kw">itrax_section</span>(<span class="dt">elementsonly =</span> <span class="kw">c</span>(<span class="st">&quot;Ti&quot;</span>, <span class="st">&quot;Si&quot;</span>, <span class="st">&quot;S&quot;</span>, <span class="st">&quot;K&quot;</span>, <span class="st">&quot;Ca&quot;</span>), <span class="dt">divisions =</span> <span class="dv">10</span>)</span>
+<span id="cb66-5"><a href="unconstrained-cluster-analysis.html#cb66-5"></a></span>
+<span id="cb66-6"><a href="unconstrained-cluster-analysis.html#cb66-6"></a><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb66-7"><a href="unconstrained-cluster-analysis.html#cb66-7"></a><span class="st">  </span><span class="kw">geom_tile</span>(<span class="dt">data =</span> foo <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pluck</span>(<span class="st">&quot;groups&quot;</span>), </span>
+<span id="cb66-8"><a href="unconstrained-cluster-analysis.html#cb66-8"></a>            <span class="kw">aes</span>(<span class="dt">x =</span> depth, <span class="dt">y =</span> <span class="dv">1</span>, <span class="dt">fill =</span> group, <span class="dt">width =</span> <span class="dv">50</span>)) <span class="op">+</span><span class="st"> </span><span class="co"># width here needs to be set to the resampling interval</span></span>
+<span id="cb66-9"><a href="unconstrained-cluster-analysis.html#cb66-9"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> foo <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pluck</span>(<span class="st">&quot;samples&quot;</span>), </span>
+<span id="cb66-10"><a href="unconstrained-cluster-analysis.html#cb66-10"></a>             <span class="kw">aes</span>(<span class="dt">x =</span> depth, <span class="dt">y =</span> <span class="dv">1</span>)) <span class="op">+</span></span>
+<span id="cb66-11"><a href="unconstrained-cluster-analysis.html#cb66-11"></a><span class="st">  </span><span class="kw">scale_x_reverse</span>() <span class="op">+</span></span>
+<span id="cb66-12"><a href="unconstrained-cluster-analysis.html#cb66-12"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.title.y =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb66-13"><a href="unconstrained-cluster-analysis.html#cb66-13"></a>        <span class="dt">axis.text.y =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb66-14"><a href="unconstrained-cluster-analysis.html#cb66-14"></a>        <span class="dt">axis.ticks.y =</span> <span class="kw">element_blank</span>())</span></code></pre></div>
+<p><img src="itraxBook_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
 </div>
             </section>
 
@@ -276,6 +279,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {

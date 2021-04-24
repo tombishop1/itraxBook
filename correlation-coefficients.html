@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>6.1 Correlation Coefficients | Using Itrax Data in R</title>
   <meta name="description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
-  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
   <meta property="og:title" content="6.1 Correlation Coefficients | Using Itrax Data in R" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-04-16" />
+<meta name="date" content="2021-04-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -51,6 +51,8 @@
 
 
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 
 
 <style type="text/css">
@@ -117,6 +119,7 @@ code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
+
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -219,11 +222,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="correlation-coefficients" class="section level2">
 <h2><span class="header-section-number">6.1</span> Correlation Coefficients</h2>
 <p>The Pearson’s R correlation coefficient is occasionally used to study the relationships between individual elements. It is often useful in conjunction with principle component analysis.</p>
-<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="correlation-coefficients.html#cb63-1"></a><span class="kw">itrax_correlation</span>(CD166_<span class="dv">19</span>_xrf) <span class="op">%&gt;%</span></span>
-<span id="cb63-2"><a href="correlation-coefficients.html#cb63-2"></a><span class="st">  </span>ggcorrplot<span class="op">::</span><span class="kw">ggcorrplot</span>(<span class="dt">hc.order =</span> <span class="ot">TRUE</span>,</span>
-<span id="cb63-3"><a href="correlation-coefficients.html#cb63-3"></a>                         <span class="dt">p.mat =</span> ggcorrplot<span class="op">::</span><span class="kw">cor_pmat</span>(., <span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>),</span>
-<span id="cb63-4"><a href="correlation-coefficients.html#cb63-4"></a>                         <span class="dt">insig =</span> <span class="st">&quot;blank&quot;</span>)</span></code></pre></div>
-<p><img src="itraxBook_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="correlation-coefficients.html#cb64-1"></a><span class="kw">itrax_correlation</span>(CD166_<span class="dv">19</span>_xrf) <span class="op">%&gt;%</span></span>
+<span id="cb64-2"><a href="correlation-coefficients.html#cb64-2"></a><span class="st">  </span>ggcorrplot<span class="op">::</span><span class="kw">ggcorrplot</span>(<span class="dt">hc.order =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb64-3"><a href="correlation-coefficients.html#cb64-3"></a>                         <span class="dt">p.mat =</span> ggcorrplot<span class="op">::</span><span class="kw">cor_pmat</span>(., <span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>),</span>
+<span id="cb64-4"><a href="correlation-coefficients.html#cb64-4"></a>                         <span class="dt">insig =</span> <span class="st">&quot;blank&quot;</span>)</span></code></pre></div>
+<p><img src="itraxBook_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 </div>
             </section>
 
@@ -254,6 +257,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
