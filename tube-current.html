@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-04-24" />
+<meta name="date" content="2021-05-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -183,13 +183,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5" data-path="transforming-data.html"><a href="transforming-data.html"><i class="fa fa-check"></i><b>5</b> Transforming Data</a><ul>
 <li class="chapter" data-level="5.1" data-path="ratios-and-normalisation.html"><a href="ratios-and-normalisation.html"><i class="fa fa-check"></i><b>5.1</b> Ratios and Normalisation</a></li>
 <li class="chapter" data-level="5.2" data-path="running-mean-and-other-window-functions.html"><a href="running-mean-and-other-window-functions.html"><i class="fa fa-check"></i><b>5.2</b> Running Mean and Other Window Functions</a></li>
-<li class="chapter" data-level="5.3" data-path="preparing-data-for-multivariate-data-analysis.html"><a href="preparing-data-for-multivariate-data-analysis.html"><i class="fa fa-check"></i><b>5.3</b> Preparing Data for Multivariate Data Analysis</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="multivariate-methods.html"><a href="multivariate-methods.html"><i class="fa fa-check"></i><b>6</b> Multivariate Methods</a><ul>
-<li class="chapter" data-level="6.1" data-path="correlation-coefficients.html"><a href="correlation-coefficients.html"><i class="fa fa-check"></i><b>6.1</b> Correlation Coefficients</a></li>
-<li class="chapter" data-level="6.2" data-path="unconstrained-cluster-analysis.html"><a href="unconstrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.2</b> Unconstrained Cluster Analysis</a></li>
-<li class="chapter" data-level="6.3" data-path="constrained-cluster-analysis.html"><a href="constrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.3</b> Constrained Cluster Analysis</a></li>
-<li class="chapter" data-level="6.4" data-path="principle-components-analysis.html"><a href="principle-components-analysis.html"><i class="fa fa-check"></i><b>6.4</b> Principle Components Analysis</a></li>
+<li class="chapter" data-level="6.1" data-path="preparing-data-for-multivariate-data-analysis.html"><a href="preparing-data-for-multivariate-data-analysis.html"><i class="fa fa-check"></i><b>6.1</b> Preparing Data for Multivariate Data Analysis</a></li>
+<li class="chapter" data-level="6.2" data-path="principle-component-analysis.html"><a href="principle-component-analysis.html"><i class="fa fa-check"></i><b>6.2</b> Principle Component analysis</a></li>
+<li class="chapter" data-level="6.3" data-path="unconstrained-cluster-analysis.html"><a href="unconstrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.3</b> Unconstrained Cluster Analysis</a></li>
+<li class="chapter" data-level="6.4" data-path="constrained-cluster-analysis.html"><a href="constrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.4</b> Constrained Cluster Analysis</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="calibrating-data.html"><a href="calibrating-data.html"><i class="fa fa-check"></i><b>7</b> Calibrating Data</a><ul>
 <li class="chapter" data-level="7.1" data-path="suitable-methods.html"><a href="suitable-methods.html"><i class="fa fa-check"></i><b>7.1</b> Suitable Methods</a></li>
@@ -222,12 +221,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="tube-current" class="section level2">
 <h2><span class="header-section-number">3.5</span> Tube current</h2>
 <p>Although element peak areas are not exactly linearly related to tube current, they can be approximated to a linear relationship (see <span class="citation">Jarvis, Croudace, and Rothwell (<a href="#ref-Jarvis2015" role="doc-biblioref">2015</a>)</span>). The <code>Q-Spec</code> software can report either peak areas (n) or intensities (n/mA), and it is easy to tell which you are using: peak areas are always integers, but intensities are always fractions. It is easy to adjust from one to the other:</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="tube-current.html#cb23-1"></a>current &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(CD166_<span class="dv">19</span>_S1<span class="op">$</span>metadata[<span class="dv">18</span>, <span class="dv">2</span>])</span>
-<span id="cb23-2"><a href="tube-current.html#cb23-2"></a>  CD166_<span class="dv">19</span>_S1<span class="op">$</span>xrf <span class="op">%&gt;%</span></span>
-<span id="cb23-3"><a href="tube-current.html#cb23-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">intensity_Fe =</span> <span class="kw">round</span>(Fe<span class="op">/</span>current, <span class="dv">3</span>)) <span class="op">%&gt;%</span><span class="st">        </span><span class="co"># convert to intensity</span></span>
-<span id="cb23-4"><a href="tube-current.html#cb23-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">peakarea_Fe  =</span> <span class="kw">round</span>(intensity_Fe<span class="op">*</span>current)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># convert to peak area</span></span>
-<span id="cb23-5"><a href="tube-current.html#cb23-5"></a><span class="st">  </span><span class="kw">select</span>(Fe, intensity_Fe, peakarea_Fe) <span class="op">%&gt;%</span></span>
-<span id="cb23-6"><a href="tube-current.html#cb23-6"></a><span class="st">  </span><span class="kw">head</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="tube-current.html#cb21-1"></a>current &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(CD166_<span class="dv">19</span>_S1<span class="op">$</span>metadata[<span class="dv">18</span>, <span class="dv">2</span>])</span>
+<span id="cb21-2"><a href="tube-current.html#cb21-2"></a>  CD166_<span class="dv">19</span>_S1<span class="op">$</span>xrf <span class="op">%&gt;%</span></span>
+<span id="cb21-3"><a href="tube-current.html#cb21-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">intensity_Fe =</span> <span class="kw">round</span>(Fe<span class="op">/</span>current, <span class="dv">3</span>)) <span class="op">%&gt;%</span><span class="st">        </span><span class="co"># convert to intensity</span></span>
+<span id="cb21-4"><a href="tube-current.html#cb21-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">peakarea_Fe  =</span> <span class="kw">round</span>(intensity_Fe<span class="op">*</span>current)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># convert to peak area</span></span>
+<span id="cb21-5"><a href="tube-current.html#cb21-5"></a><span class="st">  </span><span class="kw">select</span>(Fe, intensity_Fe, peakarea_Fe) <span class="op">%&gt;%</span></span>
+<span id="cb21-6"><a href="tube-current.html#cb21-6"></a><span class="st">  </span><span class="kw">head</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 6 x 3
 ##      Fe intensity_Fe peakarea_Fe
 ##   &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;

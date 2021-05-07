@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-04-24" />
+<meta name="date" content="2021-05-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -183,13 +183,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5" data-path="transforming-data.html"><a href="transforming-data.html"><i class="fa fa-check"></i><b>5</b> Transforming Data</a><ul>
 <li class="chapter" data-level="5.1" data-path="ratios-and-normalisation.html"><a href="ratios-and-normalisation.html"><i class="fa fa-check"></i><b>5.1</b> Ratios and Normalisation</a></li>
 <li class="chapter" data-level="5.2" data-path="running-mean-and-other-window-functions.html"><a href="running-mean-and-other-window-functions.html"><i class="fa fa-check"></i><b>5.2</b> Running Mean and Other Window Functions</a></li>
-<li class="chapter" data-level="5.3" data-path="preparing-data-for-multivariate-data-analysis.html"><a href="preparing-data-for-multivariate-data-analysis.html"><i class="fa fa-check"></i><b>5.3</b> Preparing Data for Multivariate Data Analysis</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="multivariate-methods.html"><a href="multivariate-methods.html"><i class="fa fa-check"></i><b>6</b> Multivariate Methods</a><ul>
-<li class="chapter" data-level="6.1" data-path="correlation-coefficients.html"><a href="correlation-coefficients.html"><i class="fa fa-check"></i><b>6.1</b> Correlation Coefficients</a></li>
-<li class="chapter" data-level="6.2" data-path="unconstrained-cluster-analysis.html"><a href="unconstrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.2</b> Unconstrained Cluster Analysis</a></li>
-<li class="chapter" data-level="6.3" data-path="constrained-cluster-analysis.html"><a href="constrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.3</b> Constrained Cluster Analysis</a></li>
-<li class="chapter" data-level="6.4" data-path="principle-components-analysis.html"><a href="principle-components-analysis.html"><i class="fa fa-check"></i><b>6.4</b> Principle Components Analysis</a></li>
+<li class="chapter" data-level="6.1" data-path="preparing-data-for-multivariate-data-analysis.html"><a href="preparing-data-for-multivariate-data-analysis.html"><i class="fa fa-check"></i><b>6.1</b> Preparing Data for Multivariate Data Analysis</a></li>
+<li class="chapter" data-level="6.2" data-path="principle-component-analysis.html"><a href="principle-component-analysis.html"><i class="fa fa-check"></i><b>6.2</b> Principle Component analysis</a></li>
+<li class="chapter" data-level="6.3" data-path="unconstrained-cluster-analysis.html"><a href="unconstrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.3</b> Unconstrained Cluster Analysis</a></li>
+<li class="chapter" data-level="6.4" data-path="constrained-cluster-analysis.html"><a href="constrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.4</b> Constrained Cluster Analysis</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="calibrating-data.html"><a href="calibrating-data.html"><i class="fa fa-check"></i><b>7</b> Calibrating Data</a><ul>
 <li class="chapter" data-level="7.1" data-path="suitable-methods.html"><a href="suitable-methods.html"><i class="fa fa-check"></i><b>7.1</b> Suitable Methods</a></li>
@@ -222,18 +221,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="dead-time" class="section level2">
 <h2><span class="header-section-number">3.6</span> Dead Time</h2>
 <p>In silicone drift ED-XRF detectors the electronics are only so fast. This limits the flux of photons into the detector that can be measured. When the count rate is high, the detector will not be making observations whilst the electronics “catch-up”; this is the dead-time, and here it is expressed as a fraction of the overall dwell time. When the system is optimised variations in dead-time are usually small enough to be ignored, but where the matrix or configuration leads to large variations in dead-time they should be corrected for.</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="dead-time.html#cb25-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> CD166_<span class="dv">19</span>_xrf, <span class="kw">aes</span>(<span class="dt">x =</span> depth, <span class="dt">y =</span> Dt)) <span class="op">+</span></span>
-<span id="cb25-2"><a href="dead-time.html#cb25-2"></a><span class="st">  </span><span class="kw">scale_x_reverse</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb25-3"><a href="dead-time.html#cb25-3"></a><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">sec.axis =</span> <span class="kw">sec_axis</span>( <span class="dt">trans=</span><span class="op">~</span>(.<span class="op">+</span>(<span class="dv">1</span><span class="op">-</span><span class="kw">mean</span>(CD166_<span class="dv">19</span>_xrf<span class="op">$</span>Dt, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))), <span class="dt">name=</span><span class="st">&quot;Correction Factor&quot;</span>)) <span class="op">+</span></span>
-<span id="cb25-4"><a href="dead-time.html#cb25-4"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span></span>
-<span id="cb25-5"><a href="dead-time.html#cb25-5"></a><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="kw">mean</span>(CD166_<span class="dv">19</span>_xrf<span class="op">$</span>Dt, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dt">linetype =</span> <span class="st">&quot;dotted&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="dead-time.html#cb23-1"></a><span class="kw">ggplot</span>(<span class="dt">data =</span> CD166_<span class="dv">19</span>_xrf, <span class="kw">aes</span>(<span class="dt">x =</span> depth, <span class="dt">y =</span> Dt)) <span class="op">+</span></span>
+<span id="cb23-2"><a href="dead-time.html#cb23-2"></a><span class="st">  </span><span class="kw">scale_x_reverse</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb23-3"><a href="dead-time.html#cb23-3"></a><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">sec.axis =</span> <span class="kw">sec_axis</span>( <span class="dt">trans=</span><span class="op">~</span>(.<span class="op">+</span>(<span class="dv">1</span><span class="op">-</span><span class="kw">mean</span>(CD166_<span class="dv">19</span>_xrf<span class="op">$</span>Dt, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))), <span class="dt">name=</span><span class="st">&quot;Correction Factor&quot;</span>)) <span class="op">+</span></span>
+<span id="cb23-4"><a href="dead-time.html#cb23-4"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span></span>
+<span id="cb23-5"><a href="dead-time.html#cb23-5"></a><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="kw">mean</span>(CD166_<span class="dv">19</span>_xrf<span class="op">$</span>Dt, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dt">linetype =</span> <span class="st">&quot;dotted&quot;</span>)</span></code></pre></div>
 <p><img src="itraxBook_files/figure-html/deadtime-1.png" width="672" /></p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="dead-time.html#cb26-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
-<span id="cb26-2"><a href="dead-time.html#cb26-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">newDt =</span> Dt<span class="op">+</span>(<span class="dv">1</span><span class="op">-</span><span class="kw">mean</span>(CD166_<span class="dv">19</span>_xrf<span class="op">$</span>Dt, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb26-3"><a href="dead-time.html#cb26-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">any_of</span>(elementsList)) <span class="op">*</span><span class="st"> </span>newDt) <span class="op">%&gt;%</span></span>
-<span id="cb26-4"><a href="dead-time.html#cb26-4"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>newDt) <span class="op">%&gt;%</span></span>
-<span id="cb26-5"><a href="dead-time.html#cb26-5"></a><span class="st">  </span><span class="kw">head</span>()</span></code></pre></div>
-<pre><code>## # A tibble: 6 x 56
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="dead-time.html#cb24-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
+<span id="cb24-2"><a href="dead-time.html#cb24-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">newDt =</span> Dt<span class="op">+</span>(<span class="dv">1</span><span class="op">-</span><span class="kw">mean</span>(CD166_<span class="dv">19</span>_xrf<span class="op">$</span>Dt, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb24-3"><a href="dead-time.html#cb24-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">any_of</span>(elementsList)) <span class="op">*</span><span class="st"> </span>newDt) <span class="op">%&gt;%</span></span>
+<span id="cb24-4"><a href="dead-time.html#cb24-4"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>newDt) <span class="op">%&gt;%</span></span>
+<span id="cb24-5"><a href="dead-time.html#cb24-5"></a><span class="st">  </span><span class="kw">head</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 6 x 57
+## # Rowwise: 
 ##   depth   MSE   cps validity    Al    Si     P     S    Cl    Ar     K      Ca
 ##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
 ## 1     1  1.41 34525 TRUE      76.2  276.     0  10.0 1322.  606. 2573. 113068.
@@ -242,14 +242,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 4     4  1.41 40022 TRUE      26.1  207.     0  21.1 1319.  558. 2276. 153954.
 ## 5     5  1.41 41973 TRUE      53.4  235.     0  37.3 1754.  596. 2970. 136960.
 ## 6     6  1.36 41268 TRUE      27.2  350.     0  28.2 1589.  508. 3204. 133235.
-## # … with 44 more variables: Sc &lt;dbl&gt;, Ti &lt;dbl&gt;, V &lt;dbl&gt;, Cr &lt;dbl&gt;, Mn &lt;dbl&gt;,
+## # … with 45 more variables: Sc &lt;dbl&gt;, Ti &lt;dbl&gt;, V &lt;dbl&gt;, Cr &lt;dbl&gt;, Mn &lt;dbl&gt;,
 ## #   Fe &lt;dbl&gt;, Ni &lt;dbl&gt;, Cu &lt;dbl&gt;, Zn &lt;dbl&gt;, Ga &lt;dbl&gt;, Ge &lt;dbl&gt;, Br &lt;dbl&gt;,
 ## #   Rb &lt;dbl&gt;, Sr &lt;dbl&gt;, Y &lt;dbl&gt;, Zr &lt;dbl&gt;, Pd &lt;dbl&gt;, Cd &lt;dbl&gt;, I &lt;dbl&gt;,
 ## #   Cs &lt;dbl&gt;, Ba &lt;dbl&gt;, Nd &lt;dbl&gt;, Sm &lt;dbl&gt;, Yb &lt;dbl&gt;, Ta &lt;dbl&gt;, W &lt;dbl&gt;,
 ## #   Pb &lt;dbl&gt;, Bi &lt;dbl&gt;, Mo inc &lt;dbl&gt;, Mo coh &lt;dbl&gt;, filename &lt;chr&gt;,
 ## #   position &lt;dbl&gt;, sample surface &lt;dbl&gt;, E-gain &lt;dbl&gt;, E-offset &lt;dbl&gt;,
 ## #   F-slope &lt;dbl&gt;, F-offset &lt;dbl&gt;, Fe a*2 &lt;dbl&gt;, Fe a+b &lt;dbl&gt;, S1 &lt;dbl&gt;,
-## #   S2 &lt;dbl&gt;, S3 &lt;dbl&gt;, Dt &lt;dbl&gt;, label &lt;chr&gt;</code></pre>
+## #   S2 &lt;dbl&gt;, S3 &lt;dbl&gt;, Dt &lt;dbl&gt;, label &lt;chr&gt;, qc &lt;lgl&gt;</code></pre>
 </div>
             </section>
 

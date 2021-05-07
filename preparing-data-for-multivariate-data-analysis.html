@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>5.3 Preparing Data for Multivariate Data Analysis | Using Itrax Data in R</title>
+  <title>6.1 Preparing Data for Multivariate Data Analysis | Using Itrax Data in R</title>
   <meta name="description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
   <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="5.3 Preparing Data for Multivariate Data Analysis | Using Itrax Data in R" />
+  <meta property="og:title" content="6.1 Preparing Data for Multivariate Data Analysis | Using Itrax Data in R" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="5.3 Preparing Data for Multivariate Data Analysis | Using Itrax Data in R" />
+  <meta name="twitter:title" content="6.1 Preparing Data for Multivariate Data Analysis | Using Itrax Data in R" />
   
   <meta name="twitter:description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
   
@@ -24,15 +24,15 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-04-24" />
+<meta name="date" content="2021-05-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="running-mean-and-other-window-functions.html"/>
-<link rel="next" href="multivariate-methods.html"/>
+<link rel="prev" href="multivariate-methods.html"/>
+<link rel="next" href="principle-component-analysis.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -183,13 +183,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5" data-path="transforming-data.html"><a href="transforming-data.html"><i class="fa fa-check"></i><b>5</b> Transforming Data</a><ul>
 <li class="chapter" data-level="5.1" data-path="ratios-and-normalisation.html"><a href="ratios-and-normalisation.html"><i class="fa fa-check"></i><b>5.1</b> Ratios and Normalisation</a></li>
 <li class="chapter" data-level="5.2" data-path="running-mean-and-other-window-functions.html"><a href="running-mean-and-other-window-functions.html"><i class="fa fa-check"></i><b>5.2</b> Running Mean and Other Window Functions</a></li>
-<li class="chapter" data-level="5.3" data-path="preparing-data-for-multivariate-data-analysis.html"><a href="preparing-data-for-multivariate-data-analysis.html"><i class="fa fa-check"></i><b>5.3</b> Preparing Data for Multivariate Data Analysis</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="multivariate-methods.html"><a href="multivariate-methods.html"><i class="fa fa-check"></i><b>6</b> Multivariate Methods</a><ul>
-<li class="chapter" data-level="6.1" data-path="correlation-coefficients.html"><a href="correlation-coefficients.html"><i class="fa fa-check"></i><b>6.1</b> Correlation Coefficients</a></li>
-<li class="chapter" data-level="6.2" data-path="unconstrained-cluster-analysis.html"><a href="unconstrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.2</b> Unconstrained Cluster Analysis</a></li>
-<li class="chapter" data-level="6.3" data-path="constrained-cluster-analysis.html"><a href="constrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.3</b> Constrained Cluster Analysis</a></li>
-<li class="chapter" data-level="6.4" data-path="principle-components-analysis.html"><a href="principle-components-analysis.html"><i class="fa fa-check"></i><b>6.4</b> Principle Components Analysis</a></li>
+<li class="chapter" data-level="6.1" data-path="preparing-data-for-multivariate-data-analysis.html"><a href="preparing-data-for-multivariate-data-analysis.html"><i class="fa fa-check"></i><b>6.1</b> Preparing Data for Multivariate Data Analysis</a></li>
+<li class="chapter" data-level="6.2" data-path="principle-component-analysis.html"><a href="principle-component-analysis.html"><i class="fa fa-check"></i><b>6.2</b> Principle Component analysis</a></li>
+<li class="chapter" data-level="6.3" data-path="unconstrained-cluster-analysis.html"><a href="unconstrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.3</b> Unconstrained Cluster Analysis</a></li>
+<li class="chapter" data-level="6.4" data-path="constrained-cluster-analysis.html"><a href="constrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.4</b> Constrained Cluster Analysis</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="calibrating-data.html"><a href="calibrating-data.html"><i class="fa fa-check"></i><b>7</b> Calibrating Data</a><ul>
 <li class="chapter" data-level="7.1" data-path="suitable-methods.html"><a href="suitable-methods.html"><i class="fa fa-check"></i><b>7.1</b> Suitable Methods</a></li>
@@ -220,35 +219,64 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
             <section class="normal" id="section-">
 <div id="preparing-data-for-multivariate-data-analysis" class="section level2">
-<h2><span class="header-section-number">5.3</span> Preparing Data for Multivariate Data Analysis</h2>
-<p>Where multivariate methods (cluster analysis, principle components analysis, correlation matrices) are required, it is usually necessary to transform data. This is because the statistical assumptions that underlie these methods are often not met when dealing with compositional data like that from an XRF core-scanner. There is no “right” or ideal way to deal with these issues, but a common method is to use a form of log transformation. Here we use a centred log transformation, which cannot be performed on zero values.</p>
-<pre><code>df %&gt;% chemometrics::clr(df)</code></pre>
-<p>There are a number of possible solutions to this problem of zero values, none ideal, but the most common are to add an arbitrary number to the entirety of the data, or to replace zero values with a very small number, perhaps the limit of precision or the limit of detection. In the example shown, the limit of precision for the peak area intensity or counts is used (<code>0.001</code> or <code>1</code> respectively).</p>
-<pre><code>input[input == 0] &lt;- 0.001</code></pre>
-<p>A final solution may be to exclude zero values from any subsequent analysis, although not all methods tolerate <code>NA</code> in the data. Where there are many zero values for a particular variable, the variable may not provide good data and could be excluded.</p>
-<pre><code>df %&gt;% na_if(0)</code></pre>
-<p>In most multivariate analyses there are a number of variables which have high signal-to-noise ratios or otherwise only add noise to multivariate methods. In these cases, they might be excluded from multivariate methods. The selection of variables for inclusion is a matter for the analyst. It goes without saying that variables that are not part of the composition (that is, anything that is not an element) must be removed from the data used for multivariate analysis.</p>
-<pre><code>df %&gt;% select(-any_of(c(&quot;Mg&quot;, &quot;Co&quot;, &quot;Mo&quot;))</code></pre>
-<p>Finally, in order to correctly identify the measurements to their original data source, it is necessary to use row names that uniquely identify observations. For single scans this is not usually an issue — the <code>depth</code> or <code>position</code> variable can be used. However, where a dataset is a composition of multiple cores, you may find that there are multiple observations for a particular depth where cores overlap. In the example shown we create a unique name for each observation by concatenating the name of the core as recorded in the <code>label</code> column of a core sequence joined using <code>itraxR::itrax_join()</code> with the corresponding <code>depth</code> variable, but the code could be modified to suit a different work flow.</p>
-<pre><code>rowlabels &lt;- str_c(df$label, df$depth, sep = &quot;_&quot;)
-input &lt;- df %&gt;% select(any_of(elements)) 
-input &lt;- input %&gt;% select(-any_of(c(&quot;Mg&quot;, &quot;Co&quot;, &quot;Mo&quot;)))
-input[input == 0] &lt;- 0.001
-
-library(chemometrics)
-input &lt;- clr(input)
-
-row.names(input) &lt;- rowlabels</code></pre>
-
+<h2><span class="header-section-number">6.1</span> Preparing Data for Multivariate Data Analysis</h2>
+<p>Where multivariate methods (cluster analysis, principle components analysis, correlation matrices) are required, it is usually necessary to transform data and treat them in a special way to avoid breaking the assumptions of a method or drawing erroneous conclusions. This is because the constant sum constraint that defines compositional data - put simply, if one element increases in proportion, an equal decrease must occur in the remaining elements that make up the composition. This is further complicated by unobserved elements, dimensionless (i.e. calibrated) data, and observations below the limit of detection. The package <code>compositions</code> deals with much of these issues, including any necessary transformation, and ensures that the data are treated differently by functions like <code>princomp()</code> and <code>dist()</code>, e.g. <code>compositions::princomp.acomp()</code> by setting a <code>class</code> attribute and providing modified functions.</p>
+<p>It’s worth spending some time getting familiar with the documentation for <code>compositions</code>, and possibly the wider literature around compositional data analysis. Several different methods are provided depending on the nature of the compositional data - in these examples, we use the <code>acomp()</code> but other methods are available and may be more appropriate. This package also deals with the variety of different types of zero and missing values.</p>
+<p>in order to correctly identify the observations to their original data source, it is necessary to use row names that uniquely identify observations. For single scans this is not usually an issue — the <code>depth</code> or <code>position</code> variable can be used. However, where a dataset is a composition of multiple cores, you may find that there are multiple observations for a particular depth where cores overlap.</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="preparing-data-for-multivariate-data-analysis.html#cb54-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
+<span id="cb54-2"><a href="preparing-data-for-multivariate-data-analysis.html#cb54-2"></a><span class="st">  </span><span class="kw">filter</span>(qc <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb54-3"><a href="preparing-data-for-multivariate-data-analysis.html#cb54-3"></a><span class="st">  </span><span class="kw">select</span>(<span class="kw">any_of</span>(<span class="kw">c</span>(elementsList, <span class="st">&quot;depth&quot;</span>, <span class="st">&quot;label&quot;</span>))) <span class="op">%&gt;%</span></span>
+<span id="cb54-4"><a href="preparing-data-for-multivariate-data-analysis.html#cb54-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">id =</span> <span class="kw">paste0</span>(label, <span class="st">&quot;_&quot;</span>, depth)) <span class="op">%&gt;%</span></span>
+<span id="cb54-5"><a href="preparing-data-for-multivariate-data-analysis.html#cb54-5"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(<span class="st">&quot;depth&quot;</span>, <span class="st">&quot;label&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb54-6"><a href="preparing-data-for-multivariate-data-analysis.html#cb54-6"></a><span class="st">  </span><span class="kw">column_to_rownames</span>(<span class="st">&quot;id&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb54-7"><a href="preparing-data-for-multivariate-data-analysis.html#cb54-7"></a><span class="st">  </span>compositions<span class="op">::</span><span class="kw">acomp</span>() <span class="op">%&gt;%</span></span>
+<span id="cb54-8"><a href="preparing-data-for-multivariate-data-analysis.html#cb54-8"></a><span class="st">  </span>compositions<span class="op">::</span><span class="kw">clr</span>() <span class="op">%&gt;%</span></span>
+<span id="cb54-9"><a href="preparing-data-for-multivariate-data-analysis.html#cb54-9"></a><span class="st">  </span><span class="kw">head</span>()</span></code></pre></div>
+<pre><code>##             Al          Si P         S       Cl        Ar        K       Ca
+## S1_2 -1.667957  0.01257692 0  0.000000 1.610842 0.6775532 2.162970 6.168551
+## S1_3 -1.337080  0.15794735 0 -2.175409 1.651872 0.5853914 2.132870 6.359980
+## S1_4 -2.577052 -0.50727264 0 -2.790626 1.344159 0.4838193 1.890181 6.104312
+## S1_5 -1.832349 -0.35160251 0 -2.191723 1.658999 0.5791751 2.185902 6.016879
+## S1_6 -2.353327  0.20016052 0 -2.316960 1.713481 0.5734120 2.415158 6.142778
+## S1_7 -1.532016  0.01140051 0 -1.731145 1.572197 0.5612186 2.315764 5.997614
+##             Sc       Ti          V          Cr        Mn       Fe         Ni
+## S1_2 -3.071951 1.787862 -1.2336714  0.07588920 0.6151413 4.793895 -1.0666173
+## S1_3  0.000000 2.018498 -2.5501029  0.06596496 0.5388713 4.848795 -0.7433055
+## S1_4  0.000000 1.781135 -1.5176607 -0.11156370 0.3490001 4.642477 -0.8653355
+## S1_5 -1.139202 1.707242 -1.3140046  0.28413376 0.8013029 4.896167 -0.6906532
+## S1_6 -3.010107 1.912477 -0.9763354  0.34479716 1.0253971 5.071523 -0.6318844
+## S1_7  0.000000 1.821293  0.0000000  0.27809231 0.8746785 4.921040 -0.9803687
+##              Cu         Zn        Ga        Ge        Br          Rb       Sr
+## S1_2 -0.2729289 -0.1200212 -1.839807 -2.022129 0.6942203 -1.38027484 3.413883
+## S1_3 -0.6305100 -0.8289609  0.000000 -1.879945 0.6687730  0.04583005 3.532946
+## S1_4 -0.5072726 -0.3586853  0.000000  0.000000 0.5766695 -0.08894561 3.369173
+## S1_5 -0.1822401 -0.3220020  0.000000  0.000000 0.6880826 -0.08561327 3.435995
+## S1_6 -0.1277033  0.0344155 -1.960285 -1.777963 0.9146913  0.11288712 3.552841
+## S1_7 -0.4287851 -0.1597082 -3.729241 -1.063750 0.5595048  0.01140051 3.394734
+##               Y           Zr        Pd        Cd         I Cs         Ba
+## S1_2 -0.7693658  0.063543367 -1.354299 -2.184648 -1.839807  0 -1.8398072
+## S1_3 -0.8620218 -0.006355701 -1.323657 -1.633812 -1.259119  0 -2.4222695
+## S1_4 -1.1623200  0.328165999 -1.645494 -2.657095 -1.630456  0 -1.7408042
+## S1_5 -0.6096841 -0.727467152 -2.368654 -2.276280 -2.667147  0 -0.9198390
+## S1_6 -0.9857252  0.093838923 -1.372498 -2.316960 -1.588721  0 -1.1165648
+## S1_7 -1.8574387 -0.043491315 -2.374695 -1.783331 -2.407485  0 -0.6611879
+##             Nd        Sm          Yb        Ta        W         Pb         Bi
+## S1_2 -1.506316 -1.882367 -0.06910111 0.9431443 1.899349  0.0000000 -0.7983533
+## S1_3 -1.856956 -1.977584 -0.57855027 0.9142116 1.967725 -3.0761959 -0.3478405
+## S1_4 -1.517661 -1.676266 -0.45065374 0.8419347 1.842715 -0.8112683 -0.9373090
+## S1_5 -2.064971 -2.219122 -0.70889077 1.0206452 1.956973 -1.8136569 -0.7463952
+## S1_6 -1.074453 -3.164258 -0.43422851 1.0984223 2.107031 -1.6601802 -0.4451576
+## S1_7 -1.286894 -2.630629 -0.29525367 1.0221918 1.906887 -1.4911943 -0.7914026
+## attr(,&quot;class&quot;)
+## [1] &quot;rmult&quot;</code></pre>
 </div>
-<!-- </div> -->
             </section>
 
           </div>
         </div>
       </div>
-<a href="running-mean-and-other-window-functions.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="multivariate-methods.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="multivariate-methods.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="principle-component-analysis.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

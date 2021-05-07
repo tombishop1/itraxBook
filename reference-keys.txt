@@ -37,12 +37,11 @@ combining-images-with-xrf-data
 transforming-data
 ratios-and-normalisation
 running-mean-and-other-window-functions
-preparing-data-for-multivariate-data-analysis
 multivariate-methods
-correlation-coefficients
+preparing-data-for-multivariate-data-analysis
+principle-component-analysis
 unconstrained-cluster-analysis
 constrained-cluster-analysis
-principle-components-analysis
 calibrating-data
 suitable-methods
 preparing-data

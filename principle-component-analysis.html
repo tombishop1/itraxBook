@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>6.1 Correlation Coefficients | Using Itrax Data in R</title>
+  <title>6.2 Principle Component analysis | Using Itrax Data in R</title>
   <meta name="description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
   <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="6.1 Correlation Coefficients | Using Itrax Data in R" />
+  <meta property="og:title" content="6.2 Principle Component analysis | Using Itrax Data in R" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="6.1 Correlation Coefficients | Using Itrax Data in R" />
+  <meta name="twitter:title" content="6.2 Principle Component analysis | Using Itrax Data in R" />
   
   <meta name="twitter:description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
   
@@ -24,14 +24,14 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-04-24" />
+<meta name="date" content="2021-05-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="multivariate-methods.html"/>
+<link rel="prev" href="preparing-data-for-multivariate-data-analysis.html"/>
 <link rel="next" href="unconstrained-cluster-analysis.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -183,13 +183,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5" data-path="transforming-data.html"><a href="transforming-data.html"><i class="fa fa-check"></i><b>5</b> Transforming Data</a><ul>
 <li class="chapter" data-level="5.1" data-path="ratios-and-normalisation.html"><a href="ratios-and-normalisation.html"><i class="fa fa-check"></i><b>5.1</b> Ratios and Normalisation</a></li>
 <li class="chapter" data-level="5.2" data-path="running-mean-and-other-window-functions.html"><a href="running-mean-and-other-window-functions.html"><i class="fa fa-check"></i><b>5.2</b> Running Mean and Other Window Functions</a></li>
-<li class="chapter" data-level="5.3" data-path="preparing-data-for-multivariate-data-analysis.html"><a href="preparing-data-for-multivariate-data-analysis.html"><i class="fa fa-check"></i><b>5.3</b> Preparing Data for Multivariate Data Analysis</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="multivariate-methods.html"><a href="multivariate-methods.html"><i class="fa fa-check"></i><b>6</b> Multivariate Methods</a><ul>
-<li class="chapter" data-level="6.1" data-path="correlation-coefficients.html"><a href="correlation-coefficients.html"><i class="fa fa-check"></i><b>6.1</b> Correlation Coefficients</a></li>
-<li class="chapter" data-level="6.2" data-path="unconstrained-cluster-analysis.html"><a href="unconstrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.2</b> Unconstrained Cluster Analysis</a></li>
-<li class="chapter" data-level="6.3" data-path="constrained-cluster-analysis.html"><a href="constrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.3</b> Constrained Cluster Analysis</a></li>
-<li class="chapter" data-level="6.4" data-path="principle-components-analysis.html"><a href="principle-components-analysis.html"><i class="fa fa-check"></i><b>6.4</b> Principle Components Analysis</a></li>
+<li class="chapter" data-level="6.1" data-path="preparing-data-for-multivariate-data-analysis.html"><a href="preparing-data-for-multivariate-data-analysis.html"><i class="fa fa-check"></i><b>6.1</b> Preparing Data for Multivariate Data Analysis</a></li>
+<li class="chapter" data-level="6.2" data-path="principle-component-analysis.html"><a href="principle-component-analysis.html"><i class="fa fa-check"></i><b>6.2</b> Principle Component analysis</a></li>
+<li class="chapter" data-level="6.3" data-path="unconstrained-cluster-analysis.html"><a href="unconstrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.3</b> Unconstrained Cluster Analysis</a></li>
+<li class="chapter" data-level="6.4" data-path="constrained-cluster-analysis.html"><a href="constrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.4</b> Constrained Cluster Analysis</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="calibrating-data.html"><a href="calibrating-data.html"><i class="fa fa-check"></i><b>7</b> Calibrating Data</a><ul>
 <li class="chapter" data-level="7.1" data-path="suitable-methods.html"><a href="suitable-methods.html"><i class="fa fa-check"></i><b>7.1</b> Suitable Methods</a></li>
@@ -219,21 +218,57 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="correlation-coefficients" class="section level2">
-<h2><span class="header-section-number">6.1</span> Correlation Coefficients</h2>
-<p>The Pearson’s R correlation coefficient is occasionally used to study the relationships between individual elements. It is often useful in conjunction with principle component analysis.</p>
-<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="correlation-coefficients.html#cb64-1"></a><span class="kw">itrax_correlation</span>(CD166_<span class="dv">19</span>_xrf) <span class="op">%&gt;%</span></span>
-<span id="cb64-2"><a href="correlation-coefficients.html#cb64-2"></a><span class="st">  </span>ggcorrplot<span class="op">::</span><span class="kw">ggcorrplot</span>(<span class="dt">hc.order =</span> <span class="ot">TRUE</span>,</span>
-<span id="cb64-3"><a href="correlation-coefficients.html#cb64-3"></a>                         <span class="dt">p.mat =</span> ggcorrplot<span class="op">::</span><span class="kw">cor_pmat</span>(., <span class="dt">method =</span> <span class="st">&quot;spearman&quot;</span>),</span>
-<span id="cb64-4"><a href="correlation-coefficients.html#cb64-4"></a>                         <span class="dt">insig =</span> <span class="st">&quot;blank&quot;</span>)</span></code></pre></div>
+<div id="principle-component-analysis" class="section level2">
+<h2><span class="header-section-number">6.2</span> Principle Component analysis</h2>
+<p>Principle component analysis (PCA) is a common method for exploring multivariate data. The plot is made with <code>ggfortify</code>, a wrapper for <code>ggplot2::biplot()</code>.</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="principle-component-analysis.html#cb56-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
+<span id="cb56-2"><a href="principle-component-analysis.html#cb56-2"></a><span class="st">  </span><span class="kw">filter</span>(qc <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb56-3"><a href="principle-component-analysis.html#cb56-3"></a><span class="st">  </span><span class="kw">select</span>(<span class="kw">any_of</span>(elementsList)) <span class="op">%&gt;%</span></span>
+<span id="cb56-4"><a href="principle-component-analysis.html#cb56-4"></a><span class="st">  </span><span class="kw">acomp</span>() <span class="op">%&gt;%</span></span>
+<span id="cb56-5"><a href="principle-component-analysis.html#cb56-5"></a><span class="st">  </span><span class="kw">clr</span>() <span class="op">%&gt;%</span></span>
+<span id="cb56-6"><a href="principle-component-analysis.html#cb56-6"></a><span class="st">  </span><span class="kw">princomp</span>() <span class="op">%&gt;%</span></span>
+<span id="cb56-7"><a href="principle-component-analysis.html#cb56-7"></a><span class="st">  </span><span class="kw">autoplot</span>(<span class="dt">loadings =</span> <span class="ot">TRUE</span>, </span>
+<span id="cb56-8"><a href="principle-component-analysis.html#cb56-8"></a>           <span class="dt">loadings.label =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb56-9"><a href="principle-component-analysis.html#cb56-9"></a>           <span class="dt">alpha =</span> <span class="fl">0.5</span>,</span>
+<span id="cb56-10"><a href="principle-component-analysis.html#cb56-10"></a>           <span class="dt">loadings.label.repel =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <p><img src="itraxBook_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p>It is useful to plot components over depth. They can be extracted and plotted as follows:</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="principle-component-analysis.html#cb57-1"></a><span class="kw">bind_rows</span>(</span>
+<span id="cb57-2"><a href="principle-component-analysis.html#cb57-2"></a>  <span class="kw">tibble</span>(<span class="dt">depth =</span> CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
+<span id="cb57-3"><a href="principle-component-analysis.html#cb57-3"></a><span class="st">           </span><span class="kw">filter</span>(qc <span class="op">==</span><span class="st"> </span><span class="ot">FALSE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb57-4"><a href="principle-component-analysis.html#cb57-4"></a><span class="st">           </span><span class="kw">pull</span>(<span class="st">&quot;depth&quot;</span>),</span>
+<span id="cb57-5"><a href="principle-component-analysis.html#cb57-5"></a>         <span class="dt">Comp.1 =</span> <span class="ot">NA</span></span>
+<span id="cb57-6"><a href="principle-component-analysis.html#cb57-6"></a>        ),</span>
+<span id="cb57-7"><a href="principle-component-analysis.html#cb57-7"></a></span>
+<span id="cb57-8"><a href="principle-component-analysis.html#cb57-8"></a>  <span class="kw">tibble</span>(</span>
+<span id="cb57-9"><a href="principle-component-analysis.html#cb57-9"></a>    <span class="dt">depth =</span> CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
+<span id="cb57-10"><a href="principle-component-analysis.html#cb57-10"></a><span class="st">      </span><span class="kw">filter</span>(qc <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb57-11"><a href="principle-component-analysis.html#cb57-11"></a><span class="st">      </span><span class="kw">pull</span>(<span class="st">&quot;depth&quot;</span>),</span>
+<span id="cb57-12"><a href="principle-component-analysis.html#cb57-12"></a>    <span class="dt">Comp.1 =</span> CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
+<span id="cb57-13"><a href="principle-component-analysis.html#cb57-13"></a><span class="st">      </span><span class="kw">filter</span>(qc <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb57-14"><a href="principle-component-analysis.html#cb57-14"></a><span class="st">      </span><span class="kw">select</span>(<span class="kw">any_of</span>(elementsList)) <span class="op">%&gt;%</span></span>
+<span id="cb57-15"><a href="principle-component-analysis.html#cb57-15"></a><span class="st">      </span><span class="kw">acomp</span>() <span class="op">%&gt;%</span></span>
+<span id="cb57-16"><a href="principle-component-analysis.html#cb57-16"></a><span class="st">      </span><span class="kw">clr</span>() <span class="op">%&gt;%</span></span>
+<span id="cb57-17"><a href="principle-component-analysis.html#cb57-17"></a><span class="st">      </span><span class="kw">princomp</span>() <span class="op">%&gt;%</span></span>
+<span id="cb57-18"><a href="principle-component-analysis.html#cb57-18"></a><span class="st">      </span>magrittr<span class="op">::</span><span class="kw">extract2</span>(<span class="st">&quot;scores&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb57-19"><a href="principle-component-analysis.html#cb57-19"></a><span class="st">      </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span></span>
+<span id="cb57-20"><a href="principle-component-analysis.html#cb57-20"></a><span class="st">      </span><span class="kw">pull</span>(<span class="st">&quot;Comp.1&quot;</span>)</span>
+<span id="cb57-21"><a href="principle-component-analysis.html#cb57-21"></a>    )) <span class="op">%&gt;%</span></span>
+<span id="cb57-22"><a href="principle-component-analysis.html#cb57-22"></a><span class="st">  </span></span>
+<span id="cb57-23"><a href="principle-component-analysis.html#cb57-23"></a><span class="st">  </span><span class="kw">arrange</span>(depth) <span class="op">%&gt;%</span></span>
+<span id="cb57-24"><a href="principle-component-analysis.html#cb57-24"></a><span class="st">  </span></span>
+<span id="cb57-25"><a href="principle-component-analysis.html#cb57-25"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> depth, <span class="dt">y =</span> Comp<span class="fl">.1</span>)) <span class="op">+</span></span>
+<span id="cb57-26"><a href="principle-component-analysis.html#cb57-26"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb57-27"><a href="principle-component-analysis.html#cb57-27"></a><span class="st">  </span><span class="kw">scale_x_reverse</span>(<span class="dt">name =</span> <span class="st">&quot;depth [mm]&quot;</span>)</span></code></pre></div>
+<pre><code>## Warning: Removed 3 row(s) containing missing values (geom_path).</code></pre>
+<p><img src="itraxBook_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="multivariate-methods.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="preparing-data-for-multivariate-data-analysis.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="unconstrained-cluster-analysis.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>

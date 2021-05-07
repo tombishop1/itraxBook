@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-04-24" />
+<meta name="date" content="2021-05-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -183,13 +183,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5" data-path="transforming-data.html"><a href="transforming-data.html"><i class="fa fa-check"></i><b>5</b> Transforming Data</a><ul>
 <li class="chapter" data-level="5.1" data-path="ratios-and-normalisation.html"><a href="ratios-and-normalisation.html"><i class="fa fa-check"></i><b>5.1</b> Ratios and Normalisation</a></li>
 <li class="chapter" data-level="5.2" data-path="running-mean-and-other-window-functions.html"><a href="running-mean-and-other-window-functions.html"><i class="fa fa-check"></i><b>5.2</b> Running Mean and Other Window Functions</a></li>
-<li class="chapter" data-level="5.3" data-path="preparing-data-for-multivariate-data-analysis.html"><a href="preparing-data-for-multivariate-data-analysis.html"><i class="fa fa-check"></i><b>5.3</b> Preparing Data for Multivariate Data Analysis</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="multivariate-methods.html"><a href="multivariate-methods.html"><i class="fa fa-check"></i><b>6</b> Multivariate Methods</a><ul>
-<li class="chapter" data-level="6.1" data-path="correlation-coefficients.html"><a href="correlation-coefficients.html"><i class="fa fa-check"></i><b>6.1</b> Correlation Coefficients</a></li>
-<li class="chapter" data-level="6.2" data-path="unconstrained-cluster-analysis.html"><a href="unconstrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.2</b> Unconstrained Cluster Analysis</a></li>
-<li class="chapter" data-level="6.3" data-path="constrained-cluster-analysis.html"><a href="constrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.3</b> Constrained Cluster Analysis</a></li>
-<li class="chapter" data-level="6.4" data-path="principle-components-analysis.html"><a href="principle-components-analysis.html"><i class="fa fa-check"></i><b>6.4</b> Principle Components Analysis</a></li>
+<li class="chapter" data-level="6.1" data-path="preparing-data-for-multivariate-data-analysis.html"><a href="preparing-data-for-multivariate-data-analysis.html"><i class="fa fa-check"></i><b>6.1</b> Preparing Data for Multivariate Data Analysis</a></li>
+<li class="chapter" data-level="6.2" data-path="principle-component-analysis.html"><a href="principle-component-analysis.html"><i class="fa fa-check"></i><b>6.2</b> Principle Component analysis</a></li>
+<li class="chapter" data-level="6.3" data-path="unconstrained-cluster-analysis.html"><a href="unconstrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.3</b> Unconstrained Cluster Analysis</a></li>
+<li class="chapter" data-level="6.4" data-path="constrained-cluster-analysis.html"><a href="constrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.4</b> Constrained Cluster Analysis</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="calibrating-data.html"><a href="calibrating-data.html"><i class="fa fa-check"></i><b>7</b> Calibrating Data</a><ul>
 <li class="chapter" data-level="7.1" data-path="suitable-methods.html"><a href="suitable-methods.html"><i class="fa fa-check"></i><b>7.1</b> Suitable Methods</a></li>
@@ -226,29 +225,29 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>CD166_19_xrf %&gt;% 
   mutate(across(any_of(elementsList)) /`Mo inc`)</code></pre>
 <p>This can be integrated into the work flow from the dat tidying chapter, for example:</p>
-<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="ratios-and-normalisation.html#cb53-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb53-2"><a href="ratios-and-normalisation.html#cb53-2"></a><span class="st">  </span><span class="co"># transform</span></span>
-<span id="cb53-3"><a href="ratios-and-normalisation.html#cb53-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">any_of</span>(elementsList)) <span class="op">/</span><span class="st">`</span><span class="dt">Mo inc</span><span class="st">`</span>) <span class="op">%&gt;%</span></span>
-<span id="cb53-4"><a href="ratios-and-normalisation.html#cb53-4"></a><span class="st">  </span></span>
-<span id="cb53-5"><a href="ratios-and-normalisation.html#cb53-5"></a><span class="st">  </span><span class="co"># identify acceptable observations</span></span>
-<span id="cb53-6"><a href="ratios-and-normalisation.html#cb53-6"></a><span class="st">  </span><span class="kw">filter</span>(validity <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb53-7"><a href="ratios-and-normalisation.html#cb53-7"></a><span class="st">  </span></span>
-<span id="cb53-8"><a href="ratios-and-normalisation.html#cb53-8"></a><span class="st">  </span><span class="co"># identify acceptable variables</span></span>
-<span id="cb53-9"><a href="ratios-and-normalisation.html#cb53-9"></a><span class="st">  </span><span class="kw">select</span>(<span class="kw">any_of</span>(myElements), depth, label) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb53-10"><a href="ratios-and-normalisation.html#cb53-10"></a><span class="st">  </span></span>
-<span id="cb53-11"><a href="ratios-and-normalisation.html#cb53-11"></a><span class="st">  </span><span class="co"># pivot</span></span>
-<span id="cb53-12"><a href="ratios-and-normalisation.html#cb53-12"></a><span class="st">  </span>tidyr<span class="op">::</span><span class="kw">pivot_longer</span>(<span class="op">!</span><span class="kw">c</span>(<span class="st">&quot;depth&quot;</span>, <span class="st">&quot;label&quot;</span>), <span class="dt">names_to =</span> <span class="st">&quot;elements&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;peakarea&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb53-13"><a href="ratios-and-normalisation.html#cb53-13"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">elements =</span> <span class="kw">factor</span>(elements, <span class="dt">levels =</span> <span class="kw">c</span>(elementsList, <span class="st">&quot;coh/inc&quot;</span>))) <span class="op">%&gt;%</span></span>
-<span id="cb53-14"><a href="ratios-and-normalisation.html#cb53-14"></a><span class="st">  </span></span>
-<span id="cb53-15"><a href="ratios-and-normalisation.html#cb53-15"></a><span class="st">  </span><span class="co"># plot</span></span>
-<span id="cb53-16"><a href="ratios-and-normalisation.html#cb53-16"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> peakarea, <span class="dt">y =</span> depth)) <span class="op">+</span></span>
-<span id="cb53-17"><a href="ratios-and-normalisation.html#cb53-17"></a><span class="st">    </span>tidypaleo<span class="op">::</span><span class="kw">geom_lineh</span>(<span class="kw">aes</span>(<span class="dt">color =</span> label)) <span class="op">+</span></span>
-<span id="cb53-18"><a href="ratios-and-normalisation.html#cb53-18"></a><span class="st">    </span><span class="kw">scale_y_reverse</span>() <span class="op">+</span></span>
-<span id="cb53-19"><a href="ratios-and-normalisation.html#cb53-19"></a><span class="st">    </span><span class="kw">scale_x_continuous</span>(<span class="dt">n.breaks =</span> <span class="dv">2</span>) <span class="op">+</span></span>
-<span id="cb53-20"><a href="ratios-and-normalisation.html#cb53-20"></a><span class="st">    </span><span class="kw">facet_geochem_gridh</span>(<span class="kw">vars</span>(elements)) <span class="op">+</span></span>
-<span id="cb53-21"><a href="ratios-and-normalisation.html#cb53-21"></a><span class="st">    </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;peak area / Mo. inc.&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Depth [mm]&quot;</span>) <span class="op">+</span></span>
-<span id="cb53-22"><a href="ratios-and-normalisation.html#cb53-22"></a><span class="st">    </span>tidypaleo<span class="op">::</span><span class="kw">theme_paleo</span>() <span class="op">+</span></span>
-<span id="cb53-23"><a href="ratios-and-normalisation.html#cb53-23"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="ratios-and-normalisation.html#cb50-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb50-2"><a href="ratios-and-normalisation.html#cb50-2"></a><span class="st">  </span><span class="co"># transform</span></span>
+<span id="cb50-3"><a href="ratios-and-normalisation.html#cb50-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">any_of</span>(elementsList)) <span class="op">/</span><span class="st">`</span><span class="dt">Mo inc</span><span class="st">`</span>) <span class="op">%&gt;%</span></span>
+<span id="cb50-4"><a href="ratios-and-normalisation.html#cb50-4"></a><span class="st">  </span></span>
+<span id="cb50-5"><a href="ratios-and-normalisation.html#cb50-5"></a><span class="st">  </span><span class="co"># identify acceptable observations</span></span>
+<span id="cb50-6"><a href="ratios-and-normalisation.html#cb50-6"></a><span class="st">  </span><span class="kw">filter</span>(validity <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb50-7"><a href="ratios-and-normalisation.html#cb50-7"></a><span class="st">  </span></span>
+<span id="cb50-8"><a href="ratios-and-normalisation.html#cb50-8"></a><span class="st">  </span><span class="co"># identify acceptable variables</span></span>
+<span id="cb50-9"><a href="ratios-and-normalisation.html#cb50-9"></a><span class="st">  </span><span class="kw">select</span>(<span class="kw">any_of</span>(myElements), depth, label) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb50-10"><a href="ratios-and-normalisation.html#cb50-10"></a><span class="st">  </span></span>
+<span id="cb50-11"><a href="ratios-and-normalisation.html#cb50-11"></a><span class="st">  </span><span class="co"># pivot</span></span>
+<span id="cb50-12"><a href="ratios-and-normalisation.html#cb50-12"></a><span class="st">  </span>tidyr<span class="op">::</span><span class="kw">pivot_longer</span>(<span class="op">!</span><span class="kw">c</span>(<span class="st">&quot;depth&quot;</span>, <span class="st">&quot;label&quot;</span>), <span class="dt">names_to =</span> <span class="st">&quot;elements&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;peakarea&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb50-13"><a href="ratios-and-normalisation.html#cb50-13"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">elements =</span> <span class="kw">factor</span>(elements, <span class="dt">levels =</span> <span class="kw">c</span>(elementsList, <span class="st">&quot;coh/inc&quot;</span>))) <span class="op">%&gt;%</span></span>
+<span id="cb50-14"><a href="ratios-and-normalisation.html#cb50-14"></a><span class="st">  </span></span>
+<span id="cb50-15"><a href="ratios-and-normalisation.html#cb50-15"></a><span class="st">  </span><span class="co"># plot</span></span>
+<span id="cb50-16"><a href="ratios-and-normalisation.html#cb50-16"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> peakarea, <span class="dt">y =</span> depth)) <span class="op">+</span></span>
+<span id="cb50-17"><a href="ratios-and-normalisation.html#cb50-17"></a><span class="st">    </span>tidypaleo<span class="op">::</span><span class="kw">geom_lineh</span>(<span class="kw">aes</span>(<span class="dt">color =</span> label)) <span class="op">+</span></span>
+<span id="cb50-18"><a href="ratios-and-normalisation.html#cb50-18"></a><span class="st">    </span><span class="kw">scale_y_reverse</span>() <span class="op">+</span></span>
+<span id="cb50-19"><a href="ratios-and-normalisation.html#cb50-19"></a><span class="st">    </span><span class="kw">scale_x_continuous</span>(<span class="dt">n.breaks =</span> <span class="dv">2</span>) <span class="op">+</span></span>
+<span id="cb50-20"><a href="ratios-and-normalisation.html#cb50-20"></a><span class="st">    </span><span class="kw">facet_geochem_gridh</span>(<span class="kw">vars</span>(elements)) <span class="op">+</span></span>
+<span id="cb50-21"><a href="ratios-and-normalisation.html#cb50-21"></a><span class="st">    </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;peak area / Mo. inc.&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Depth [mm]&quot;</span>) <span class="op">+</span></span>
+<span id="cb50-22"><a href="ratios-and-normalisation.html#cb50-22"></a><span class="st">    </span>tidypaleo<span class="op">::</span><span class="kw">theme_paleo</span>() <span class="op">+</span></span>
+<span id="cb50-23"><a href="ratios-and-normalisation.html#cb50-23"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>)</span></code></pre></div>
 <p><img src="itraxBook_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 </div>
             </section>

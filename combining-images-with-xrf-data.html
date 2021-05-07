@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-04-24" />
+<meta name="date" content="2021-05-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -183,13 +183,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5" data-path="transforming-data.html"><a href="transforming-data.html"><i class="fa fa-check"></i><b>5</b> Transforming Data</a><ul>
 <li class="chapter" data-level="5.1" data-path="ratios-and-normalisation.html"><a href="ratios-and-normalisation.html"><i class="fa fa-check"></i><b>5.1</b> Ratios and Normalisation</a></li>
 <li class="chapter" data-level="5.2" data-path="running-mean-and-other-window-functions.html"><a href="running-mean-and-other-window-functions.html"><i class="fa fa-check"></i><b>5.2</b> Running Mean and Other Window Functions</a></li>
-<li class="chapter" data-level="5.3" data-path="preparing-data-for-multivariate-data-analysis.html"><a href="preparing-data-for-multivariate-data-analysis.html"><i class="fa fa-check"></i><b>5.3</b> Preparing Data for Multivariate Data Analysis</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="multivariate-methods.html"><a href="multivariate-methods.html"><i class="fa fa-check"></i><b>6</b> Multivariate Methods</a><ul>
-<li class="chapter" data-level="6.1" data-path="correlation-coefficients.html"><a href="correlation-coefficients.html"><i class="fa fa-check"></i><b>6.1</b> Correlation Coefficients</a></li>
-<li class="chapter" data-level="6.2" data-path="unconstrained-cluster-analysis.html"><a href="unconstrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.2</b> Unconstrained Cluster Analysis</a></li>
-<li class="chapter" data-level="6.3" data-path="constrained-cluster-analysis.html"><a href="constrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.3</b> Constrained Cluster Analysis</a></li>
-<li class="chapter" data-level="6.4" data-path="principle-components-analysis.html"><a href="principle-components-analysis.html"><i class="fa fa-check"></i><b>6.4</b> Principle Components Analysis</a></li>
+<li class="chapter" data-level="6.1" data-path="preparing-data-for-multivariate-data-analysis.html"><a href="preparing-data-for-multivariate-data-analysis.html"><i class="fa fa-check"></i><b>6.1</b> Preparing Data for Multivariate Data Analysis</a></li>
+<li class="chapter" data-level="6.2" data-path="principle-component-analysis.html"><a href="principle-component-analysis.html"><i class="fa fa-check"></i><b>6.2</b> Principle Component analysis</a></li>
+<li class="chapter" data-level="6.3" data-path="unconstrained-cluster-analysis.html"><a href="unconstrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.3</b> Unconstrained Cluster Analysis</a></li>
+<li class="chapter" data-level="6.4" data-path="constrained-cluster-analysis.html"><a href="constrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.4</b> Constrained Cluster Analysis</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="calibrating-data.html"><a href="calibrating-data.html"><i class="fa fa-check"></i><b>7</b> Calibrating Data</a><ul>
 <li class="chapter" data-level="7.1" data-path="suitable-methods.html"><a href="suitable-methods.html"><i class="fa fa-check"></i><b>7.1</b> Suitable Methods</a></li>
@@ -222,13 +221,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="combining-images-with-xrf-data" class="section level2">
 <h2><span class="header-section-number">4.3</span> Combining Images with XRF Data</h2>
 <p>It is possible to combine different plots. For example, it is often desirable to plot the XRF data alongside the core imagery. By not passing <code>coord_fixed(ratio = 1)</code> to the image plot, its relative width can be controlled via <code>widths =</code>, which makes for a visually pleasing plot. Note also that the y-axis labels have been removed from all but one of the plots to avoid duplication.</p>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="combining-images-with-xrf-data.html#cb51-1"></a>egg<span class="op">::</span><span class="kw">ggarrange</span>(imagePlot <span class="op">+</span><span class="st"> </span><span class="kw">theme_paleo</span>(), </span>
-<span id="cb51-2"><a href="combining-images-with-xrf-data.html#cb51-2"></a>               xrfStrat <span class="op">+</span><span class="st"> </span><span class="kw">theme</span>(<span class="dt">axis.title.y =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb51-3"><a href="combining-images-with-xrf-data.html#cb51-3"></a>                                <span class="dt">axis.text.y  =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb51-4"><a href="combining-images-with-xrf-data.html#cb51-4"></a>                                <span class="dt">axis.ticks.y =</span> <span class="kw">element_blank</span>()), </span>
-<span id="cb51-5"><a href="combining-images-with-xrf-data.html#cb51-5"></a>               <span class="dt">ncol =</span> <span class="dv">2</span>, </span>
-<span id="cb51-6"><a href="combining-images-with-xrf-data.html#cb51-6"></a>               <span class="dt">widths =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">4</span>) <span class="co"># these are relative. For c(1, 5), the first plot will be 1/5th the width of the second.</span></span>
-<span id="cb51-7"><a href="combining-images-with-xrf-data.html#cb51-7"></a>               )</span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="combining-images-with-xrf-data.html#cb48-1"></a>egg<span class="op">::</span><span class="kw">ggarrange</span>(imagePlot <span class="op">+</span><span class="st"> </span><span class="kw">theme_paleo</span>(), </span>
+<span id="cb48-2"><a href="combining-images-with-xrf-data.html#cb48-2"></a>               xrfStrat <span class="op">+</span><span class="st"> </span><span class="kw">theme</span>(<span class="dt">axis.title.y =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb48-3"><a href="combining-images-with-xrf-data.html#cb48-3"></a>                                <span class="dt">axis.text.y  =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb48-4"><a href="combining-images-with-xrf-data.html#cb48-4"></a>                                <span class="dt">axis.ticks.y =</span> <span class="kw">element_blank</span>()), </span>
+<span id="cb48-5"><a href="combining-images-with-xrf-data.html#cb48-5"></a>               <span class="dt">ncol =</span> <span class="dv">2</span>, </span>
+<span id="cb48-6"><a href="combining-images-with-xrf-data.html#cb48-6"></a>               <span class="dt">widths =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">4</span>) <span class="co"># these are relative. For c(1, 5), the first plot will be 1/5th the width of the second.</span></span>
+<span id="cb48-7"><a href="combining-images-with-xrf-data.html#cb48-7"></a>               )</span></code></pre></div>
 <p><img src="itraxBook_files/figure-html/combining_images-1.png" width="672" /></p>
 
 </div>

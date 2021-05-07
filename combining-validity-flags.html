@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-04-24" />
+<meta name="date" content="2021-05-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -183,13 +183,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5" data-path="transforming-data.html"><a href="transforming-data.html"><i class="fa fa-check"></i><b>5</b> Transforming Data</a><ul>
 <li class="chapter" data-level="5.1" data-path="ratios-and-normalisation.html"><a href="ratios-and-normalisation.html"><i class="fa fa-check"></i><b>5.1</b> Ratios and Normalisation</a></li>
 <li class="chapter" data-level="5.2" data-path="running-mean-and-other-window-functions.html"><a href="running-mean-and-other-window-functions.html"><i class="fa fa-check"></i><b>5.2</b> Running Mean and Other Window Functions</a></li>
-<li class="chapter" data-level="5.3" data-path="preparing-data-for-multivariate-data-analysis.html"><a href="preparing-data-for-multivariate-data-analysis.html"><i class="fa fa-check"></i><b>5.3</b> Preparing Data for Multivariate Data Analysis</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="multivariate-methods.html"><a href="multivariate-methods.html"><i class="fa fa-check"></i><b>6</b> Multivariate Methods</a><ul>
-<li class="chapter" data-level="6.1" data-path="correlation-coefficients.html"><a href="correlation-coefficients.html"><i class="fa fa-check"></i><b>6.1</b> Correlation Coefficients</a></li>
-<li class="chapter" data-level="6.2" data-path="unconstrained-cluster-analysis.html"><a href="unconstrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.2</b> Unconstrained Cluster Analysis</a></li>
-<li class="chapter" data-level="6.3" data-path="constrained-cluster-analysis.html"><a href="constrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.3</b> Constrained Cluster Analysis</a></li>
-<li class="chapter" data-level="6.4" data-path="principle-components-analysis.html"><a href="principle-components-analysis.html"><i class="fa fa-check"></i><b>6.4</b> Principle Components Analysis</a></li>
+<li class="chapter" data-level="6.1" data-path="preparing-data-for-multivariate-data-analysis.html"><a href="preparing-data-for-multivariate-data-analysis.html"><i class="fa fa-check"></i><b>6.1</b> Preparing Data for Multivariate Data Analysis</a></li>
+<li class="chapter" data-level="6.2" data-path="principle-component-analysis.html"><a href="principle-component-analysis.html"><i class="fa fa-check"></i><b>6.2</b> Principle Component analysis</a></li>
+<li class="chapter" data-level="6.3" data-path="unconstrained-cluster-analysis.html"><a href="unconstrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.3</b> Unconstrained Cluster Analysis</a></li>
+<li class="chapter" data-level="6.4" data-path="constrained-cluster-analysis.html"><a href="constrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.4</b> Constrained Cluster Analysis</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="calibrating-data.html"><a href="calibrating-data.html"><i class="fa fa-check"></i><b>7</b> Calibrating Data</a><ul>
 <li class="chapter" data-level="7.1" data-path="suitable-methods.html"><a href="suitable-methods.html"><i class="fa fa-check"></i><b>7.1</b> Suitable Methods</a></li>
@@ -222,50 +221,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="combining-validity-flags" class="section level2">
 <h2><span class="header-section-number">3.4</span> Combining “Validity” Flags</h2>
 <p>It is often desirable to combine all deletion criteria into a single binary variable. This means combining multiple binary variables, returning <code>FALSE</code> if any of the values are <code>FALSE</code>, but only returning <code>TRUE</code> if all of the values are <code>TRUE</code>.</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="combining-validity-flags.html#cb20-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="combining-validity-flags.html#cb20-1"></a>CD166_<span class="dv">19</span>_xrf &lt;-<span class="st"> </span>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
 <span id="cb20-2"><a href="combining-validity-flags.html#cb20-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">slope =</span> <span class="st">`</span><span class="dt">sample surface</span><span class="st">`</span> <span class="op">-</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">lag</span>(<span class="st">`</span><span class="dt">sample surface</span><span class="st">`</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb20-3"><a href="combining-validity-flags.html#cb20-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">in_slope_tolerance =</span> <span class="kw">ifelse</span>(slope <span class="op">&lt;=-</span><span class="fl">0.1</span> <span class="op">|</span><span class="st"> </span>slope <span class="op">&gt;=</span><span class="fl">0.1</span> <span class="op">|</span><span class="st"> </span><span class="kw">is.na</span>(slope) <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb20-4"><a href="combining-validity-flags.html#cb20-4"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>slope) <span class="op">%&gt;%</span></span>
 <span id="cb20-5"><a href="combining-validity-flags.html#cb20-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">in_cps_tolerance =</span> <span class="kw">ifelse</span>(cps <span class="op">&lt;=</span><span class="dv">30000</span> <span class="op">|</span><span class="st"> </span>cps <span class="op">&gt;=</span><span class="dv">60000</span> <span class="op">|</span><span class="st"> </span><span class="kw">is.na</span>(cps) <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb20-6"><a href="combining-validity-flags.html#cb20-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">in_mse_tolerance =</span> <span class="kw">ifelse</span>(MSE <span class="op">&lt;=</span><span class="dv">2</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb20-6"><a href="combining-validity-flags.html#cb20-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">in_mse_tolerance =</span> <span class="kw">ifelse</span>(MSE <span class="op">&lt;=</span><span class="dv">2</span>, <span class="ot">TRUE</span>, <span class="ot">FALSE</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb20-7"><a href="combining-validity-flags.html#cb20-7"></a><span class="st">  </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span></span>
-<span id="cb20-8"><a href="combining-validity-flags.html#cb20-8"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">validity =</span> <span class="kw">any</span>(<span class="kw">c</span>(validity, in_slope_tolerance, in_cps_tolerance, in_mse_tolerance) <span class="op">==</span><span class="st"> </span><span class="ot">FALSE</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb20-9"><a href="combining-validity-flags.html#cb20-9"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(in_slope_tolerance, in_cps_tolerance, in_mse_tolerance)) <span class="op">%&gt;%</span></span>
-<span id="cb20-10"><a href="combining-validity-flags.html#cb20-10"></a><span class="st">  </span></span>
-<span id="cb20-11"><a href="combining-validity-flags.html#cb20-11"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="dt">data =</span> ., <span class="kw">aes</span>(<span class="dt">y =</span> depth, <span class="dt">x =</span> <span class="st">`</span><span class="dt">Mo inc</span><span class="st">`</span><span class="op">/</span><span class="st">`</span><span class="dt">Mo coh</span><span class="st">`</span>, <span class="dt">col =</span> validity)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb20-8"><a href="combining-validity-flags.html#cb20-8"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">qc =</span> <span class="op">!</span><span class="kw">any</span>(<span class="kw">c</span>(validity, in_slope_tolerance, in_cps_tolerance, in_mse_tolerance) <span class="op">==</span><span class="st"> </span><span class="ot">FALSE</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb20-9"><a href="combining-validity-flags.html#cb20-9"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(in_slope_tolerance, in_cps_tolerance, in_mse_tolerance)) </span>
+<span id="cb20-10"><a href="combining-validity-flags.html#cb20-10"></a>  </span>
+<span id="cb20-11"><a href="combining-validity-flags.html#cb20-11"></a>  <span class="kw">ggplot</span>(<span class="dt">data =</span> CD166_<span class="dv">19</span>_xrf, <span class="kw">aes</span>(<span class="dt">y =</span> depth, <span class="dt">x =</span> <span class="st">`</span><span class="dt">Mo inc</span><span class="st">`</span><span class="op">/</span><span class="st">`</span><span class="dt">Mo coh</span><span class="st">`</span>, <span class="dt">col =</span> qc)) <span class="op">+</span><span class="st"> </span></span>
 <span id="cb20-12"><a href="combining-validity-flags.html#cb20-12"></a><span class="st">  </span><span class="kw">geom_lineh</span>(<span class="kw">aes</span>(<span class="dt">group =</span> <span class="dv">1</span>)) <span class="op">+</span></span>
-<span id="cb20-13"><a href="combining-validity-flags.html#cb20-13"></a><span class="st">  </span><span class="kw">geom_rug</span>(<span class="dt">sides =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">data =</span> . <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(validity <span class="op">==</span><span class="st"> </span><span class="ot">FALSE</span>)) <span class="op">+</span></span>
-<span id="cb20-14"><a href="combining-validity-flags.html#cb20-14"></a><span class="st">  </span><span class="kw">scale_y_reverse</span>()</span></code></pre></div>
+<span id="cb20-13"><a href="combining-validity-flags.html#cb20-13"></a><span class="st">  </span><span class="kw">geom_rug</span>(<span class="dt">sides =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">data =</span> . <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(qc <span class="op">==</span><span class="st"> </span><span class="ot">FALSE</span>)) <span class="op">+</span></span>
+<span id="cb20-14"><a href="combining-validity-flags.html#cb20-14"></a><span class="st">  </span><span class="kw">scale_color_discrete</span>(<span class="dt">name =</span> <span class="st">&quot;pass QC&quot;</span>) <span class="op">+</span></span>
+<span id="cb20-15"><a href="combining-validity-flags.html#cb20-15"></a><span class="st">  </span><span class="kw">scale_y_reverse</span>(<span class="dt">name =</span> <span class="st">&quot;depth [mm]&quot;</span>)</span></code></pre></div>
 <p><img src="itraxBook_files/figure-html/combined_validity_checks-1.png" width="672" /></p>
-<p>Bear in mind that this doesn’t remove observations considered defective, only marks them has <code>validity == FALSE</code>. If they are to be excluded from subsequent analysis, they should be removed using <code>filter(validity == TRUE)</code>.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="combining-validity-flags.html#cb21-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
-<span id="cb21-2"><a href="combining-validity-flags.html#cb21-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">slope =</span> <span class="st">`</span><span class="dt">sample surface</span><span class="st">`</span> <span class="op">-</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">lag</span>(<span class="st">`</span><span class="dt">sample surface</span><span class="st">`</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb21-3"><a href="combining-validity-flags.html#cb21-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">in_slope_tolerance =</span> <span class="kw">ifelse</span>(slope <span class="op">&lt;=-</span><span class="fl">0.1</span> <span class="op">|</span><span class="st"> </span>slope <span class="op">&gt;=</span><span class="fl">0.1</span> <span class="op">|</span><span class="st"> </span><span class="kw">is.na</span>(slope) <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb21-4"><a href="combining-validity-flags.html#cb21-4"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>slope) <span class="op">%&gt;%</span></span>
-<span id="cb21-5"><a href="combining-validity-flags.html#cb21-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">in_cps_tolerance =</span> <span class="kw">ifelse</span>(cps <span class="op">&lt;=</span><span class="dv">30000</span> <span class="op">|</span><span class="st"> </span>cps <span class="op">&gt;=</span><span class="dv">60000</span> <span class="op">|</span><span class="st"> </span><span class="kw">is.na</span>(cps) <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb21-6"><a href="combining-validity-flags.html#cb21-6"></a><span class="st">  </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span></span>
-<span id="cb21-7"><a href="combining-validity-flags.html#cb21-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">validity =</span> <span class="op">!</span><span class="kw">any</span>(<span class="kw">c</span>(validity, in_slope_tolerance, in_cps_tolerance) <span class="op">==</span><span class="st"> </span><span class="ot">FALSE</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb21-8"><a href="combining-validity-flags.html#cb21-8"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(in_slope_tolerance, in_cps_tolerance)) <span class="op">%&gt;%</span></span>
-<span id="cb21-9"><a href="combining-validity-flags.html#cb21-9"></a><span class="st">  </span><span class="kw">filter</span>(validity <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb21-10"><a href="combining-validity-flags.html#cb21-10"></a><span class="st">  </span><span class="kw">head</span>()</span></code></pre></div>
-<pre><code>## # A tibble: 6 x 56
-## # Rowwise: 
-##   depth   MSE   cps validity    Al    Si     P     S    Cl    Ar     K     Ca
-##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-## 1     2  1.57 38370 TRUE        57   306     0     0  1513   595  2628 144287
-## 2     3  1.55 39796 TRUE        74   330     0    32  1470   506  2378 162938
-## 3     4  1.41 40022 TRUE        26   206     0    21  1312   555  2265 153194
-## 4     5  1.41 41973 TRUE        53   233     0    37  1740   591  2947 135879
-## 5     6  1.36 41268 TRUE        27   347     0    28  1576   504  3179 132183
-## 6     7  1.52 40977 TRUE        72   337     0    59  1605   584  3376 134094
-## # … with 44 more variables: Sc &lt;dbl&gt;, Ti &lt;dbl&gt;, V &lt;dbl&gt;, Cr &lt;dbl&gt;, Mn &lt;dbl&gt;,
-## #   Fe &lt;dbl&gt;, Ni &lt;dbl&gt;, Cu &lt;dbl&gt;, Zn &lt;dbl&gt;, Ga &lt;dbl&gt;, Ge &lt;dbl&gt;, Br &lt;dbl&gt;,
-## #   Rb &lt;dbl&gt;, Sr &lt;dbl&gt;, Y &lt;dbl&gt;, Zr &lt;dbl&gt;, Pd &lt;dbl&gt;, Cd &lt;dbl&gt;, I &lt;dbl&gt;,
-## #   Cs &lt;dbl&gt;, Ba &lt;dbl&gt;, Nd &lt;dbl&gt;, Sm &lt;dbl&gt;, Yb &lt;dbl&gt;, Ta &lt;dbl&gt;, W &lt;dbl&gt;,
-## #   Pb &lt;dbl&gt;, Bi &lt;dbl&gt;, Mo inc &lt;dbl&gt;, Mo coh &lt;dbl&gt;, filename &lt;chr&gt;,
-## #   position &lt;dbl&gt;, sample surface &lt;dbl&gt;, E-gain &lt;dbl&gt;, E-offset &lt;dbl&gt;,
-## #   F-slope &lt;dbl&gt;, F-offset &lt;dbl&gt;, Fe a*2 &lt;dbl&gt;, Fe a+b &lt;dbl&gt;, S1 &lt;dbl&gt;,
-## #   S2 &lt;dbl&gt;, S3 &lt;dbl&gt;, Dt &lt;dbl&gt;, label &lt;chr&gt;</code></pre>
+<p>Bear in mind that this doesn’t remove observations considered defective, only marks them has <code>qc == FALSE</code>. If they are to be excluded from subsequent analysis, they should be removed using <code>filter(qc == TRUE)</code>.</p>
 </div>
             </section>
 
