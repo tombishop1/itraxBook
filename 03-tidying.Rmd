@@ -68,36 +68,24 @@ CD166_19_xrf %>%
 It is often desirable to combine all deletion criteria into a single binary variable. This means combining multiple binary variables, returning `FALSE` if any of the values are `FALSE`, but only returning `TRUE` if all of the values are `TRUE`. 
 
 ```{r combined_validity_checks, warning=FALSE}
-CD166_19_xrf %>%
+CD166_19_xrf <- CD166_19_xrf %>%
   mutate(slope = `sample surface` - dplyr::lag(`sample surface`)) %>%
   mutate(in_slope_tolerance = ifelse(slope <=-0.1 | slope >=0.1 | is.na(slope) == TRUE, FALSE, TRUE)) %>%
   select(-slope) %>%
   mutate(in_cps_tolerance = ifelse(cps <=30000 | cps >=60000 | is.na(cps) == TRUE, FALSE, TRUE)) %>%
-  mutate(in_mse_tolerance = ifelse(MSE <=2, FALSE, TRUE)) %>%
+  mutate(in_mse_tolerance = ifelse(MSE <=2, TRUE, FALSE)) %>%
   rowwise() %>%
-  mutate(validity = any(c(validity, in_slope_tolerance, in_cps_tolerance, in_mse_tolerance) == FALSE)) %>%
-  select(-c(in_slope_tolerance, in_cps_tolerance, in_mse_tolerance)) %>%
+  mutate(qc = !any(c(validity, in_slope_tolerance, in_cps_tolerance, in_mse_tolerance) == FALSE)) %>%
+  select(-c(in_slope_tolerance, in_cps_tolerance, in_mse_tolerance)) 
   
-  ggplot(data = ., aes(y = depth, x = `Mo inc`/`Mo coh`, col = validity)) + 
+  ggplot(data = CD166_19_xrf, aes(y = depth, x = `Mo inc`/`Mo coh`, col = qc)) + 
   geom_lineh(aes(group = 1)) +
-  geom_rug(sides = "l", data = . %>% filter(validity == FALSE)) +
-  scale_y_reverse()
+  geom_rug(sides = "l", data = . %>% filter(qc == FALSE)) +
+  scale_color_discrete(name = "pass QC") +
+  scale_y_reverse(name = "depth [mm]")
 ```
 
-Bear in mind that this doesn't remove observations considered defective, only marks them has `validity == FALSE`. If they are to be excluded from subsequent analysis, they should be removed using `filter(validity == TRUE)`.
-
-```{r slice_invalid}
-CD166_19_xrf %>%
-  mutate(slope = `sample surface` - dplyr::lag(`sample surface`)) %>%
-  mutate(in_slope_tolerance = ifelse(slope <=-0.1 | slope >=0.1 | is.na(slope) == TRUE, FALSE, TRUE)) %>%
-  select(-slope) %>%
-  mutate(in_cps_tolerance = ifelse(cps <=30000 | cps >=60000 | is.na(cps) == TRUE, FALSE, TRUE)) %>%
-  rowwise() %>%
-  mutate(validity = !any(c(validity, in_slope_tolerance, in_cps_tolerance) == FALSE)) %>%
-  select(-c(in_slope_tolerance, in_cps_tolerance)) %>%
-  filter(validity == TRUE) %>%
-  head()
-```
+Bear in mind that this doesn't remove observations considered defective, only marks them has `qc == FALSE`. If they are to be excluded from subsequent analysis, they should be removed using `filter(qc == TRUE)`.
 
 ## Tube current
 
@@ -248,17 +236,9 @@ apply(CD166_19_xrf %>% select(any_of(elementsList)), 2, FUN = function(x){round(
   pull(elements) %>% 
   ordered() -> myElements
 
+# get acceptable observations
 CD166_19_xrf %>% 
-  # identify acceptable observations
-  mutate(slope = `sample surface` - dplyr::lag(`sample surface`)) %>%
-  mutate(in_slope_tolerance = ifelse(slope <=-0.1 | slope >=0.1 | is.na(slope) == TRUE, FALSE, TRUE)) %>%
-  select(-slope) %>%
-  mutate(in_cps_tolerance = ifelse(cps <=30000 | cps >=60000 | is.na(cps) == TRUE, FALSE, TRUE)) %>%
-  mutate(in_mse_tolerance = ifelse(MSE <=2, FALSE, TRUE)) %>%
-  rowwise() %>%
-  mutate(validity = any(c(validity, in_slope_tolerance, in_cps_tolerance, in_mse_tolerance) == FALSE)) %>%
-  select(-c(in_slope_tolerance, in_cps_tolerance, in_mse_tolerance)) %>%
-  filter(validity == TRUE) %>%
+  filter(qc == TRUE) %>%
   
   # pivot long
   select(any_of(myElements), depth, label) %>% 
@@ -274,8 +254,6 @@ CD166_19_xrf %>%
     labs(x = "peak area", y = "Depth [mm]") +
     tidypaleo::theme_paleo() +
     theme(legend.position = "none")
-
-#rm(myElements)
 ```
 
 ## Reversing Data

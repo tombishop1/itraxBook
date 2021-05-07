@@ -1,39 +1,90 @@
 # Multivariate Methods
 
-Input data often needs extensive preparation if useful results are to be obtained --- transformation, dealing with zero values, and `NA` values. It is worth mentioning some general issues around the robustness of multivariate analysis - special treatment is required for compositional data for most methods; see @Aitchison1986. 
+## Preparing Data for Multivariate Data Analysis
+Where multivariate methods (cluster analysis, principle components analysis, correlation matrices) are required, it is usually necessary to transform data and treat them in a special way to avoid breaking the assumptions of a method or drawing erroneous conclusions. This is because the constant sum constraint that defines compositional data - put simply, if one element increases in proportion, an equal decrease must occur in the remaining elements that make up the composition. This is further complicated by unobserved elements, dimensionless (i.e. calibrated) data, and observations below the limit of detection. The package `compositions` deals with much of these issues, including any necessary transformation, and ensures that the data are treated differently by functions like `princomp()` and `dist()`, e.g. `compositions::princomp.acomp()` by setting a `class` attribute and providing modified functions. 
 
-At present the preparation of data is handled in `itraxR` using the internal function `itraxR:::multivariate_import()`, but at least at present this function is not exported from the package. However it can be accessed by the user using the `:::` notation. 
+It's worth spending some time getting familiar with the documentation for `compositions`, and possibly the wider literature around compositional data analysis. Several different methods are provided depending on the nature of the compositional data - in these examples, we use the `acomp()` but other methods are available and may be more appropriate. This package also deals with the variety of different types of zero and missing values. 
+
+in order to correctly identify the observations to their original data source, it is necessary to use row names that uniquely identify observations. For single scans this is not usually an issue --- the `depth` or `position` variable can be used. However, where a dataset is a composition of multiple cores, you may find that there are multiple observations for a particular depth where cores overlap.
 
 ```{r}
-data("periodicTable")
 CD166_19_xrf %>%
-  mutate(ids = 1:dim(CD166_19_xrf)[1]) %>%
-  itraxR:::multivariate_import(elementsonly = TRUE, 
-                               zeros = "addone", 
-                               transform = TRUE) %>%
-  glimpse()
+  filter(qc == TRUE) %>%
+  select(any_of(c(elementsList, "depth", "label"))) %>%
+  mutate(id = paste0(label, "_", depth)) %>%
+  select(-c("depth", "label")) %>%
+  column_to_rownames("id") %>%
+  compositions::acomp() %>%
+  compositions::clr() %>%
+  head()
 ```
 
-## Correlation Coefficients
+## Principle Component analysis
 
-The Pearson's R correlation coefficient is occasionally used to study the relationships between individual elements. It is often useful in conjunction with principle component analysis.
+Principle component analysis (PCA) is a common method for exploring multivariate data. The plot is made with `ggfortify`, a wrapper for `ggplot2::biplot()`. 
 
 ```{r}
-itrax_correlation(CD166_19_xrf) %>%
-  ggcorrplot::ggcorrplot(hc.order = TRUE,
-                         p.mat = ggcorrplot::cor_pmat(., method = "spearman"),
-                         insig = "blank")
+CD166_19_xrf %>%
+  filter(qc == TRUE) %>%
+  select(any_of(elementsList)) %>%
+  acomp() %>%
+  clr() %>%
+  princomp() %>%
+  autoplot(loadings = TRUE, 
+           loadings.label = TRUE,
+           alpha = 0.5,
+           loadings.label.repel = TRUE)
+```
+
+It is useful to plot components over depth. They can be extracted and plotted as follows:
+
+```{r}
+bind_rows(
+  tibble(depth = CD166_19_xrf %>%
+           filter(qc == FALSE) %>%
+           pull("depth"),
+         Comp.1 = NA
+        ),
+
+  tibble(
+    depth = CD166_19_xrf %>%
+      filter(qc == TRUE) %>%
+      pull("depth"),
+    Comp.1 = CD166_19_xrf %>%
+      filter(qc == TRUE) %>%
+      select(any_of(elementsList)) %>%
+      acomp() %>%
+      clr() %>%
+      princomp() %>%
+      magrittr::extract2("scores") %>%
+      as_tibble() %>%
+      pull("Comp.1")
+    )) %>%
+  
+  arrange(depth) %>%
+  
+  ggplot(aes(x = depth, y = Comp.1)) +
+  geom_line() + 
+  scale_x_reverse(name = "depth [mm]")
 ```
 
 ## Unconstrained Cluster Analysis
-
 Unconstrained cluster analysis will group each measurement by similarity, returning an arbitrary number of groups as defined by the function. This is useful in identifying recurring compositional units, or identifying candidate samples for quantitative analysis. 
 
 ```{r}
-itrax_section(CD166_19_S1$xrf, 
-              elementsonly = c("Ti", "Si", "S", "K", "Ca"), divisions = 10) %>%
-  pluck("groups") %>%
-
+bind_rows(tibble(depth = filter(CD166_19_xrf, qc == TRUE) %>% pull(depth),
+                 group = dist(acomp(filter(CD166_19_xrf, qc == TRUE), 
+                                    parts = names(CD166_19_xrf)[names(CD166_19_xrf) %in% elementsList])$clr) %>%
+                 hclust(method = "ward.D2") %>%
+                 cutree(k = 5) %>%
+                 as.factor()), 
+          
+          CD166_19_xrf %>%
+            filter(qc == FALSE) %>%
+            mutate(group = NA) %>%
+            select(depth, group)) %>%
+  arrange(depth) %>%
+  
   ggplot() + 
   geom_tile(aes(x = depth, y = 1, fill = group)) +
   scale_x_reverse() +
@@ -42,52 +93,26 @@ itrax_section(CD166_19_S1$xrf,
         axis.ticks.y = element_blank())
 ```
 
-Given that these groups form the characteristic compositional units, they present good candidates for sampling for quantitative analysis. The second part of this function will report the sample most characteristic of each group. For example, if you can submit 10 samples for quantitative analysis (e.g. ICP-MS), you can input the elements you wish to calibrate for in the `elementsonly` argument, the number of samples you want to take in the `divisions` argument, and the function will report the samples that are likely to give the best calibration across all elements. The resolution at which you are able to sub-sample the core may be significantly coarser than the scan, so you may wish to reduce the data first. The example below summarises the data into 50 mm chunks before the cluster analysis.
+## Constrained Cluster Analysis
 
-```{r}
-foo <- CD166_19_xrf %>%
-  select(where(is.numeric)) %>%
-  itrax_reduce(by = 50) %>%
-  itrax_section(elementsonly = c("Ti", "Si", "S", "K", "Ca"), divisions = 10)
+Constrained cluster analysis is helpful in identifying "break-points" in the sedimentary sequence. It forces each sample to remain in sequence, thus there are no recurring units along the stratigraphy. 
 
-ggplot() + 
-  geom_tile(data = foo %>% pluck("groups"), 
-            aes(x = depth, y = 1, fill = group, width = 50)) + # width here needs to be set to the resampling interval
-  geom_point(data = foo %>% pluck("samples"), 
-             aes(x = depth, y = 1)) +
+```{r constrained_clusters_1}
+bind_rows(tibble(depth = filter(CD166_19_xrf, qc == TRUE) %>% pull(depth),
+                 group = rioja::chclust(dist(acomp(filter(CD166_19_xrf, qc == TRUE), parts = names(CD166_19_xrf)[names(CD166_19_xrf) %in% elementsList])$clr)) %>%
+                 cutree(k = 5) %>%
+                 as.factor()), 
+          
+          CD166_19_xrf %>%
+            filter(qc == FALSE) %>%
+            mutate(group = NA) %>%
+            select(depth, group)) %>%
+  arrange(depth) %>%
+  
+  ggplot() + 
+  geom_tile(aes(x = depth, y = 1, fill = group)) +
   scale_x_reverse() +
   theme(axis.title.y = element_blank(),
         axis.text.y = element_blank(),
         axis.ticks.y = element_blank())
 ```
-
-```{r include=FALSE}
-rm(foo)
-```
-
-## Constrained Cluster Analysis
-
-## Principle Components Analysis
-Principle components analysis can be used for exploring patterns in these data. 
-
-```{r}
-library(ggfortify)
-
-CD166_19_xrf %>%
-  itrax_ordination() %>%
-  pluck("pca") %>%
-  autoplot(loadings = TRUE, loadings.label = TRUE)
-```
-
-```{r}
-CD166_19_xrf %>%
-  itrax_ordination() %>%
-  pluck("data") %>%
-  select(depth, label, position, starts_with(".fittedPC")) %>%
-  drop_na() %>%
-
-  ggplot(aes(x = depth, y = .fittedPC1, colour = label)) +
-  geom_line() + 
-  scale_x_reverse()
-```
-
