@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-05-11" />
+<meta name="date" content="2021-06-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -229,13 +229,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb20-6"><a href="combining-validity-flags.html#cb20-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">in_mse_tolerance =</span> <span class="kw">ifelse</span>(MSE <span class="op">&lt;=</span><span class="dv">2</span>, <span class="ot">TRUE</span>, <span class="ot">FALSE</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb20-7"><a href="combining-validity-flags.html#cb20-7"></a><span class="st">  </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span></span>
 <span id="cb20-8"><a href="combining-validity-flags.html#cb20-8"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">qc =</span> <span class="op">!</span><span class="kw">any</span>(<span class="kw">c</span>(validity, in_slope_tolerance, in_cps_tolerance, in_mse_tolerance) <span class="op">==</span><span class="st"> </span><span class="ot">FALSE</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb20-9"><a href="combining-validity-flags.html#cb20-9"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(in_slope_tolerance, in_cps_tolerance, in_mse_tolerance)) </span>
-<span id="cb20-10"><a href="combining-validity-flags.html#cb20-10"></a>  </span>
-<span id="cb20-11"><a href="combining-validity-flags.html#cb20-11"></a>  <span class="kw">ggplot</span>(<span class="dt">data =</span> CD166_<span class="dv">19</span>_xrf, <span class="kw">aes</span>(<span class="dt">y =</span> depth, <span class="dt">x =</span> <span class="st">`</span><span class="dt">Mo inc</span><span class="st">`</span><span class="op">/</span><span class="st">`</span><span class="dt">Mo coh</span><span class="st">`</span>, <span class="dt">col =</span> qc)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb20-12"><a href="combining-validity-flags.html#cb20-12"></a><span class="st">  </span><span class="kw">geom_lineh</span>(<span class="kw">aes</span>(<span class="dt">group =</span> <span class="dv">1</span>)) <span class="op">+</span></span>
-<span id="cb20-13"><a href="combining-validity-flags.html#cb20-13"></a><span class="st">  </span><span class="kw">geom_rug</span>(<span class="dt">sides =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">data =</span> . <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(qc <span class="op">==</span><span class="st"> </span><span class="ot">FALSE</span>)) <span class="op">+</span></span>
-<span id="cb20-14"><a href="combining-validity-flags.html#cb20-14"></a><span class="st">  </span><span class="kw">scale_color_discrete</span>(<span class="dt">name =</span> <span class="st">&quot;pass QC&quot;</span>) <span class="op">+</span></span>
-<span id="cb20-15"><a href="combining-validity-flags.html#cb20-15"></a><span class="st">  </span><span class="kw">scale_y_reverse</span>(<span class="dt">name =</span> <span class="st">&quot;depth [mm]&quot;</span>)</span></code></pre></div>
+<span id="cb20-9"><a href="combining-validity-flags.html#cb20-9"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></span>
+<span id="cb20-10"><a href="combining-validity-flags.html#cb20-10"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(in_slope_tolerance, in_cps_tolerance, in_mse_tolerance)) <span class="co">#%&gt;%</span></span>
+<span id="cb20-11"><a href="combining-validity-flags.html#cb20-11"></a>  </span>
+<span id="cb20-12"><a href="combining-validity-flags.html#cb20-12"></a>  <span class="kw">ggplot</span>(<span class="dt">data =</span> CD166_<span class="dv">19</span>_xrf, <span class="kw">aes</span>(<span class="dt">y =</span> depth, <span class="dt">x =</span> <span class="st">`</span><span class="dt">Mo inc</span><span class="st">`</span><span class="op">/</span><span class="st">`</span><span class="dt">Mo coh</span><span class="st">`</span>, <span class="dt">col =</span> qc)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb20-13"><a href="combining-validity-flags.html#cb20-13"></a><span class="st">  </span><span class="kw">geom_lineh</span>(<span class="kw">aes</span>(<span class="dt">group =</span> <span class="dv">1</span>)) <span class="op">+</span></span>
+<span id="cb20-14"><a href="combining-validity-flags.html#cb20-14"></a><span class="st">  </span><span class="kw">geom_rug</span>(<span class="dt">sides =</span> <span class="st">&quot;l&quot;</span>, <span class="dt">data =</span> . <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(qc <span class="op">==</span><span class="st"> </span><span class="ot">FALSE</span>)) <span class="op">+</span></span>
+<span id="cb20-15"><a href="combining-validity-flags.html#cb20-15"></a><span class="st">  </span><span class="kw">scale_color_discrete</span>(<span class="dt">name =</span> <span class="st">&quot;pass QC&quot;</span>) <span class="op">+</span></span>
+<span id="cb20-16"><a href="combining-validity-flags.html#cb20-16"></a><span class="st">  </span><span class="kw">scale_y_reverse</span>(<span class="dt">name =</span> <span class="st">&quot;depth [mm]&quot;</span>)</span></code></pre></div>
 <p><img src="itraxBook_files/figure-html/combined_validity_checks-1.png" width="672" /></p>
 <p>Bear in mind that this doesn’t remove observations considered defective, only marks them has <code>qc == FALSE</code>. If they are to be excluded from subsequent analysis, they should be removed using <code>filter(qc == TRUE)</code>.</p>
 </div>
