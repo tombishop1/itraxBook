@@ -77,7 +77,7 @@ CD166_19_xrf <- CD166_19_xrf %>%
   rowwise() %>%
   mutate(qc = !any(c(validity, in_slope_tolerance, in_cps_tolerance, in_mse_tolerance) == FALSE)) %>%
   ungroup() %>%
-  select(-c(in_slope_tolerance, in_cps_tolerance, in_mse_tolerance)) %>%
+  select(-c(in_slope_tolerance, in_cps_tolerance, in_mse_tolerance)) #%>%
   
   ggplot(data = CD166_19_xrf, aes(y = depth, x = `Mo inc`/`Mo coh`, col = qc)) + 
   geom_lineh(aes(group = 1)) +
