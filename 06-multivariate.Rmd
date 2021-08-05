@@ -1,7 +1,7 @@
 # Multivariate Methods
 
 ## Preparing Data for Multivariate Data Analysis
-Where multivariate methods (cluster analysis, principle components analysis, correlation matrices) are required, it is usually necessary to transform data and treat them in a special way to avoid breaking the assumptions of a method or drawing erroneous conclusions. This is because the constant sum constraint that defines compositional data - put simply, if one element increases in proportion, an equal decrease must occur in the remaining elements that make up the composition. This is further complicated by unobserved elements, dimensionless (i.e. calibrated) data, and observations below the limit of detection. The package `compositions` deals with much of these issues, including any necessary transformation, and ensures that the data are treated differently by functions like `princomp()` and `dist()`, e.g. `compositions::princomp.acomp()` by setting a `class` attribute and providing modified functions. 
+Where multivariate methods (cluster analysis, principal components analysis, correlation matrices) are required, it is usually necessary to transform data and treat them in a special way to avoid breaking the assumptions of a method or drawing erroneous conclusions. This is because the constant sum constraint that defines compositional data - put simply, if one element increases in proportion, an equal decrease must occur in the remaining elements that make up the composition. This is further complicated by unobserved elements, dimensionless (i.e. calibrated) data, and observations below the limit of detection. The package `compositions` deals with much of these issues, including any necessary transformation, and ensures that the data are treated differently by functions like `princomp()` and `dist()`, e.g. `compositions::princomp.acomp()` by setting a `class` attribute and providing modified functions. 
 
 It's worth spending some time getting familiar with the documentation for `compositions`, and possibly the wider literature around compositional data analysis. Several different methods are provided depending on the nature of the compositional data - in these examples, we use the `acomp()` but other methods are available. This package also deals with the variety of different types of zero and missing values. For these count data we deal with values that are below the limit of detection by letting the `compositions` package know the detection limit. For these count data, the detection limit is `1`, and thus is coded as `-1`. This allows `zeroreplace()` to correctly deal with this problem. 
 
@@ -19,9 +19,9 @@ CD166_19_xrf_acomp <- CD166_19_xrf %>%
 head(CD166_19_xrf_acomp)
 ```
 
-## Principle Component analysis
+## Principal Component analysis
 
-Principle component analysis (PCA) is a common method for exploring multivariate data. Note the use of `zeroreplace()` - this is because the `princomp()` method defined for th `acomp` class uses a centred-log-ratio (`clr()`) transformation that is intolerant to zero-values. 
+Principal component analysis (PCA) is a common method for exploring multivariate data. Note the use of `zeroreplace()` - this is because the `princomp()` method defined for th `acomp` class uses a centred-log-ratio (`clr()`) transformation that is intolerant to zero-values. 
 
 ```{r}
 CD166_19_xrf_acomp %>%
