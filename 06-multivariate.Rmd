@@ -19,7 +19,7 @@ CD166_19_xrf_acomp <- CD166_19_xrf %>%
 head(CD166_19_xrf_acomp)
 ```
 
-## Principal Component analysis
+## Principal Component Analysis
 
 Principal component analysis (PCA) is a common method for exploring multivariate data. Note the use of `zeroreplace()` - this is because the `princomp()` method defined for th `acomp` class uses a centred-log-ratio (`clr()`) transformation that is intolerant to zero-values. 
 

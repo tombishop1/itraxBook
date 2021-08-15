@@ -297,12 +297,12 @@ itrax_restspectra(foldername = "CD166_19_S1/CD166_19_S1/XRF data/",
   invisible()
 ```
 
-By combining all of the sections, and joining the raw spectral data with the processed data from the `Results.txt` `Q-Spec` output file, it can be used as a very powerful diagnostic tool.
+By combining all of the sections, and joining the raw spectral data with the processed data from the `Results.txt` (`Q-Spec`) output file, it can be used as a very powerful diagnostic tool.
 
 ```{r spectra2}
 # import spectral data
 read_spectra <- function(foldername, labeltext){itrax_restspectra(foldername = foldername,
-                                                       plot = FALSE) %>%
+                                                                  plot = FALSE) %>%
     mutate(label = labeltext) %>%
     select(label, everything()) %>%
     mutate(filename = str_split(filename, pattern = "//") %>% sapply(., `[`, 2))}
@@ -340,7 +340,7 @@ ggplot(aes(x = channel, y = depth, fill = counts)) +
   scale_x_continuous(name = "channel [n]",
                      sec.axis = sec_axis(trans = ~ ((. * as.numeric(settings[1,2])) + as.numeric(settings[2,2])),
                                          name = "energy [k eV]")) +
-  guides(fill = FALSE) +
+  guides(fill = "none") +
   facet_grid(rows = vars(label),
              scales = "free_y",
              space = "free_y")
