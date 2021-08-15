@@ -14,7 +14,9 @@ description: This book is a guide to importing, tidying, manipulating and analys
 ```{r setup, include=FALSE, echo=FALSE}
 require("knitr")
 opts_knit$set(root.dir = "CD166_19_(2020)/")
+getOption("download.file.method")
 options(download.file.method = "libcurl") # this fixes an issue with install_github() - it was set to wininet
+getOption("download.file.method")
 #setwd("CD166_19_(2020)/")
 
 # check if itraxR is installed, if not, install
