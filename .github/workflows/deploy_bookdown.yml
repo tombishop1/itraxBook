@@ -26,8 +26,12 @@ jobs:
         #run: Rscript -e 'install.packages(c("rmarkdown","bookdown"), type = "source")'
         run: Rscript -e 'install.packages(c("rmarkdown","bookdown","remotes"))'
       - name: Install itraxR
+        env:
+          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
         run: Rscript -e 'remotes::install_github("tombishop1/itraxR")'
       - name: Install tidypaleo
+        env:
+          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
         run: Rscript -e 'remotes::install_github("paleolimbot/tidypaleo")'
       - name: Render Book
         run: Rscript -e 'bookdown::render_book("index.Rmd", encoding = "UTF-8")'
