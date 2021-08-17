@@ -24,7 +24,11 @@ jobs:
       - uses: r-lib/actions/setup-pandoc@v1
       - name: Install rmarkdown
         #run: Rscript -e 'install.packages(c("rmarkdown","bookdown"), type = "source")'
-        run: Rscript -e 'install.packages(c("rmarkdown","bookdown"))'
+        run: Rscript -e 'install.packages(c("rmarkdown","bookdown","remotes"))'
+      - name: Install itraxR
+        run: Rscript -e 'remotes::install_github("tombishop1/itraxR")'
+      - name: Install tidypaleo
+        run: Rscript -e 'remotes::install_github("paleolimbot/tidypaleo")'
       - name: Render Book
         run: Rscript -e 'bookdown::render_book("index.Rmd", encoding = "UTF-8")'
       - uses: actions/upload-artifact@v1
