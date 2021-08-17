@@ -11,7 +11,7 @@ CD166_19_xrf %>%
   mutate(across(any_of(elementsList)) /`Mo inc`)
 ```
 
-This can be integrated into the work flow from the dat tidying chapter, for example:
+This can be integrated into the work flow from the data tidying chapter, for example:
 
 ```{r}
 CD166_19_xrf %>% 
@@ -37,6 +37,29 @@ CD166_19_xrf %>%
     labs(x = "peak area / Mo. inc.", y = "Depth [mm]") +
     tidypaleo::theme_paleo() +
     theme(legend.position = "none")
+```
+
+Note that where zero values are encountered in divisions, dividing by zero will lead to `Inf` values. This can cause issues with plotting data, and these values should be cleaned into `NA` before plotting. For example:
+
+```{r message=FALSE, warning=FALSE}
+ggarrange(
+  
+  CD166_19_xrf %>%
+  mutate(`Fe/Sc` = Fe/Sc) %>%
+  ggplot(aes(x = depth, y = `Fe/Sc`)) + 
+  geom_line() + 
+    scale_x_reverse() + 
+    ggtitle("w/ Inf."),
+  
+  CD166_19_xrf %>%
+  mutate(`Fe/Sc` = Fe/Sc) %>%
+  mutate_if(is.numeric, list(~na_if(., Inf))) %>% # convert all Inf to NA
+  ggplot(aes(x = depth, y = `Fe/Sc`)) + 
+  geom_line() + 
+    scale_x_reverse() + 
+    ggtitle("na_if(., Inf)")
+  
+)
 ```
 
 ## Running Mean and Other Window Functions
