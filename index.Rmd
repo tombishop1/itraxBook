@@ -19,13 +19,13 @@ opts_knit$set(root.dir = "CD166_19_(2020)/")
 # check if itraxR is installed, if not, install
 if (!require("itraxR", character.only = TRUE)) {
   install.packages("remotes")
-  remotes::install_github("tombishop1/itraxR")
+  remotes::install_github("tombishop1/itraxR", method = "curl")
   library(itraxR)
 }
 
 if (!require("tidypaleo", character.only = TRUE)) {
   install.packages("remotes")
-  remotes::install_github("paleolimbot/tidypaleo")
+  remotes::install_github("paleolimbot/tidypaleo", method = "curl")
   library(tidypaleo)
 }
 
