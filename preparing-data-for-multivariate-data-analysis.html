@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>6.1 Preparing Data for Multivariate Data Analysis | Using Itrax Data in R</title>
   <meta name="description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
-  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.23 and GitBook 2.6.7" />
 
   <meta property="og:title" content="6.1 Preparing Data for Multivariate Data Analysis | Using Itrax Data in R" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-06-02" />
+<meta name="date" content="2021-08-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,8 +32,8 @@
   
   
 <link rel="prev" href="multivariate-methods.html"/>
-<link rel="next" href="principle-component-analysis.html"/>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link rel="next" href="principal-component-analysis.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -186,7 +186,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="6" data-path="multivariate-methods.html"><a href="multivariate-methods.html"><i class="fa fa-check"></i><b>6</b> Multivariate Methods</a><ul>
 <li class="chapter" data-level="6.1" data-path="preparing-data-for-multivariate-data-analysis.html"><a href="preparing-data-for-multivariate-data-analysis.html"><i class="fa fa-check"></i><b>6.1</b> Preparing Data for Multivariate Data Analysis</a></li>
-<li class="chapter" data-level="6.2" data-path="principle-component-analysis.html"><a href="principle-component-analysis.html"><i class="fa fa-check"></i><b>6.2</b> Principle Component analysis</a></li>
+<li class="chapter" data-level="6.2" data-path="principal-component-analysis.html"><a href="principal-component-analysis.html"><i class="fa fa-check"></i><b>6.2</b> Principal Component Analysis</a></li>
 <li class="chapter" data-level="6.3" data-path="unconstrained-cluster-analysis.html"><a href="unconstrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.3</b> Unconstrained Cluster Analysis</a></li>
 <li class="chapter" data-level="6.4" data-path="constrained-cluster-analysis.html"><a href="constrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.4</b> Constrained Cluster Analysis</a></li>
 </ul></li>
@@ -220,69 +220,76 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="preparing-data-for-multivariate-data-analysis" class="section level2">
 <h2><span class="header-section-number">6.1</span> Preparing Data for Multivariate Data Analysis</h2>
-<p>Where multivariate methods (cluster analysis, principle components analysis, correlation matrices) are required, it is usually necessary to transform data and treat them in a special way to avoid breaking the assumptions of a method or drawing erroneous conclusions. This is because the constant sum constraint that defines compositional data - put simply, if one element increases in proportion, an equal decrease must occur in the remaining elements that make up the composition. This is further complicated by unobserved elements, dimensionless (i.e. calibrated) data, and observations below the limit of detection. The package <code>compositions</code> deals with much of these issues, including any necessary transformation, and ensures that the data are treated differently by functions like <code>princomp()</code> and <code>dist()</code>, e.g. <code>compositions::princomp.acomp()</code> by setting a <code>class</code> attribute and providing modified functions.</p>
+<p>Where multivariate methods (cluster analysis, principal components analysis, correlation matrices) are required, it is usually necessary to transform data and treat them in a special way to avoid breaking the assumptions of a method or drawing erroneous conclusions. This is because the constant sum constraint that defines compositional data - put simply, if one element increases in proportion, an equal decrease must occur in the remaining elements that make up the composition. This is further complicated by unobserved elements, dimensionless (i.e. calibrated) data, and observations below the limit of detection. The package <code>compositions</code> deals with much of these issues, including any necessary transformation, and ensures that the data are treated differently by functions like <code>princomp()</code> and <code>dist()</code>, e.g. <code>compositions::princomp.acomp()</code> by setting a <code>class</code> attribute and providing modified functions.</p>
 <p>It’s worth spending some time getting familiar with the documentation for <code>compositions</code>, and possibly the wider literature around compositional data analysis. Several different methods are provided depending on the nature of the compositional data - in these examples, we use the <code>acomp()</code> but other methods are available. This package also deals with the variety of different types of zero and missing values. For these count data we deal with values that are below the limit of detection by letting the <code>compositions</code> package know the detection limit. For these count data, the detection limit is <code>1</code>, and thus is coded as <code>-1</code>. This allows <code>zeroreplace()</code> to correctly deal with this problem.</p>
 <p>In order to correctly identify the observations to their original data source, it is necessary to use row names that uniquely identify observations. For single scans this is not usually an issue — the <code>depth</code> or <code>position</code> variable can be used. However, where a dataset is a composition of multiple cores, you may find that there are multiple observations for a particular depth where cores overlap. We don’t usually use row names when working in the <code>tidyverse</code> style, but because were going to be using base functionsl ike <code>princomp()</code> and <code>dist()</code>, they may become necessary.</p>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="preparing-data-for-multivariate-data-analysis.html#cb54-1"></a>CD166_<span class="dv">19</span>_xrf_acomp &lt;-<span class="st"> </span>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
-<span id="cb54-2"><a href="preparing-data-for-multivariate-data-analysis.html#cb54-2"></a><span class="st">  </span><span class="kw">filter</span>(qc <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb54-3"><a href="preparing-data-for-multivariate-data-analysis.html#cb54-3"></a><span class="st">  </span><span class="kw">select</span>(<span class="kw">any_of</span>(<span class="kw">c</span>(elementsList, <span class="st">&quot;depth&quot;</span>, <span class="st">&quot;label&quot;</span>))) <span class="op">%&gt;%</span></span>
-<span id="cb54-4"><a href="preparing-data-for-multivariate-data-analysis.html#cb54-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">id =</span> <span class="kw">paste0</span>(label, <span class="st">&quot;_&quot;</span>, depth)) <span class="op">%&gt;%</span></span>
-<span id="cb54-5"><a href="preparing-data-for-multivariate-data-analysis.html#cb54-5"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(<span class="st">&quot;depth&quot;</span>, <span class="st">&quot;label&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb54-6"><a href="preparing-data-for-multivariate-data-analysis.html#cb54-6"></a><span class="st">  </span><span class="kw">column_to_rownames</span>(<span class="st">&quot;id&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb54-7"><a href="preparing-data-for-multivariate-data-analysis.html#cb54-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">everything</span>(), <span class="cf">function</span>(x){<span class="kw">ifelse</span>(x <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">-1</span>, x)})) <span class="op">%&gt;%</span></span>
-<span id="cb54-8"><a href="preparing-data-for-multivariate-data-analysis.html#cb54-8"></a><span class="st">  </span><span class="kw">acomp</span>()</span>
-<span id="cb54-9"><a href="preparing-data-for-multivariate-data-analysis.html#cb54-9"></a><span class="kw">head</span>(CD166_<span class="dv">19</span>_xrf_acomp)</span></code></pre></div>
-<pre><code>##      Al           Si          P             S             Cl         
-## S1_2 0.0002804828 0.001505750 &lt;4.920751e-06 &lt;4.920751e-06 0.007445097
-## S1_3 0.0003343092 0.001490838 &lt;4.517691e-06  1.445661e-04 0.006641006
-## S1_4 0.0001227370 0.000972455 &lt;4.720655e-06  9.913376e-05 0.006193500
-## S1_5 0.0002582984 0.001135538 &lt;4.873556e-06  1.803216e-04 0.008479987
-## S1_6 0.0001333485 0.001713775 &lt;4.938833e-06  1.382873e-04 0.007783600
-## S1_7 0.0003509832 0.001642797 &lt;4.874767e-06  2.876113e-04 0.007824001
-##      Ar          K          Ca        Sc            Ti          V            
-## S1_2 0.002927847 0.01293173 0.7100004  6.889052e-05 0.008886877  4.330261e-04
-## S1_3 0.002285952 0.01074307 0.7361036 &lt;4.517691e-06 0.009582023  9.938921e-05
-## S1_4 0.002619964 0.01069228 0.7231761 &lt;4.720655e-06 0.009587651  3.540491e-04
-## S1_5 0.002880271 0.01436237 0.6622139  5.165969e-04 0.008899113  4.337464e-04
-## S1_6 0.002489172 0.01570055 0.6528297  6.914366e-05 0.009497375  5.284551e-04
-## S1_7 0.002846864 0.01645721 0.6536770 &lt;4.874767e-06 0.010037146 &lt;4.874767e-06
-##      Cr          Mn          Fe        Ni           Cu           Zn         
-## S1_2 0.001604165 0.002750700 0.1795779 0.0005117581 0.0011317728 0.001318761
-## S1_3 0.001359825 0.002182045 0.1624200 0.0006053706 0.0006776537 0.000555676
-## S1_4 0.001444520 0.002289518 0.1676399 0.0006797744 0.0009724550 0.001128237
-## S1_5 0.002144364 0.003596684 0.2159131 0.0008090102 0.0013451013 0.001169653
-## S1_6 0.001980472 0.003911555 0.2236452 0.0007457637 0.0012347081 0.001452017
-## S1_7 0.002144898 0.003894939 0.2227476 0.0006093459 0.0010578245 0.001384434
-##      Ga            Ge            Br          Rb           Sr        
-## S1_2  2.361961e-04  1.968301e-04 0.002977055 0.0003739771 0.04517742
-## S1_3 &lt;4.517691e-06  1.942607e-04 0.002484730 0.0013327189 0.04356861
-## S1_4 &lt;4.720655e-06 &lt;4.720655e-06 0.002874879 0.0014775651 0.04692331
-## S1_5 &lt;4.873556e-06 &lt;4.873556e-06 0.003211673 0.0014815609 0.05013427
-## S1_6  1.975533e-04  2.370640e-04 0.003501632 0.0015705488 0.04897840
-## S1_7  3.899814e-05  5.605982e-04 0.002841989 0.0016427966 0.04841131
-##      Y            Zr           Pd           Cd           I           
-## S1_2 0.0006889052 0.0015844819 0.0003838186 0.0001673055 0.0002361961
-## S1_3 0.0005376053 0.0012649536 0.0003388268 0.0002484730 0.0003614153
-## S1_4 0.0005051101 0.0022423112 0.0003115632 0.0001132957 0.0003162839
-## S1_5 0.0008772400 0.0007797689 0.0001510802 0.0001657009 0.0001120918
-## S1_6 0.0005235163 0.0015409158 0.0003555959 0.0001382873 0.0002864523
-## S1_7 0.0002534879 0.0015550507 0.0001511178 0.0002729870 0.0001462430
-##      Cs            Ba           Nd           Sm           Yb          
-## S1_2 &lt;4.920751e-06 0.0002361961 0.0003296903 2.263546e-04 0.0013876519
-## S1_3 &lt;4.517691e-06 0.0001129423 0.0001987784 1.761900e-04 0.0007137952
-## S1_4 &lt;4.720655e-06 0.0002832393 0.0003540491 3.021219e-04 0.0010291028
-## S1_5 &lt;4.873556e-06 0.0006433093 0.0002046893 1.754480e-04 0.0007943896
-## S1_6 &lt;4.938833e-06 0.0004593114 0.0004790668 5.926599e-05 0.0009087452
-## S1_7 &lt;4.874767e-06 0.0008384600 0.0004484786 1.169944e-04 0.0012089423
-##      Ta          W           Pb            Bi          
-## S1_2 0.003818503 0.009934997 &lt;4.920751e-06 0.0006692222
-## S1_3 0.003175937 0.009107666  5.872999e-05 0.0008990206
-## S1_4 0.003748200 0.010196615  7.175396e-04 0.0006325678
-## S1_5 0.004478798 0.011423614  2.631720e-04 0.0007651482
-## S1_6 0.004207885 0.011537113  2.666970e-04 0.0008988675
-## S1_7 0.004514034 0.010934103  3.656075e-04 0.0007360899
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="preparing-data-for-multivariate-data-analysis.html#cb55-1"></a>CD166_<span class="dv">19</span>_xrf_acomp &lt;-<span class="st"> </span>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
+<span id="cb55-2"><a href="preparing-data-for-multivariate-data-analysis.html#cb55-2"></a><span class="st">  </span><span class="kw">filter</span>(qc <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb55-3"><a href="preparing-data-for-multivariate-data-analysis.html#cb55-3"></a><span class="st">  </span><span class="kw">select</span>(<span class="kw">any_of</span>(<span class="kw">c</span>(elementsList, <span class="st">&quot;depth&quot;</span>, <span class="st">&quot;label&quot;</span>))) <span class="op">%&gt;%</span></span>
+<span id="cb55-4"><a href="preparing-data-for-multivariate-data-analysis.html#cb55-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">id =</span> <span class="kw">paste0</span>(label, <span class="st">&quot;_&quot;</span>, depth)) <span class="op">%&gt;%</span></span>
+<span id="cb55-5"><a href="preparing-data-for-multivariate-data-analysis.html#cb55-5"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(<span class="st">&quot;depth&quot;</span>, <span class="st">&quot;label&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb55-6"><a href="preparing-data-for-multivariate-data-analysis.html#cb55-6"></a><span class="st">  </span><span class="kw">column_to_rownames</span>(<span class="st">&quot;id&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb55-7"><a href="preparing-data-for-multivariate-data-analysis.html#cb55-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">everything</span>(), <span class="cf">function</span>(x){<span class="kw">ifelse</span>(x <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">-1</span>, x)})) <span class="op">%&gt;%</span></span>
+<span id="cb55-8"><a href="preparing-data-for-multivariate-data-analysis.html#cb55-8"></a><span class="st">  </span><span class="kw">acomp</span>()</span>
+<span id="cb55-9"><a href="preparing-data-for-multivariate-data-analysis.html#cb55-9"></a><span class="kw">head</span>(CD166_<span class="dv">19</span>_xrf_acomp)</span></code></pre></div>
+<pre><code>##      Al             Si            P               S               Cl           
+## S1_2 &quot;0.0002804828&quot; &quot;0.001505750&quot; &quot;&lt;4.920751e-06&quot; &quot;&lt;4.920751e-06&quot; &quot;0.007445097&quot;
+## S1_3 &quot;0.0003343092&quot; &quot;0.001490838&quot; &quot;&lt;4.517691e-06&quot; &quot; 1.445661e-04&quot; &quot;0.006641006&quot;
+## S1_4 &quot;0.0001227370&quot; &quot;0.000972455&quot; &quot;&lt;4.720655e-06&quot; &quot; 9.913376e-05&quot; &quot;0.006193500&quot;
+## S1_5 &quot;0.0002582984&quot; &quot;0.001135538&quot; &quot;&lt;4.873556e-06&quot; &quot; 1.803216e-04&quot; &quot;0.008479987&quot;
+## S1_6 &quot;0.0001333485&quot; &quot;0.001713775&quot; &quot;&lt;4.938833e-06&quot; &quot; 1.382873e-04&quot; &quot;0.007783600&quot;
+## S1_7 &quot;0.0003509832&quot; &quot;0.001642797&quot; &quot;&lt;4.874767e-06&quot; &quot; 2.876113e-04&quot; &quot;0.007824001&quot;
+##      Ar            K            Ca          Sc              Ti           
+## S1_2 &quot;0.002927847&quot; &quot;0.01293173&quot; &quot;0.7100004&quot; &quot; 6.889052e-05&quot; &quot;0.008886877&quot;
+## S1_3 &quot;0.002285952&quot; &quot;0.01074307&quot; &quot;0.7361036&quot; &quot;&lt;4.517691e-06&quot; &quot;0.009582023&quot;
+## S1_4 &quot;0.002619964&quot; &quot;0.01069228&quot; &quot;0.7231761&quot; &quot;&lt;4.720655e-06&quot; &quot;0.009587651&quot;
+## S1_5 &quot;0.002880271&quot; &quot;0.01436237&quot; &quot;0.6622139&quot; &quot; 5.165969e-04&quot; &quot;0.008899113&quot;
+## S1_6 &quot;0.002489172&quot; &quot;0.01570055&quot; &quot;0.6528297&quot; &quot; 6.914366e-05&quot; &quot;0.009497375&quot;
+## S1_7 &quot;0.002846864&quot; &quot;0.01645721&quot; &quot;0.6536770&quot; &quot;&lt;4.874767e-06&quot; &quot;0.010037146&quot;
+##      V               Cr            Mn            Fe          Ni            
+## S1_2 &quot; 4.330261e-04&quot; &quot;0.001604165&quot; &quot;0.002750700&quot; &quot;0.1795779&quot; &quot;0.0005117581&quot;
+## S1_3 &quot; 9.938921e-05&quot; &quot;0.001359825&quot; &quot;0.002182045&quot; &quot;0.1624200&quot; &quot;0.0006053706&quot;
+## S1_4 &quot; 3.540491e-04&quot; &quot;0.001444520&quot; &quot;0.002289518&quot; &quot;0.1676399&quot; &quot;0.0006797744&quot;
+## S1_5 &quot; 4.337464e-04&quot; &quot;0.002144364&quot; &quot;0.003596684&quot; &quot;0.2159131&quot; &quot;0.0008090102&quot;
+## S1_6 &quot; 5.284551e-04&quot; &quot;0.001980472&quot; &quot;0.003911555&quot; &quot;0.2236452&quot; &quot;0.0007457637&quot;
+## S1_7 &quot;&lt;4.874767e-06&quot; &quot;0.002144898&quot; &quot;0.003894939&quot; &quot;0.2227476&quot; &quot;0.0006093459&quot;
+##      Cu             Zn            Ga              Ge              Br           
+## S1_2 &quot;0.0011317728&quot; &quot;0.001318761&quot; &quot; 2.361961e-04&quot; &quot; 1.968301e-04&quot; &quot;0.002977055&quot;
+## S1_3 &quot;0.0006776537&quot; &quot;0.000555676&quot; &quot;&lt;4.517691e-06&quot; &quot; 1.942607e-04&quot; &quot;0.002484730&quot;
+## S1_4 &quot;0.0009724550&quot; &quot;0.001128237&quot; &quot;&lt;4.720655e-06&quot; &quot;&lt;4.720655e-06&quot; &quot;0.002874879&quot;
+## S1_5 &quot;0.0013451013&quot; &quot;0.001169653&quot; &quot;&lt;4.873556e-06&quot; &quot;&lt;4.873556e-06&quot; &quot;0.003211673&quot;
+## S1_6 &quot;0.0012347081&quot; &quot;0.001452017&quot; &quot; 1.975533e-04&quot; &quot; 2.370640e-04&quot; &quot;0.003501632&quot;
+## S1_7 &quot;0.0010578245&quot; &quot;0.001384434&quot; &quot; 3.899814e-05&quot; &quot; 5.605982e-04&quot; &quot;0.002841989&quot;
+##      Rb             Sr           Y              Zr             Pd            
+## S1_2 &quot;0.0003739771&quot; &quot;0.04517742&quot; &quot;0.0006889052&quot; &quot;0.0015844819&quot; &quot;0.0003838186&quot;
+## S1_3 &quot;0.0013327189&quot; &quot;0.04356861&quot; &quot;0.0005376053&quot; &quot;0.0012649536&quot; &quot;0.0003388268&quot;
+## S1_4 &quot;0.0014775651&quot; &quot;0.04692331&quot; &quot;0.0005051101&quot; &quot;0.0022423112&quot; &quot;0.0003115632&quot;
+## S1_5 &quot;0.0014815609&quot; &quot;0.05013427&quot; &quot;0.0008772400&quot; &quot;0.0007797689&quot; &quot;0.0001510802&quot;
+## S1_6 &quot;0.0015705488&quot; &quot;0.04897840&quot; &quot;0.0005235163&quot; &quot;0.0015409158&quot; &quot;0.0003555959&quot;
+## S1_7 &quot;0.0016427966&quot; &quot;0.04841131&quot; &quot;0.0002534879&quot; &quot;0.0015550507&quot; &quot;0.0001511178&quot;
+##      Cd             I              Cs              Ba            
+## S1_2 &quot;0.0001673055&quot; &quot;0.0002361961&quot; &quot;&lt;4.920751e-06&quot; &quot;0.0002361961&quot;
+## S1_3 &quot;0.0002484730&quot; &quot;0.0003614153&quot; &quot;&lt;4.517691e-06&quot; &quot;0.0001129423&quot;
+## S1_4 &quot;0.0001132957&quot; &quot;0.0003162839&quot; &quot;&lt;4.720655e-06&quot; &quot;0.0002832393&quot;
+## S1_5 &quot;0.0001657009&quot; &quot;0.0001120918&quot; &quot;&lt;4.873556e-06&quot; &quot;0.0006433093&quot;
+## S1_6 &quot;0.0001382873&quot; &quot;0.0002864523&quot; &quot;&lt;4.938833e-06&quot; &quot;0.0004593114&quot;
+## S1_7 &quot;0.0002729870&quot; &quot;0.0001462430&quot; &quot;&lt;4.874767e-06&quot; &quot;0.0008384600&quot;
+##      Nd             Sm             Yb             Ta            W            
+## S1_2 &quot;0.0003296903&quot; &quot;2.263546e-04&quot; &quot;0.0013876519&quot; &quot;0.003818503&quot; &quot;0.009934997&quot;
+## S1_3 &quot;0.0001987784&quot; &quot;1.761900e-04&quot; &quot;0.0007137952&quot; &quot;0.003175937&quot; &quot;0.009107666&quot;
+## S1_4 &quot;0.0003540491&quot; &quot;3.021219e-04&quot; &quot;0.0010291028&quot; &quot;0.003748200&quot; &quot;0.010196615&quot;
+## S1_5 &quot;0.0002046893&quot; &quot;1.754480e-04&quot; &quot;0.0007943896&quot; &quot;0.004478798&quot; &quot;0.011423614&quot;
+## S1_6 &quot;0.0004790668&quot; &quot;5.926599e-05&quot; &quot;0.0009087452&quot; &quot;0.004207885&quot; &quot;0.011537113&quot;
+## S1_7 &quot;0.0004484786&quot; &quot;1.169944e-04&quot; &quot;0.0012089423&quot; &quot;0.004514034&quot; &quot;0.010934103&quot;
+##      Pb              Bi            
+## S1_2 &quot;&lt;4.920751e-06&quot; &quot;0.0006692222&quot;
+## S1_3 &quot; 5.872999e-05&quot; &quot;0.0008990206&quot;
+## S1_4 &quot; 7.175396e-04&quot; &quot;0.0006325678&quot;
+## S1_5 &quot; 2.631720e-04&quot; &quot;0.0007651482&quot;
+## S1_6 &quot; 2.666970e-04&quot; &quot;0.0008988675&quot;
+## S1_7 &quot; 3.656075e-04&quot; &quot;0.0007360899&quot;
 ## attr(,&quot;class&quot;)
-## [1] acomp</code></pre>
+## [1] &quot;acomp&quot;</code></pre>
 </div>
             </section>
 
@@ -290,7 +297,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
         </div>
       </div>
 <a href="multivariate-methods.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="principle-component-analysis.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="principal-component-analysis.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -334,6 +341,10 @@ gitbook.start({
 "text": null
 },
 "download": ["itraxBook.pdf", "itraxBook.epub"],
+"search": {
+"engine": "lunr",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }

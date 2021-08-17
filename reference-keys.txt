@@ -39,7 +39,7 @@ ratios-and-normalisation
 running-mean-and-other-window-functions
 multivariate-methods
 preparing-data-for-multivariate-data-analysis
-principle-component-analysis
+principal-component-analysis
 unconstrained-cluster-analysis
 constrained-cluster-analysis
 calibrating-data

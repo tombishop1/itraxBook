@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>3.12 Visualising Raw Data | Using Itrax Data in R</title>
   <meta name="description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
-  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.23 and GitBook 2.6.7" />
 
   <meta property="og:title" content="3.12 Visualising Raw Data | Using Itrax Data in R" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-06-02" />
+<meta name="date" content="2021-08-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,7 +33,7 @@
   
 <link rel="prev" href="reversing-data.html"/>
 <link rel="next" href="plotting.html"/>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -186,7 +186,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="6" data-path="multivariate-methods.html"><a href="multivariate-methods.html"><i class="fa fa-check"></i><b>6</b> Multivariate Methods</a><ul>
 <li class="chapter" data-level="6.1" data-path="preparing-data-for-multivariate-data-analysis.html"><a href="preparing-data-for-multivariate-data-analysis.html"><i class="fa fa-check"></i><b>6.1</b> Preparing Data for Multivariate Data Analysis</a></li>
-<li class="chapter" data-level="6.2" data-path="principle-component-analysis.html"><a href="principle-component-analysis.html"><i class="fa fa-check"></i><b>6.2</b> Principle Component analysis</a></li>
+<li class="chapter" data-level="6.2" data-path="principal-component-analysis.html"><a href="principal-component-analysis.html"><i class="fa fa-check"></i><b>6.2</b> Principal Component Analysis</a></li>
 <li class="chapter" data-level="6.3" data-path="unconstrained-cluster-analysis.html"><a href="unconstrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.3</b> Unconstrained Cluster Analysis</a></li>
 <li class="chapter" data-level="6.4" data-path="constrained-cluster-analysis.html"><a href="constrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.4</b> Constrained Cluster Analysis</a></li>
 </ul></li>
@@ -225,58 +225,60 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb33-2"><a href="visualising-raw-data.html#cb33-2"></a>                  <span class="dt">parameters =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1/Results_ settings.dfl&quot;</span></span>
 <span id="cb33-3"><a href="visualising-raw-data.html#cb33-3"></a>                  ) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb33-4"><a href="visualising-raw-data.html#cb33-4"></a><span class="st">  </span><span class="kw">invisible</span>()</span></code></pre></div>
+<pre><code>## Warning: `guides(&lt;scale&gt; = FALSE)` is deprecated. Please use `guides(&lt;scale&gt; =
+## &quot;none&quot;)` instead.</code></pre>
 <p><img src="itraxBook_files/figure-html/restspectra-1.png" width="672" /></p>
-<p>By combining all of the sections, and joining the raw spectral data with the processed data from the <code>Results.txt</code> <code>Q-Spec</code> output file, it can be used as a very powerful diagnostic tool.</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="visualising-raw-data.html#cb34-1"></a><span class="co"># import spectral data</span></span>
-<span id="cb34-2"><a href="visualising-raw-data.html#cb34-2"></a>read_spectra &lt;-<span class="st"> </span><span class="cf">function</span>(foldername, labeltext){<span class="kw">itrax_restspectra</span>(<span class="dt">foldername =</span> foldername,</span>
-<span id="cb34-3"><a href="visualising-raw-data.html#cb34-3"></a>                                                       <span class="dt">plot =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb34-4"><a href="visualising-raw-data.html#cb34-4"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">label =</span> labeltext) <span class="op">%&gt;%</span></span>
-<span id="cb34-5"><a href="visualising-raw-data.html#cb34-5"></a><span class="st">    </span><span class="kw">select</span>(label, <span class="kw">everything</span>()) <span class="op">%&gt;%</span></span>
-<span id="cb34-6"><a href="visualising-raw-data.html#cb34-6"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">filename =</span> <span class="kw">str_split</span>(filename, <span class="dt">pattern =</span> <span class="st">&quot;//&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sapply</span>(., <span class="st">`</span><span class="dt">[</span><span class="st">`</span>, <span class="dv">2</span>))}</span>
-<span id="cb34-7"><a href="visualising-raw-data.html#cb34-7"></a></span>
-<span id="cb34-8"><a href="visualising-raw-data.html#cb34-8"></a><span class="co"># import the channel energy information</span></span>
-<span id="cb34-9"><a href="visualising-raw-data.html#cb34-9"></a>settings &lt;-<span class="st"> </span><span class="kw">itrax_qspecsettings</span>(<span class="st">&quot;CD166_19_S1/CD166_19_S1/Results_ settings.dfl&quot;</span>)</span>
-<span id="cb34-10"><a href="visualising-raw-data.html#cb34-10"></a></span>
-<span id="cb34-11"><a href="visualising-raw-data.html#cb34-11"></a><span class="co"># import and join them</span></span>
-<span id="cb34-12"><a href="visualising-raw-data.html#cb34-12"></a><span class="kw">left_join</span>(CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
-<span id="cb34-13"><a href="visualising-raw-data.html#cb34-13"></a><span class="st">  </span><span class="kw">select</span>(depth, validity, filename, label) <span class="op">%&gt;%</span></span>
-<span id="cb34-14"><a href="visualising-raw-data.html#cb34-14"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">filename =</span> filename <span class="op">%&gt;%</span></span>
-<span id="cb34-15"><a href="visualising-raw-data.html#cb34-15"></a><span class="st">           </span><span class="kw">str_split</span>(<span class="dt">pattern =</span> <span class="st">&quot;</span><span class="ch">\\\\</span><span class="st">&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb34-16"><a href="visualising-raw-data.html#cb34-16"></a><span class="st">           </span><span class="kw">sapply</span>(., <span class="st">`</span><span class="dt">[</span><span class="st">`</span>, <span class="dv">7</span>)), </span>
-<span id="cb34-17"><a href="visualising-raw-data.html#cb34-17"></a>  <span class="kw">bind_rows</span>(<span class="kw">read_spectra</span>(<span class="dt">foldername =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1/XRF data/&quot;</span>, <span class="dt">labeltext =</span> <span class="st">&quot;S1&quot;</span>), </span>
-<span id="cb34-18"><a href="visualising-raw-data.html#cb34-18"></a>            <span class="kw">read_spectra</span>(<span class="dt">foldername =</span> <span class="st">&quot;CD166_19_S2/CD166_19_S2/XRF data/&quot;</span>, <span class="dt">labeltext =</span> <span class="st">&quot;S2&quot;</span>),</span>
-<span id="cb34-19"><a href="visualising-raw-data.html#cb34-19"></a>            <span class="kw">read_spectra</span>(<span class="dt">foldername =</span> <span class="st">&quot;CD166_19_S3/CD166_19_S3/XRF data/&quot;</span>, <span class="dt">labeltext =</span> <span class="st">&quot;S3&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb34-20"><a href="visualising-raw-data.html#cb34-20"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">label =</span> <span class="kw">as.factor</span>(label)), </span>
-<span id="cb34-21"><a href="visualising-raw-data.html#cb34-21"></a>  <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;filename&quot;</span>, <span class="st">&quot;label&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb34-22"><a href="visualising-raw-data.html#cb34-22"></a></span>
-<span id="cb34-23"><a href="visualising-raw-data.html#cb34-23"></a><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="dt">cols =</span> <span class="op">-</span><span class="kw">c</span>(depth, validity, filename, label, position),</span>
-<span id="cb34-24"><a href="visualising-raw-data.html#cb34-24"></a>               <span class="dt">names_to =</span> <span class="st">&quot;channel&quot;</span>,</span>
-<span id="cb34-25"><a href="visualising-raw-data.html#cb34-25"></a>               <span class="dt">values_to =</span> <span class="st">&quot;counts&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb34-26"><a href="visualising-raw-data.html#cb34-26"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">channel =</span> <span class="kw">as.numeric</span>(channel)) <span class="op">%&gt;%</span></span>
-<span id="cb34-27"><a href="visualising-raw-data.html#cb34-27"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(<span class="st">&quot;filename&quot;</span>, <span class="st">&quot;validity&quot;</span>, <span class="st">&quot;position&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb34-28"><a href="visualising-raw-data.html#cb34-28"></a></span>
-<span id="cb34-29"><a href="visualising-raw-data.html#cb34-29"></a><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> channel, <span class="dt">y =</span> depth, <span class="dt">fill =</span> counts)) <span class="op">+</span></span>
-<span id="cb34-30"><a href="visualising-raw-data.html#cb34-30"></a><span class="st">  </span><span class="kw">geom_tile</span>() <span class="op">+</span></span>
-<span id="cb34-31"><a href="visualising-raw-data.html#cb34-31"></a><span class="st">  </span><span class="kw">scale_fill_gradient</span>(<span class="dt">name =</span> <span class="st">&quot;value&quot;</span>,</span>
-<span id="cb34-32"><a href="visualising-raw-data.html#cb34-32"></a>                      <span class="dt">trans =</span> <span class="st">&quot;pseudo_log&quot;</span>,</span>
-<span id="cb34-33"><a href="visualising-raw-data.html#cb34-33"></a>                      <span class="dt">low =</span> <span class="st">&quot;#132B43&quot;</span>,</span>
-<span id="cb34-34"><a href="visualising-raw-data.html#cb34-34"></a>                      <span class="dt">high =</span> <span class="st">&quot;#56B1F7&quot;</span>,</span>
-<span id="cb34-35"><a href="visualising-raw-data.html#cb34-35"></a>                      <span class="dt">labels =</span> round) <span class="op">+</span></span>
-<span id="cb34-36"><a href="visualising-raw-data.html#cb34-36"></a><span class="st">  </span><span class="kw">scale_y_reverse</span>(<span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="kw">max</span>(CD166_<span class="dv">19</span>_xrf<span class="op">$</span>depth), <span class="dt">by =</span> <span class="dv">500</span>),</span>
-<span id="cb34-37"><a href="visualising-raw-data.html#cb34-37"></a>                  <span class="dt">name =</span> <span class="st">&quot;depth [mm]&quot;</span>) <span class="op">+</span></span>
-<span id="cb34-38"><a href="visualising-raw-data.html#cb34-38"></a><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">name =</span> <span class="st">&quot;channel [n]&quot;</span>,</span>
-<span id="cb34-39"><a href="visualising-raw-data.html#cb34-39"></a>                     <span class="dt">sec.axis =</span> <span class="kw">sec_axis</span>(<span class="dt">trans =</span> <span class="op">~</span><span class="st"> </span>((. <span class="op">*</span><span class="st"> </span><span class="kw">as.numeric</span>(settings[<span class="dv">1</span>,<span class="dv">2</span>])) <span class="op">+</span><span class="st"> </span><span class="kw">as.numeric</span>(settings[<span class="dv">2</span>,<span class="dv">2</span>])),</span>
-<span id="cb34-40"><a href="visualising-raw-data.html#cb34-40"></a>                                         <span class="dt">name =</span> <span class="st">&quot;energy [k eV]&quot;</span>)) <span class="op">+</span></span>
-<span id="cb34-41"><a href="visualising-raw-data.html#cb34-41"></a><span class="st">  </span><span class="kw">guides</span>(<span class="dt">fill =</span> <span class="ot">FALSE</span>) <span class="op">+</span></span>
-<span id="cb34-42"><a href="visualising-raw-data.html#cb34-42"></a><span class="st">  </span><span class="kw">facet_grid</span>(<span class="dt">rows =</span> <span class="kw">vars</span>(label),</span>
-<span id="cb34-43"><a href="visualising-raw-data.html#cb34-43"></a>             <span class="dt">scales =</span> <span class="st">&quot;free_y&quot;</span>,</span>
-<span id="cb34-44"><a href="visualising-raw-data.html#cb34-44"></a>             <span class="dt">space =</span> <span class="st">&quot;free_y&quot;</span>)</span></code></pre></div>
+<p>By combining all of the sections, and joining the raw spectral data with the processed data from the <code>Results.txt</code> (<code>Q-Spec</code>) output file, it can be used as a very powerful diagnostic tool.</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="visualising-raw-data.html#cb35-1"></a><span class="co"># import spectral data</span></span>
+<span id="cb35-2"><a href="visualising-raw-data.html#cb35-2"></a>read_spectra &lt;-<span class="st"> </span><span class="cf">function</span>(foldername, labeltext){<span class="kw">itrax_restspectra</span>(<span class="dt">foldername =</span> foldername,</span>
+<span id="cb35-3"><a href="visualising-raw-data.html#cb35-3"></a>                                                                  <span class="dt">plot =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb35-4"><a href="visualising-raw-data.html#cb35-4"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">label =</span> labeltext) <span class="op">%&gt;%</span></span>
+<span id="cb35-5"><a href="visualising-raw-data.html#cb35-5"></a><span class="st">    </span><span class="kw">select</span>(label, <span class="kw">everything</span>()) <span class="op">%&gt;%</span></span>
+<span id="cb35-6"><a href="visualising-raw-data.html#cb35-6"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">filename =</span> <span class="kw">str_split</span>(filename, <span class="dt">pattern =</span> <span class="st">&quot;//&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sapply</span>(., <span class="st">`</span><span class="dt">[</span><span class="st">`</span>, <span class="dv">2</span>))}</span>
+<span id="cb35-7"><a href="visualising-raw-data.html#cb35-7"></a></span>
+<span id="cb35-8"><a href="visualising-raw-data.html#cb35-8"></a><span class="co"># import the channel energy information</span></span>
+<span id="cb35-9"><a href="visualising-raw-data.html#cb35-9"></a>settings &lt;-<span class="st"> </span><span class="kw">itrax_qspecsettings</span>(<span class="st">&quot;CD166_19_S1/CD166_19_S1/Results_ settings.dfl&quot;</span>)</span>
+<span id="cb35-10"><a href="visualising-raw-data.html#cb35-10"></a></span>
+<span id="cb35-11"><a href="visualising-raw-data.html#cb35-11"></a><span class="co"># import and join them</span></span>
+<span id="cb35-12"><a href="visualising-raw-data.html#cb35-12"></a><span class="kw">left_join</span>(CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
+<span id="cb35-13"><a href="visualising-raw-data.html#cb35-13"></a><span class="st">  </span><span class="kw">select</span>(depth, validity, filename, label) <span class="op">%&gt;%</span></span>
+<span id="cb35-14"><a href="visualising-raw-data.html#cb35-14"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">filename =</span> filename <span class="op">%&gt;%</span></span>
+<span id="cb35-15"><a href="visualising-raw-data.html#cb35-15"></a><span class="st">           </span><span class="kw">str_split</span>(<span class="dt">pattern =</span> <span class="st">&quot;</span><span class="ch">\\\\</span><span class="st">&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb35-16"><a href="visualising-raw-data.html#cb35-16"></a><span class="st">           </span><span class="kw">sapply</span>(., <span class="st">`</span><span class="dt">[</span><span class="st">`</span>, <span class="dv">7</span>)), </span>
+<span id="cb35-17"><a href="visualising-raw-data.html#cb35-17"></a>  <span class="kw">bind_rows</span>(<span class="kw">read_spectra</span>(<span class="dt">foldername =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1/XRF data/&quot;</span>, <span class="dt">labeltext =</span> <span class="st">&quot;S1&quot;</span>), </span>
+<span id="cb35-18"><a href="visualising-raw-data.html#cb35-18"></a>            <span class="kw">read_spectra</span>(<span class="dt">foldername =</span> <span class="st">&quot;CD166_19_S2/CD166_19_S2/XRF data/&quot;</span>, <span class="dt">labeltext =</span> <span class="st">&quot;S2&quot;</span>),</span>
+<span id="cb35-19"><a href="visualising-raw-data.html#cb35-19"></a>            <span class="kw">read_spectra</span>(<span class="dt">foldername =</span> <span class="st">&quot;CD166_19_S3/CD166_19_S3/XRF data/&quot;</span>, <span class="dt">labeltext =</span> <span class="st">&quot;S3&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb35-20"><a href="visualising-raw-data.html#cb35-20"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">label =</span> <span class="kw">as.factor</span>(label)), </span>
+<span id="cb35-21"><a href="visualising-raw-data.html#cb35-21"></a>  <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;filename&quot;</span>, <span class="st">&quot;label&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb35-22"><a href="visualising-raw-data.html#cb35-22"></a></span>
+<span id="cb35-23"><a href="visualising-raw-data.html#cb35-23"></a><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="dt">cols =</span> <span class="op">-</span><span class="kw">c</span>(depth, validity, filename, label, position),</span>
+<span id="cb35-24"><a href="visualising-raw-data.html#cb35-24"></a>               <span class="dt">names_to =</span> <span class="st">&quot;channel&quot;</span>,</span>
+<span id="cb35-25"><a href="visualising-raw-data.html#cb35-25"></a>               <span class="dt">values_to =</span> <span class="st">&quot;counts&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb35-26"><a href="visualising-raw-data.html#cb35-26"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">channel =</span> <span class="kw">as.numeric</span>(channel)) <span class="op">%&gt;%</span></span>
+<span id="cb35-27"><a href="visualising-raw-data.html#cb35-27"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(<span class="st">&quot;filename&quot;</span>, <span class="st">&quot;validity&quot;</span>, <span class="st">&quot;position&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb35-28"><a href="visualising-raw-data.html#cb35-28"></a></span>
+<span id="cb35-29"><a href="visualising-raw-data.html#cb35-29"></a><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> channel, <span class="dt">y =</span> depth, <span class="dt">fill =</span> counts)) <span class="op">+</span></span>
+<span id="cb35-30"><a href="visualising-raw-data.html#cb35-30"></a><span class="st">  </span><span class="kw">geom_tile</span>() <span class="op">+</span></span>
+<span id="cb35-31"><a href="visualising-raw-data.html#cb35-31"></a><span class="st">  </span><span class="kw">scale_fill_gradient</span>(<span class="dt">name =</span> <span class="st">&quot;value&quot;</span>,</span>
+<span id="cb35-32"><a href="visualising-raw-data.html#cb35-32"></a>                      <span class="dt">trans =</span> <span class="st">&quot;pseudo_log&quot;</span>,</span>
+<span id="cb35-33"><a href="visualising-raw-data.html#cb35-33"></a>                      <span class="dt">low =</span> <span class="st">&quot;#132B43&quot;</span>,</span>
+<span id="cb35-34"><a href="visualising-raw-data.html#cb35-34"></a>                      <span class="dt">high =</span> <span class="st">&quot;#56B1F7&quot;</span>,</span>
+<span id="cb35-35"><a href="visualising-raw-data.html#cb35-35"></a>                      <span class="dt">labels =</span> round) <span class="op">+</span></span>
+<span id="cb35-36"><a href="visualising-raw-data.html#cb35-36"></a><span class="st">  </span><span class="kw">scale_y_reverse</span>(<span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="kw">max</span>(CD166_<span class="dv">19</span>_xrf<span class="op">$</span>depth), <span class="dt">by =</span> <span class="dv">500</span>),</span>
+<span id="cb35-37"><a href="visualising-raw-data.html#cb35-37"></a>                  <span class="dt">name =</span> <span class="st">&quot;depth [mm]&quot;</span>) <span class="op">+</span></span>
+<span id="cb35-38"><a href="visualising-raw-data.html#cb35-38"></a><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">name =</span> <span class="st">&quot;channel [n]&quot;</span>,</span>
+<span id="cb35-39"><a href="visualising-raw-data.html#cb35-39"></a>                     <span class="dt">sec.axis =</span> <span class="kw">sec_axis</span>(<span class="dt">trans =</span> <span class="op">~</span><span class="st"> </span>((. <span class="op">*</span><span class="st"> </span><span class="kw">as.numeric</span>(settings[<span class="dv">1</span>,<span class="dv">2</span>])) <span class="op">+</span><span class="st"> </span><span class="kw">as.numeric</span>(settings[<span class="dv">2</span>,<span class="dv">2</span>])),</span>
+<span id="cb35-40"><a href="visualising-raw-data.html#cb35-40"></a>                                         <span class="dt">name =</span> <span class="st">&quot;energy [k eV]&quot;</span>)) <span class="op">+</span></span>
+<span id="cb35-41"><a href="visualising-raw-data.html#cb35-41"></a><span class="st">  </span><span class="kw">guides</span>(<span class="dt">fill =</span> <span class="st">&quot;none&quot;</span>) <span class="op">+</span></span>
+<span id="cb35-42"><a href="visualising-raw-data.html#cb35-42"></a><span class="st">  </span><span class="kw">facet_grid</span>(<span class="dt">rows =</span> <span class="kw">vars</span>(label),</span>
+<span id="cb35-43"><a href="visualising-raw-data.html#cb35-43"></a>             <span class="dt">scales =</span> <span class="st">&quot;free_y&quot;</span>,</span>
+<span id="cb35-44"><a href="visualising-raw-data.html#cb35-44"></a>             <span class="dt">space =</span> <span class="st">&quot;free_y&quot;</span>)</span></code></pre></div>
 <p><img src="itraxBook_files/figure-html/spectra2-1.png" width="672" /></p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="visualising-raw-data.html#cb35-1"></a><span class="kw">rm</span>(settings, read_spectra)</span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="visualising-raw-data.html#cb36-1"></a><span class="kw">rm</span>(settings, read_spectra)</span></code></pre></div>
 <p>To inspect individual spectra, you can plot them from the object returned from <code>itrax_restspectra()</code>.</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="visualising-raw-data.html#cb36-1"></a><span class="kw">itrax_spectra</span>(<span class="dt">filename =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1/XRF data/L000642.spe&quot;</span>,</span>
-<span id="cb36-2"><a href="visualising-raw-data.html#cb36-2"></a>              <span class="dt">parameters =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1/Results_ settings.dfl&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb36-3"><a href="visualising-raw-data.html#cb36-3"></a><span class="st">  </span><span class="kw">invisible</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="visualising-raw-data.html#cb37-1"></a><span class="kw">itrax_spectra</span>(<span class="dt">filename =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1/XRF data/L000642.spe&quot;</span>,</span>
+<span id="cb37-2"><a href="visualising-raw-data.html#cb37-2"></a>              <span class="dt">parameters =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1/Results_ settings.dfl&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb37-3"><a href="visualising-raw-data.html#cb37-3"></a><span class="st">  </span><span class="kw">invisible</span>()</span></code></pre></div>
 <p><img src="itraxBook_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 
 </div>
@@ -331,6 +333,10 @@ gitbook.start({
 "text": null
 },
 "download": ["itraxBook.pdf", "itraxBook.epub"],
+"search": {
+"engine": "lunr",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }
