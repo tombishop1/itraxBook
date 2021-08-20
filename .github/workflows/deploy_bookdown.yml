@@ -33,6 +33,10 @@ jobs:
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
         run: Rscript -e 'remotes::install_github("paleolimbot/tidypaleo")'
+      - name: Install ordr
+        env:
+          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+        run: Rscript -e 'remotes::install_github("corybrunson/ordr")'
       - name: Render Book
         run: Rscript -e 'bookdown::render_book("index.Rmd", encoding = "UTF-8")'
       - uses: actions/upload-artifact@v1
