@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 1 Data Structure | Using Itrax Data in R</title>
+  <title>6.3 Using ordr for PCA | Using Itrax Data in R</title>
   <meta name="description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
   <meta name="generator" content="bookdown 0.23 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 1 Data Structure | Using Itrax Data in R" />
+  <meta property="og:title" content="6.3 Using ordr for PCA | Using Itrax Data in R" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 1 Data Structure | Using Itrax Data in R" />
+  <meta name="twitter:title" content="6.3 Using ordr for PCA | Using Itrax Data in R" />
   
   <meta name="twitter:description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="utility-data.html"/>
-<link rel="next" href="metadata.html"/>
+<link rel="prev" href="principal-component-analysis.html"/>
+<link rel="next" href="unconstrained-cluster-analysis.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -219,18 +219,29 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="intro" class="section level1">
-<h1><span class="header-section-number">Chapter 1</span> Data Structure</h1>
-<p>The Itrax core scanner is a multi-sensor device, with separate data outputs for different measurements and uses. They are described in the following sections. Note that your data may not contain all of these objects, depending on the exact scanner, configuration, or data repository you use. The folder structure may vary between operators, but typically there will be a folder for each scan section, and each will contain the data described in the following sections.</p>
-<p>Note that where radiographs and XRF data have been acquired using different step-sizes (measurement intervals), the operator will create seperate scan sections (folders) for the x-radiograph and XRF measurement. This is because a scan section can only have a single fixed step-size. For example, it is not uncommon for users to require an step-size of 200 μm for the x-radiograph, but only 1 mm for the XRF measurement.</p>
+<div id="using-ordr-for-pca" class="section level2">
+<h2><span class="header-section-number">6.3</span> Using <code>ordr</code> for PCA</h2>
+<p>The <code>ordr</code> package can be used to retain metadata (depths, labels, groups etc.) along with the PCA object. This is particularly useful for complex biplots using <code>ggplot2</code>. The following example uses the <code>CD166_19_xrf_acomp_meta</code> from the previous section; note that <code>myElements</code> is a vector of elements to include in the ordination, in this case generated in the section <a href="noisy-data.html#noisy-data">Noisy Data</a>.</p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="using-ordr-for-pca.html#cb63-1"></a>CD166_<span class="dv">19</span>_xrf_acomp_meta <span class="op">%&gt;%</span></span>
+<span id="cb63-2"><a href="using-ordr-for-pca.html#cb63-2"></a><span class="st">    </span>ordr<span class="op">::</span><span class="kw">ordinate</span>(., <span class="dt">cols =</span> <span class="kw">any_of</span>(myElements),</span>
+<span id="cb63-3"><a href="using-ordr-for-pca.html#cb63-3"></a>                   <span class="dt">model =</span> <span class="op">~</span><span class="st"> </span><span class="kw">princomp</span>(<span class="kw">clr</span>(.)),</span>
+<span id="cb63-4"><a href="using-ordr-for-pca.html#cb63-4"></a>                   <span class="dt">augment =</span> <span class="kw">any_of</span>(<span class="kw">c</span>(<span class="st">&quot;depth&quot;</span>, <span class="st">&quot;label&quot;</span>))</span>
+<span id="cb63-5"><a href="using-ordr-for-pca.html#cb63-5"></a>                   ) <span class="op">%&gt;%</span></span>
+<span id="cb63-6"><a href="using-ordr-for-pca.html#cb63-6"></a><span class="st">  </span></span>
+<span id="cb63-7"><a href="using-ordr-for-pca.html#cb63-7"></a><span class="st">  </span>ordr<span class="op">::</span><span class="kw">ggbiplot</span>(., <span class="dt">sec.axes =</span> <span class="st">&quot;cols&quot;</span>, <span class="dt">scale.factor =</span> <span class="dv">8</span>) <span class="op">+</span></span>
+<span id="cb63-8"><a href="using-ordr-for-pca.html#cb63-8"></a><span class="st">  </span>ordr<span class="op">::</span><span class="kw">geom_rows_point</span>(<span class="kw">aes</span>(<span class="dt">colour =</span> depth, <span class="dt">shape =</span> label), <span class="dt">alpha =</span> <span class="fl">0.5</span>) <span class="op">+</span></span>
+<span id="cb63-9"><a href="using-ordr-for-pca.html#cb63-9"></a><span class="st">  </span>ordr<span class="op">::</span><span class="kw">geom_cols_vector</span>() <span class="op">+</span></span>
+<span id="cb63-10"><a href="using-ordr-for-pca.html#cb63-10"></a><span class="st">  </span>ordr<span class="op">::</span><span class="kw">geom_cols_text_radiate</span>(<span class="kw">aes</span>(<span class="dt">label =</span> .name)) <span class="op">+</span></span>
+<span id="cb63-11"><a href="using-ordr-for-pca.html#cb63-11"></a><span class="st">  </span><span class="kw">scale_color_continuous</span>(<span class="dt">type =</span> <span class="st">&quot;viridis&quot;</span>, <span class="dt">trans =</span> <span class="st">&quot;reverse&quot;</span>)</span></code></pre></div>
+<p><img src="itraxBook_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="utility-data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="metadata.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="principal-component-analysis.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="unconstrained-cluster-analysis.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

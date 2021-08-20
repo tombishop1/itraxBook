@@ -40,6 +40,7 @@ running-mean-and-other-window-functions
 multivariate-methods
 preparing-data-for-multivariate-data-analysis
 principal-component-analysis
+using-ordr-for-pca
 unconstrained-cluster-analysis
 constrained-cluster-analysis
 calibrating-data
