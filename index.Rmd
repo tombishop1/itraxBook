@@ -16,9 +16,11 @@ require("knitr")
 opts_knit$set(root.dir = "CD166_19_(2020)/")
 #setwd("CD166_19_(2020)/")
 
-# check if itraxR is installed, if not, install
+# check if non-CRAN repo's are installed, if not, install
+install.packages("remotes", repos = "http://cran.uk.r-project.org")
+
 if (!require("itraxR", character.only = TRUE)) {
-  install.packages("remotes")
+
   remotes::install_github("tombishop1/itraxR", method = "curl")
   library(itraxR)
 }
@@ -29,13 +31,19 @@ if (!require("tidypaleo", character.only = TRUE)) {
   library(tidypaleo)
 }
 
+if (!require("ordr", character.only = TRUE)) {
+  install.packages("remotes")
+  remotes::install_github("corybrunson/ordr", method = "curl")
+  library(ordr)
+}
+
 # now check dependencies
 # First specify the packages of interest
 packages = c("kableExtra", "DiagrammeR", 
              "tidyverse" , "PeriodicTable", 
              "egg"       , "errors", 
              "forecast"  , "slider",
-             "ggfortify" , "compositions")
+             "compositions")
 
 # Now load or install & load all those CRAN packages
 package.check <- lapply(

@@ -5,7 +5,7 @@ Where multivariate methods (cluster analysis, principal components analysis, cor
 
 It's worth spending some time getting familiar with the documentation for `compositions`, and possibly the wider literature around compositional data analysis. Several different methods are provided depending on the nature of the compositional data - in these examples, we use the `acomp()` but other methods are available. This package also deals with the variety of different types of zero and missing values. For these count data we deal with values that are below the limit of detection by letting the `compositions` package know the detection limit. For these count data, the detection limit is `1`, and thus is coded as `-1`. This allows `zeroreplace()` to correctly deal with this problem. 
 
-In order to correctly identify the observations to their original data source, it is necessary to use row names that uniquely identify observations. For single scans this is not usually an issue --- the `depth` or `position` variable can be used. However, where a dataset is a composition of multiple cores, you may find that there are multiple observations for a particular depth where cores overlap. We don't usually use row names when working in the `tidyverse` style, but because were going to be using base functionsl ike `princomp()` and `dist()`, they may become necessary. 
+In order to correctly identify the observations to their original data source, it is necessary to use row names that uniquely identify observations. For single scans this is not usually an issue --- the `depth` or `position` variable can be used. However, where a dataset is a composition of multiple cores, you may find that there are multiple observations for a particular depth where cores overlap. We don't usually use row names when working in the `tidyverse` style, but because were going to be using base functions like `princomp()` and `dist()`, they may become necessary. 
 
 ```{r message=FALSE, warning=FALSE}
 CD166_19_xrf_acomp <- CD166_19_xrf %>%
@@ -18,6 +18,26 @@ CD166_19_xrf_acomp <- CD166_19_xrf %>%
   acomp()
 head(CD166_19_xrf_acomp)
 ```
+
+Where it is necessary to keep some (or all) of the other information, this can be re-joined to the `acomp()` object, but only if it's `acomp` class is removed. For example:
+
+```{r}
+CD166_19_xrf_acomp_meta <- full_join(CD166_19_xrf %>% 
+            filter(qc == TRUE) %>%
+            select(any_of(elementsList)) %>%
+            mutate(across(everything(), function(x){ifelse(x == 0, -1, x)})) %>%
+            acomp() %>%
+            zeroreplace() %>%
+            as.data.frame() %>%
+            mutate(id = rownames(.)), 
+          CD166_19_xrf %>%
+            filter(qc == TRUE) %>%
+            select(-any_of(elementsList)) %>%
+            mutate(id = rownames(.)), 
+          by = "id") %>%
+  select(-id)
+```
+
 
 ## Principal Component Analysis
 
@@ -57,6 +77,24 @@ bind_rows(
   ggplot(aes(x = depth, y = Comp.1)) +
   geom_line() + 
   scale_x_reverse(name = "depth [mm]")
+```
+
+## Using `ordr` for PCA
+
+The `ordr` package can be used to retain metadata (depths, labels, groups etc.) along with the PCA object. This is particularly useful for complex biplots using `ggplot2`. The following example uses the `CD166_19_xrf_acomp_meta` from the previous section; note that `myElements` is a vector of elements to include in the ordination, in this case generated in the section [Noisy Data]. 
+
+```{r}
+CD166_19_xrf_acomp_meta %>%
+    ordr::ordinate(., cols = any_of(myElements),
+                   model = ~ princomp(clr(.)),
+                   augment = any_of(c("depth", "label"))
+                   ) %>%
+  
+  ordr::ggbiplot(., sec.axes = "cols", scale.factor = 8) +
+  ordr::geom_rows_point(aes(colour = depth, shape = label), alpha = 0.5) +
+  ordr::geom_cols_vector() +
+  ordr::geom_cols_text_radiate(aes(label = .name)) +
+  scale_color_continuous(type = "viridis", trans = "reverse")
 ```
 
 ## Unconstrained Cluster Analysis
