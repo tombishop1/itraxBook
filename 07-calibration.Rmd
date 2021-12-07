@@ -6,6 +6,8 @@ Rather, an empirical approach is usually required, whereby some subset of the ma
 
 ## Suitable Methods
 
+There are a number of published methods for quantifying elemental concentrations from ED-XRF data, and the area is of continued research interest. Most methods fall into the category of bivariate linear models of the relationship between ED-XRF peak area, and independently derived element concentrations (e.g. sub-samples analysed by ICP-MS). However, there are also more complex approaches, like Lee Drake's modern version of the Lucas-Tooth and Price (1961) algorithm, "CloudCal". 
+
 ## Preparing Data
 
 In order to perform empirical calibration it is necessary to have some quantitative data that relates directly to the Itrax XRF data. The quantitative data is unlikely to be at the same resolution as the Itrax XRF data. For example, it is typical to scan cores at between 0.2 and 1 mm, but typical to sub-sample for WD-XRF or ICP at between 5 - 10 mm. In addition, where Itrax scans are contiguous, sub-samples may not be, for example a 10 mm sub-sample might be taken every 80 mm.
