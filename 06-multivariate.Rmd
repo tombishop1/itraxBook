@@ -5,39 +5,36 @@ Where multivariate methods (cluster analysis, principal components analysis, cor
 
 It's worth spending some time getting familiar with the documentation for `compositions`, and possibly the wider literature around compositional data analysis. Several different methods are provided depending on the nature of the compositional data - in these examples, we use the `acomp()` but other methods are available. This package also deals with the variety of different types of zero and missing values. For these count data we deal with values that are below the limit of detection by letting the `compositions` package know the detection limit. For these count data, the detection limit is `1`, and thus is coded as `-1`. This allows `zeroreplace()` to correctly deal with this problem. 
 
-In order to correctly identify the observations to their original data source, it is necessary to use row names that uniquely identify observations. For single scans this is not usually an issue --- the `depth` or `position` variable can be used. However, where a dataset is a composition of multiple cores, you may find that there are multiple observations for a particular depth where cores overlap. We don't usually use row names when working in the `tidyverse` style, but because were going to be using base functions like `princomp()` and `dist()`, they may become necessary. 
+In order to correctly identify the observations to their original data source, it is necessary to use row names that uniquely identify observations. For single scans this is not usually an issue --- the `depth` or `position` variable can be used. However, where a dataset is a composition of multiple cores, you may find that there are multiple observations for a particular depth where cores overlap. We don't usually use row names when working in the `tidyverse` style, but because were going to be using base functions like `princomp()` and `dist()`, they may become necessary. Here we create a unique identifier in `CD166_19_xrf` called `uid` that we will use to uniquely identify observations throughout the rest of our analysis. 
+
+```{r uid}
+CD166_19_xrf <- CD166_19_xrf %>%
+  mutate(uid = paste0(label, "_", depth))
+
+TRUE %in% CD166_19_xrf$uid %>% duplicated()
+```
 
 ```{r message=FALSE, warning=FALSE}
 CD166_19_xrf_acomp <- CD166_19_xrf %>%
   filter(qc == TRUE) %>%
-  select(any_of(c(elementsList, "depth", "label"))) %>%
-  mutate(id = paste0(label, "_", depth)) %>%
-  select(-c("depth", "label")) %>%
-  column_to_rownames("id") %>%
+  select(any_of(c(elementsList, "uid"))) %>%
+  column_to_rownames("uid") %>%
   mutate(across(everything(), function(x){ifelse(x == 0, -1, x)})) %>%
   acomp()
 head(CD166_19_xrf_acomp)
 ```
-
-Where it is necessary to keep some (or all) of the other information, this can be re-joined to the `acomp()` object, but only if it's `acomp` class is removed. For example:
+Where it is necessary to keep some (or all) of the other information, this can be re-joined to the `acomp()` object, but only if its `acomp` class is removed. For example:
 
 ```{r}
-CD166_19_xrf_acomp_meta <- full_join(CD166_19_xrf %>% 
-            filter(qc == TRUE) %>%
-            select(any_of(elementsList)) %>%
-            mutate(across(everything(), function(x){ifelse(x == 0, -1, x)})) %>%
-            acomp() %>%
-            zeroreplace() %>%
-            as.data.frame() %>%
-            mutate(id = rownames(.)), 
-          CD166_19_xrf %>%
-            filter(qc == TRUE) %>%
-            select(-any_of(elementsList)) %>%
-            mutate(id = rownames(.)), 
-          by = "id") %>%
-  select(-id)
+CD166_19_xrf_acomp_meta <- full_join(CD166_19_xrf_acomp %>% 
+                                       as.data.frame() %>%
+                                       rownames_to_column("uid"),
+                                     CD166_19_xrf %>%
+                                       select(-any_of(elementsList)),
+                                     by = "uid"
+                                     ) %>%
+  arrange(depth, label) 
 ```
-
 
 ## Principal Component Analysis
 
@@ -100,20 +97,17 @@ CD166_19_xrf_acomp_meta %>%
 ## Unconstrained Cluster Analysis
 Unconstrained cluster analysis will group each measurement by similarity, returning an arbitrary number of groups as defined by the function. This is useful in identifying recurring compositional units, or identifying candidate samples for quantitative analysis. 
 
-```{r}
-bind_rows(tibble(depth = filter(CD166_19_xrf, qc == TRUE) %>% 
-                   pull(depth),
+```{r unconstrained_clusters}
+left_join(CD166_19_xrf, 
+          tibble(uid = CD166_19_xrf_acomp %>%
+                   rownames(),
                  group = dist(CD166_19_xrf_acomp) %>%
-                   hclust(method = "ward.D2") %>%
-                   cutree(k = 5) %>%
-                   as.factor()
-                 ), 
-          CD166_19_xrf %>%
-            filter(qc == FALSE) %>%
-            mutate(group = NA) %>%
-            select(depth, group)
-          ) %>%
-  arrange(depth) %>%
+                     hclust(method = "ward.D2") %>%
+                     cutree(k = 5) %>%
+                     as.factor()
+                 ),
+          by = "uid"
+) %>%
   
   ggplot() + 
   geom_tile(aes(x = depth, y = 1, fill = group)) +
@@ -121,6 +115,58 @@ bind_rows(tibble(depth = filter(CD166_19_xrf, qc == TRUE) %>%
   theme(axis.title.y = element_blank(),
         axis.text.y = element_blank(),
         axis.ticks.y = element_blank())
+```
+
+This can then be used to identify a representative sample from each compositional unit - see the following function:
+
+```{r}
+itrax_calibsamples <- function(original_data, transformed_data, n){
+
+# function for first CA
+firstCA <- function(original_data = original_data, transformed_data = transformed_data){
+  left_join(original_data, 
+            tibble(uid = transformed_data %>%
+                     rownames(),
+                   group = dist(transformed_data) %>%
+                     hclust(method = "ward.D2") %>%
+                     cutree(k = n) %>%
+                     as.factor()
+            ),
+            by = "uid"
+  )
+}
+
+first_pass <- firstCA(original_data = original_data, transformed_data = transformed_data)
+
+secondCA <- function(x, original_data = original_data, transformed_data = transformed_data){
+  transformed_data[firstCA(original_data = original_data, transformed_data = transformed_data) %>%
+                     select(uid, group) %>%
+                       group_by(group) %>%
+                       group_split() %>%
+                       `[[`(x) %>% # this defines the group of interest
+                       pull(uid),] %>%
+    dist() %>%
+    hclust(method = "ward.D2") %>%
+    `[[`("labels") %>%
+    `[[`(length(.)/2)
+  }
+
+samples <- lapply(na.omit(unique(first_pass$group)), 
+       function(x){secondCA(x = x, original_data = original_data, transformed_data = transformed_data)}) %>% 
+  unlist()
+
+CD166_19_xrf %>%
+  filter(uid %in% samples)
+}
+```
+
+And its usage:
+
+```{r}
+itrax_calibsamples(original_data = CD166_19_xrf, 
+                   transformed_data = CD166_19_xrf_acomp[,c("Fe", "Mn", "Ca", "Ti")], 
+                   n = 10) %>%
+  select(uid, label, depth, everything())
 ```
 
 ## Constrained Cluster Analysis
