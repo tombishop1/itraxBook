@@ -117,58 +117,6 @@ left_join(CD166_19_xrf,
         axis.ticks.y = element_blank())
 ```
 
-This can then be used to identify a representative sample from each compositional unit - see the following function:
-
-```{r}
-itrax_calibsamples <- function(original_data, transformed_data, n){
-
-# function for first CA
-firstCA <- function(original_data = original_data, transformed_data = transformed_data){
-  left_join(original_data, 
-            tibble(uid = transformed_data %>%
-                     rownames(),
-                   group = dist(transformed_data) %>%
-                     hclust(method = "ward.D2") %>%
-                     cutree(k = n) %>%
-                     as.factor()
-            ),
-            by = "uid"
-  )
-}
-
-first_pass <- firstCA(original_data = original_data, transformed_data = transformed_data)
-
-secondCA <- function(x, original_data = original_data, transformed_data = transformed_data){
-  transformed_data[firstCA(original_data = original_data, transformed_data = transformed_data) %>%
-                     select(uid, group) %>%
-                       group_by(group) %>%
-                       group_split() %>%
-                       `[[`(x) %>% # this defines the group of interest
-                       pull(uid),] %>%
-    dist() %>%
-    hclust(method = "ward.D2") %>%
-    `[[`("labels") %>%
-    `[[`(length(.)/2)
-  }
-
-samples <- lapply(na.omit(unique(first_pass$group)), 
-       function(x){secondCA(x = x, original_data = original_data, transformed_data = transformed_data)}) %>% 
-  unlist()
-
-CD166_19_xrf %>%
-  filter(uid %in% samples)
-}
-```
-
-And its usage:
-
-```{r}
-itrax_calibsamples(original_data = CD166_19_xrf, 
-                   transformed_data = CD166_19_xrf_acomp[,c("Fe", "Mn", "Ca", "Ti")], 
-                   n = 10) %>%
-  select(uid, label, depth, everything())
-```
-
 ## Constrained Cluster Analysis
 
 Constrained cluster analysis is helpful in identifying units of deposition in the sedimentary sequence. It forces each sample to remain in sequence, thus there are no recurring units along the stratigraphy. 
