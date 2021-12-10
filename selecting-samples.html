@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>6.3 Using ordr for PCA | Using Itrax Data in R</title>
+  <title>7.3 Selecting Samples | Using Itrax Data in R</title>
   <meta name="description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="6.3 Using ordr for PCA | Using Itrax Data in R" />
+  <meta property="og:title" content="7.3 Selecting Samples | Using Itrax Data in R" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="6.3 Using ordr for PCA | Using Itrax Data in R" />
+  <meta name="twitter:title" content="7.3 Selecting Samples | Using Itrax Data in R" />
   
   <meta name="twitter:description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="principal-component-analysis.html"/>
-<link rel="next" href="unconstrained-cluster-analysis.html"/>
+<link rel="prev" href="preparing-data.html"/>
+<link rel="next" href="linear-methods.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -220,29 +220,40 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="using-ordr-for-pca" class="section level2">
-<h2><span class="header-section-number">6.3</span> Using <code>ordr</code> for PCA</h2>
-<p>The <code>ordr</code> package can be used to retain metadata (depths, labels, groups etc.) along with the PCA object. This is particularly useful for complex biplots using <code>ggplot2</code>. The following example uses the <code>CD166_19_xrf_acomp_meta</code> from the previous section; note that <code>myElements</code> is a vector of elements to include in the ordination, in this case generated in the section <a href="noisy-data.html#noisy-data">Noisy Data</a>.</p>
-<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="using-ordr-for-pca.html#cb63-1"></a>CD166_<span class="dv">19</span>_xrf_acomp_meta <span class="op">%&gt;%</span></span>
-<span id="cb63-2"><a href="using-ordr-for-pca.html#cb63-2"></a><span class="st">    </span>ordr<span class="op">::</span><span class="kw">ordinate</span>(., <span class="dt">cols =</span> <span class="kw">any_of</span>(myElements),</span>
-<span id="cb63-3"><a href="using-ordr-for-pca.html#cb63-3"></a>                   <span class="dt">model =</span> <span class="op">~</span><span class="st"> </span><span class="kw">princomp</span>(<span class="kw">clr</span>(.)),</span>
-<span id="cb63-4"><a href="using-ordr-for-pca.html#cb63-4"></a>                   <span class="dt">augment =</span> <span class="kw">any_of</span>(<span class="kw">c</span>(<span class="st">&quot;depth&quot;</span>, <span class="st">&quot;label&quot;</span>))</span>
-<span id="cb63-5"><a href="using-ordr-for-pca.html#cb63-5"></a>                   ) <span class="op">%&gt;%</span></span>
-<span id="cb63-6"><a href="using-ordr-for-pca.html#cb63-6"></a><span class="st">  </span></span>
-<span id="cb63-7"><a href="using-ordr-for-pca.html#cb63-7"></a><span class="st">  </span>ordr<span class="op">::</span><span class="kw">ggbiplot</span>(., <span class="dt">sec.axes =</span> <span class="st">&quot;cols&quot;</span>, <span class="dt">scale.factor =</span> <span class="dv">8</span>) <span class="op">+</span></span>
-<span id="cb63-8"><a href="using-ordr-for-pca.html#cb63-8"></a><span class="st">  </span>ordr<span class="op">::</span><span class="kw">geom_rows_point</span>(<span class="kw">aes</span>(<span class="dt">colour =</span> depth, <span class="dt">shape =</span> label), <span class="dt">alpha =</span> <span class="fl">0.5</span>) <span class="op">+</span></span>
-<span id="cb63-9"><a href="using-ordr-for-pca.html#cb63-9"></a><span class="st">  </span>ordr<span class="op">::</span><span class="kw">geom_cols_vector</span>() <span class="op">+</span></span>
-<span id="cb63-10"><a href="using-ordr-for-pca.html#cb63-10"></a><span class="st">  </span>ordr<span class="op">::</span><span class="kw">geom_cols_text_radiate</span>(<span class="kw">aes</span>(<span class="dt">label =</span> .name)) <span class="op">+</span></span>
-<span id="cb63-11"><a href="using-ordr-for-pca.html#cb63-11"></a><span class="st">  </span><span class="kw">scale_color_continuous</span>(<span class="dt">type =</span> <span class="st">&quot;viridis&quot;</span>, <span class="dt">trans =</span> <span class="st">&quot;reverse&quot;</span>)</span></code></pre></div>
-<p><img src="itraxBook_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<div id="selecting-samples" class="section level2">
+<h2><span class="header-section-number">7.3</span> Selecting Samples</h2>
+<p>Unless you plan on sub-sampling the entire core, perhaps contiguously, you will need to decide where best to take your samples for best model coverage. If you are only interested in a single element, this is trivial - simply ensure your sampling strategy encompasses a wide range of samples. However, where you are attempting to calibrate for many elements, developing an optimal sampling strategy manually can be difficult.</p>
+<p>The function below illustrates the use of cluster analysis in optimising the sampling regime. Because it is unrealistic to plan on accurately sub-sampling at the high-resolution of the data (in this case, 1 mm), we use <code>itrax_reduce()</code> to re sample the data to a lower resolution, in this case, 10 mm.</p>
+<p>The following <code>itrax_section()</code> performs an unconstrained cluster analysis, and also reports the central sample in each cluster. This could be considered the most representative of each cluster, and thus the suitable location for sampling.</p>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="selecting-samples.html#cb75-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
+<span id="cb75-2"><a href="selecting-samples.html#cb75-2"></a><span class="st">  </span><span class="kw">filter</span>(qc <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb75-3"><a href="selecting-samples.html#cb75-3"></a><span class="st">  </span><span class="kw">itrax_reduce</span>(<span class="dt">by =</span> <span class="dv">10</span>) <span class="op">%&gt;%</span></span>
+<span id="cb75-4"><a href="selecting-samples.html#cb75-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">uid =</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(uid)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># we have to spoof uid here</span></span>
+<span id="cb75-5"><a href="selecting-samples.html#cb75-5"></a><span class="st">  </span><span class="kw">drop_na</span>(<span class="st">&quot;depth&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb75-6"><a href="selecting-samples.html#cb75-6"></a><span class="st">  </span><span class="kw">itrax_section</span>(<span class="dt">divisions =</span> <span class="dv">50</span>, </span>
+<span id="cb75-7"><a href="selecting-samples.html#cb75-7"></a>                <span class="dt">elementsonly =</span> <span class="kw">c</span>(<span class="st">&quot;Ti&quot;</span>, <span class="st">&quot;Al&quot;</span>, <span class="st">&quot;Fe&quot;</span>, <span class="st">&quot;Mn&quot;</span>, <span class="st">&quot;Mg&quot;</span>, </span>
+<span id="cb75-8"><a href="selecting-samples.html#cb75-8"></a>                                 <span class="st">&quot;Ca&quot;</span>, <span class="st">&quot;Na&quot;</span>, <span class="st">&quot;K&quot;</span> , <span class="st">&quot;P&quot;</span> , <span class="st">&quot;Si&quot;</span>, </span>
+<span id="cb75-9"><a href="selecting-samples.html#cb75-9"></a>                                 <span class="st">&quot;V&quot;</span> , <span class="st">&quot;Cr&quot;</span>, <span class="st">&quot;Co&quot;</span>, <span class="st">&quot;Ni&quot;</span>, <span class="st">&quot;Cu&quot;</span>, </span>
+<span id="cb75-10"><a href="selecting-samples.html#cb75-10"></a>                                 <span class="st">&quot;Zn&quot;</span>, <span class="st">&quot;Sr&quot;</span>, <span class="st">&quot;Nb&quot;</span>, <span class="st">&quot;Y&quot;</span> , <span class="st">&quot;Zr&quot;</span>, </span>
+<span id="cb75-11"><a href="selecting-samples.html#cb75-11"></a>                                 <span class="st">&quot;Ba&quot;</span>, <span class="st">&quot;La&quot;</span>, <span class="st">&quot;Ce&quot;</span>)</span>
+<span id="cb75-12"><a href="selecting-samples.html#cb75-12"></a>                ) <span class="op">%&gt;%</span></span>
+<span id="cb75-13"><a href="selecting-samples.html#cb75-13"></a><span class="st">  </span><span class="kw">filter</span>(calib_sample <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb75-14"><a href="selecting-samples.html#cb75-14"></a><span class="st">  </span><span class="kw">pull</span>(depth)</span></code></pre></div>
+<pre><code>##  [1]  216.500  336.500  346.500  446.500  466.500  616.500  806.500  856.500
+##  [9]  936.500  956.500 1016.500 1045.857 1186.500 1236.500 1356.500 1506.500
+## [17] 1536.500 1706.500 1796.500 1866.500 1887.143 1916.500 1966.500 2046.500
+## [25] 2156.500 2266.500 2416.500 2426.500 2486.500 2586.500 2596.500 2706.500
+## [33] 2796.500 2856.500 2886.500 2916.500 2946.500 2956.500 3006.500 3036.500
+## [41] 3076.500 3086.500 3116.500 3416.444 3456.500 3586.500 3627.000 3666.500
+## [49] 4126.500</code></pre>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="principal-component-analysis.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="unconstrained-cluster-analysis.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="preparing-data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="linear-methods.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

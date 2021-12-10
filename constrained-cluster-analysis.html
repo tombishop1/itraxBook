@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-12-08" />
+<meta name="date" content="2021-12-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -194,8 +194,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7" data-path="calibrating-data.html"><a href="calibrating-data.html"><i class="fa fa-check"></i><b>7</b> Calibrating Data</a><ul>
 <li class="chapter" data-level="7.1" data-path="suitable-methods.html"><a href="suitable-methods.html"><i class="fa fa-check"></i><b>7.1</b> Suitable Methods</a></li>
 <li class="chapter" data-level="7.2" data-path="preparing-data.html"><a href="preparing-data.html"><i class="fa fa-check"></i><b>7.2</b> Preparing Data</a></li>
-<li class="chapter" data-level="7.3" data-path="linear-methods.html"><a href="linear-methods.html"><i class="fa fa-check"></i><b>7.3</b> Linear Methods</a></li>
-<li class="chapter" data-level="7.4" data-path="log-ratio-methods.html"><a href="log-ratio-methods.html"><i class="fa fa-check"></i><b>7.4</b> Log-Ratio Methods</a></li>
+<li class="chapter" data-level="7.3" data-path="selecting-samples.html"><a href="selecting-samples.html"><i class="fa fa-check"></i><b>7.3</b> Selecting Samples</a></li>
+<li class="chapter" data-level="7.4" data-path="linear-methods.html"><a href="linear-methods.html"><i class="fa fa-check"></i><b>7.4</b> Linear Methods</a></li>
+<li class="chapter" data-level="7.5" data-path="log-ratio-methods.html"><a href="log-ratio-methods.html"><i class="fa fa-check"></i><b>7.5</b> Log-Ratio Methods</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="exporting-data.html"><a href="exporting-data.html"><i class="fa fa-check"></i><b>8</b> Exporting Data</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
@@ -222,23 +223,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="constrained-cluster-analysis" class="section level2">
 <h2><span class="header-section-number">6.5</span> Constrained Cluster Analysis</h2>
 <p>Constrained cluster analysis is helpful in identifying units of deposition in the sedimentary sequence. It forces each sample to remain in sequence, thus there are no recurring units along the stratigraphy.</p>
-<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="constrained-cluster-analysis.html#cb68-1"></a><span class="kw">bind_rows</span>(<span class="kw">tibble</span>(<span class="dt">depth =</span> <span class="kw">filter</span>(CD166_<span class="dv">19</span>_xrf, qc <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(depth),</span>
-<span id="cb68-2"><a href="constrained-cluster-analysis.html#cb68-2"></a>                 <span class="dt">group =</span> rioja<span class="op">::</span><span class="kw">chclust</span>(<span class="kw">dist</span>(CD166_<span class="dv">19</span>_xrf_acomp)) <span class="op">%&gt;%</span></span>
-<span id="cb68-3"><a href="constrained-cluster-analysis.html#cb68-3"></a><span class="st">                 </span><span class="kw">cutree</span>(<span class="dt">k =</span> <span class="dv">5</span>) <span class="op">%&gt;%</span></span>
-<span id="cb68-4"><a href="constrained-cluster-analysis.html#cb68-4"></a><span class="st">                 </span><span class="kw">as.factor</span>()), </span>
-<span id="cb68-5"><a href="constrained-cluster-analysis.html#cb68-5"></a>          </span>
-<span id="cb68-6"><a href="constrained-cluster-analysis.html#cb68-6"></a>          CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
-<span id="cb68-7"><a href="constrained-cluster-analysis.html#cb68-7"></a><span class="st">            </span><span class="kw">filter</span>(qc <span class="op">==</span><span class="st"> </span><span class="ot">FALSE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb68-8"><a href="constrained-cluster-analysis.html#cb68-8"></a><span class="st">            </span><span class="kw">mutate</span>(<span class="dt">group =</span> <span class="ot">NA</span>) <span class="op">%&gt;%</span></span>
-<span id="cb68-9"><a href="constrained-cluster-analysis.html#cb68-9"></a><span class="st">            </span><span class="kw">select</span>(depth, group)) <span class="op">%&gt;%</span></span>
-<span id="cb68-10"><a href="constrained-cluster-analysis.html#cb68-10"></a><span class="st">  </span><span class="kw">arrange</span>(depth) <span class="op">%&gt;%</span></span>
-<span id="cb68-11"><a href="constrained-cluster-analysis.html#cb68-11"></a><span class="st">  </span></span>
-<span id="cb68-12"><a href="constrained-cluster-analysis.html#cb68-12"></a><span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb68-13"><a href="constrained-cluster-analysis.html#cb68-13"></a><span class="st">  </span><span class="kw">geom_tile</span>(<span class="kw">aes</span>(<span class="dt">x =</span> depth, <span class="dt">y =</span> <span class="dv">1</span>, <span class="dt">fill =</span> group)) <span class="op">+</span></span>
-<span id="cb68-14"><a href="constrained-cluster-analysis.html#cb68-14"></a><span class="st">  </span><span class="kw">scale_x_reverse</span>() <span class="op">+</span></span>
-<span id="cb68-15"><a href="constrained-cluster-analysis.html#cb68-15"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.title.y =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb68-16"><a href="constrained-cluster-analysis.html#cb68-16"></a>        <span class="dt">axis.text.y =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb68-17"><a href="constrained-cluster-analysis.html#cb68-17"></a>        <span class="dt">axis.ticks.y =</span> <span class="kw">element_blank</span>())</span></code></pre></div>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="constrained-cluster-analysis.html#cb65-1"></a><span class="kw">bind_rows</span>(<span class="kw">tibble</span>(<span class="dt">depth =</span> <span class="kw">filter</span>(CD166_<span class="dv">19</span>_xrf, qc <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(depth),</span>
+<span id="cb65-2"><a href="constrained-cluster-analysis.html#cb65-2"></a>                 <span class="dt">group =</span> rioja<span class="op">::</span><span class="kw">chclust</span>(<span class="kw">dist</span>(CD166_<span class="dv">19</span>_xrf_acomp)) <span class="op">%&gt;%</span></span>
+<span id="cb65-3"><a href="constrained-cluster-analysis.html#cb65-3"></a><span class="st">                 </span><span class="kw">cutree</span>(<span class="dt">k =</span> <span class="dv">5</span>) <span class="op">%&gt;%</span></span>
+<span id="cb65-4"><a href="constrained-cluster-analysis.html#cb65-4"></a><span class="st">                 </span><span class="kw">as.factor</span>()), </span>
+<span id="cb65-5"><a href="constrained-cluster-analysis.html#cb65-5"></a>          </span>
+<span id="cb65-6"><a href="constrained-cluster-analysis.html#cb65-6"></a>          CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
+<span id="cb65-7"><a href="constrained-cluster-analysis.html#cb65-7"></a><span class="st">            </span><span class="kw">filter</span>(qc <span class="op">==</span><span class="st"> </span><span class="ot">FALSE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb65-8"><a href="constrained-cluster-analysis.html#cb65-8"></a><span class="st">            </span><span class="kw">mutate</span>(<span class="dt">group =</span> <span class="ot">NA</span>) <span class="op">%&gt;%</span></span>
+<span id="cb65-9"><a href="constrained-cluster-analysis.html#cb65-9"></a><span class="st">            </span><span class="kw">select</span>(depth, group)) <span class="op">%&gt;%</span></span>
+<span id="cb65-10"><a href="constrained-cluster-analysis.html#cb65-10"></a><span class="st">  </span><span class="kw">arrange</span>(depth) <span class="op">%&gt;%</span></span>
+<span id="cb65-11"><a href="constrained-cluster-analysis.html#cb65-11"></a><span class="st">  </span></span>
+<span id="cb65-12"><a href="constrained-cluster-analysis.html#cb65-12"></a><span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb65-13"><a href="constrained-cluster-analysis.html#cb65-13"></a><span class="st">  </span><span class="kw">geom_tile</span>(<span class="kw">aes</span>(<span class="dt">x =</span> depth, <span class="dt">y =</span> <span class="dv">1</span>, <span class="dt">fill =</span> group)) <span class="op">+</span></span>
+<span id="cb65-14"><a href="constrained-cluster-analysis.html#cb65-14"></a><span class="st">  </span><span class="kw">scale_x_reverse</span>() <span class="op">+</span></span>
+<span id="cb65-15"><a href="constrained-cluster-analysis.html#cb65-15"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.title.y =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb65-16"><a href="constrained-cluster-analysis.html#cb65-16"></a>        <span class="dt">axis.text.y =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb65-17"><a href="constrained-cluster-analysis.html#cb65-17"></a>        <span class="dt">axis.ticks.y =</span> <span class="kw">element_blank</span>())</span></code></pre></div>
 <p><img src="itraxBook_files/figure-html/constrained_clusters_1-1.png" width="672" /></p>
 
 </div>

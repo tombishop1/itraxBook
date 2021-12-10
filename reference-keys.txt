@@ -46,6 +46,7 @@ constrained-cluster-analysis
 calibrating-data
 suitable-methods
 preparing-data
+selecting-samples
 linear-methods
 log-ratio-methods
 exporting-data
