@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-12-10" />
+<meta name="date" content="2021-12-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -225,27 +225,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Unless you plan on sub-sampling the entire core, perhaps contiguously, you will need to decide where best to take your samples for best model coverage. If you are only interested in a single element, this is trivial - simply ensure your sampling strategy encompasses a wide range of samples. However, where you are attempting to calibrate for many elements, developing an optimal sampling strategy manually can be difficult.</p>
 <p>The function below illustrates the use of cluster analysis in optimising the sampling regime. Because it is unrealistic to plan on accurately sub-sampling at the high-resolution of the data (in this case, 1 mm), we use <code>itrax_reduce()</code> to re sample the data to a lower resolution, in this case, 10 mm.</p>
 <p>The following <code>itrax_section()</code> performs an unconstrained cluster analysis, and also reports the central sample in each cluster. This could be considered the most representative of each cluster, and thus the suitable location for sampling.</p>
-<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="selecting-samples.html#cb75-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
-<span id="cb75-2"><a href="selecting-samples.html#cb75-2"></a><span class="st">  </span><span class="kw">filter</span>(qc <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb75-3"><a href="selecting-samples.html#cb75-3"></a><span class="st">  </span><span class="kw">itrax_reduce</span>(<span class="dt">by =</span> <span class="dv">10</span>) <span class="op">%&gt;%</span></span>
-<span id="cb75-4"><a href="selecting-samples.html#cb75-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">uid =</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(uid)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># we have to spoof uid here</span></span>
-<span id="cb75-5"><a href="selecting-samples.html#cb75-5"></a><span class="st">  </span><span class="kw">drop_na</span>(<span class="st">&quot;depth&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb75-6"><a href="selecting-samples.html#cb75-6"></a><span class="st">  </span><span class="kw">itrax_section</span>(<span class="dt">divisions =</span> <span class="dv">50</span>, </span>
-<span id="cb75-7"><a href="selecting-samples.html#cb75-7"></a>                <span class="dt">elementsonly =</span> <span class="kw">c</span>(<span class="st">&quot;Ti&quot;</span>, <span class="st">&quot;Al&quot;</span>, <span class="st">&quot;Fe&quot;</span>, <span class="st">&quot;Mn&quot;</span>, <span class="st">&quot;Mg&quot;</span>, </span>
-<span id="cb75-8"><a href="selecting-samples.html#cb75-8"></a>                                 <span class="st">&quot;Ca&quot;</span>, <span class="st">&quot;Na&quot;</span>, <span class="st">&quot;K&quot;</span> , <span class="st">&quot;P&quot;</span> , <span class="st">&quot;Si&quot;</span>, </span>
-<span id="cb75-9"><a href="selecting-samples.html#cb75-9"></a>                                 <span class="st">&quot;V&quot;</span> , <span class="st">&quot;Cr&quot;</span>, <span class="st">&quot;Co&quot;</span>, <span class="st">&quot;Ni&quot;</span>, <span class="st">&quot;Cu&quot;</span>, </span>
-<span id="cb75-10"><a href="selecting-samples.html#cb75-10"></a>                                 <span class="st">&quot;Zn&quot;</span>, <span class="st">&quot;Sr&quot;</span>, <span class="st">&quot;Nb&quot;</span>, <span class="st">&quot;Y&quot;</span> , <span class="st">&quot;Zr&quot;</span>, </span>
-<span id="cb75-11"><a href="selecting-samples.html#cb75-11"></a>                                 <span class="st">&quot;Ba&quot;</span>, <span class="st">&quot;La&quot;</span>, <span class="st">&quot;Ce&quot;</span>)</span>
-<span id="cb75-12"><a href="selecting-samples.html#cb75-12"></a>                ) <span class="op">%&gt;%</span></span>
-<span id="cb75-13"><a href="selecting-samples.html#cb75-13"></a><span class="st">  </span><span class="kw">filter</span>(calib_sample <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb75-14"><a href="selecting-samples.html#cb75-14"></a><span class="st">  </span><span class="kw">pull</span>(depth)</span></code></pre></div>
-<pre><code>##  [1]  216.500  336.500  346.500  446.500  466.500  616.500  806.500  856.500
-##  [9]  936.500  956.500 1016.500 1045.857 1186.500 1236.500 1356.500 1506.500
-## [17] 1536.500 1706.500 1796.500 1866.500 1887.143 1916.500 1966.500 2046.500
-## [25] 2156.500 2266.500 2416.500 2426.500 2486.500 2586.500 2596.500 2706.500
-## [33] 2796.500 2856.500 2886.500 2916.500 2946.500 2956.500 3006.500 3036.500
-## [41] 3076.500 3086.500 3116.500 3416.444 3456.500 3586.500 3627.000 3666.500
-## [49] 4126.500</code></pre>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="selecting-samples.html#cb72-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
+<span id="cb72-2"><a href="selecting-samples.html#cb72-2"></a><span class="st">  </span><span class="kw">filter</span>(qc <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb72-3"><a href="selecting-samples.html#cb72-3"></a><span class="st">  </span><span class="kw">itrax_reduce</span>(<span class="dt">by =</span> <span class="dv">10</span>) <span class="op">%&gt;%</span></span>
+<span id="cb72-4"><a href="selecting-samples.html#cb72-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">uid =</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(uid)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># we have to spoof uid here</span></span>
+<span id="cb72-5"><a href="selecting-samples.html#cb72-5"></a><span class="st">  </span><span class="kw">drop_na</span>(<span class="st">&quot;depth&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb72-6"><a href="selecting-samples.html#cb72-6"></a><span class="st">  </span><span class="kw">itrax_section</span>(<span class="dt">divisions =</span> <span class="dv">50</span>, </span>
+<span id="cb72-7"><a href="selecting-samples.html#cb72-7"></a>                <span class="dt">elementsonly =</span> <span class="kw">c</span>(<span class="st">&quot;Ti&quot;</span>, <span class="st">&quot;Al&quot;</span>, <span class="st">&quot;Fe&quot;</span>, <span class="st">&quot;Mn&quot;</span>, <span class="st">&quot;Mg&quot;</span>, </span>
+<span id="cb72-8"><a href="selecting-samples.html#cb72-8"></a>                                 <span class="st">&quot;Ca&quot;</span>, <span class="st">&quot;Na&quot;</span>, <span class="st">&quot;K&quot;</span> , <span class="st">&quot;P&quot;</span> , <span class="st">&quot;Si&quot;</span>, </span>
+<span id="cb72-9"><a href="selecting-samples.html#cb72-9"></a>                                 <span class="st">&quot;V&quot;</span> , <span class="st">&quot;Cr&quot;</span>, <span class="st">&quot;Co&quot;</span>, <span class="st">&quot;Ni&quot;</span>, <span class="st">&quot;Cu&quot;</span>, </span>
+<span id="cb72-10"><a href="selecting-samples.html#cb72-10"></a>                                 <span class="st">&quot;Zn&quot;</span>, <span class="st">&quot;Sr&quot;</span>, <span class="st">&quot;Nb&quot;</span>, <span class="st">&quot;Y&quot;</span> , <span class="st">&quot;Zr&quot;</span>, </span>
+<span id="cb72-11"><a href="selecting-samples.html#cb72-11"></a>                                 <span class="st">&quot;Ba&quot;</span>, <span class="st">&quot;La&quot;</span>, <span class="st">&quot;Ce&quot;</span>)</span>
+<span id="cb72-12"><a href="selecting-samples.html#cb72-12"></a>                ) <span class="op">%&gt;%</span></span>
+<span id="cb72-13"><a href="selecting-samples.html#cb72-13"></a><span class="st">  </span><span class="kw">filter</span>(calib_sample <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb72-14"><a href="selecting-samples.html#cb72-14"></a><span class="st">  </span><span class="kw">pull</span>(depth)</span></code></pre></div>
+<pre><code>##  [1]  335.500  435.500  445.500  465.500  685.500  845.500  935.500 1025.500
+##  [9] 1105.500 1175.500 1235.500 1365.500 1515.500 1575.500 1715.500 1805.500
+## [17] 1855.500 1885.286 1925.500 1955.500 1995.500 2035.500 2155.500 2335.500
+## [25] 2415.500 2425.500 2635.500 2685.500 2745.500 2795.500 2845.500 2885.500
+## [33] 2925.500 2935.500 2975.500 2985.500 3025.556 3035.500 3085.500 3165.500
+## [41] 3305.500 3395.500 3415.111 3525.500 3625.667 3935.500 4045.500</code></pre>
 </div>
             </section>
 

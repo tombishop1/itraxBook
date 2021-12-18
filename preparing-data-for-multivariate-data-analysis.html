@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-12-10" />
+<meta name="date" content="2021-12-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -238,61 +238,61 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb57-6"><a href="preparing-data-for-multivariate-data-analysis.html#cb57-6"></a><span class="st">  </span><span class="kw">acomp</span>()</span>
 <span id="cb57-7"><a href="preparing-data-for-multivariate-data-analysis.html#cb57-7"></a><span class="kw">head</span>(CD166_<span class="dv">19</span>_xrf_acomp)</span></code></pre></div>
 <pre><code>##      Al             Si            P               S               Cl           
+## S1_1 &quot;0.0004510065&quot; &quot;0.001631931&quot; &quot;&lt;5.934295e-06&quot; &quot; 5.934295e-05&quot; &quot;0.007821401&quot;
 ## S1_2 &quot;0.0002804828&quot; &quot;0.001505750&quot; &quot;&lt;4.920751e-06&quot; &quot;&lt;4.920751e-06&quot; &quot;0.007445097&quot;
 ## S1_3 &quot;0.0003343092&quot; &quot;0.001490838&quot; &quot;&lt;4.517691e-06&quot; &quot; 1.445661e-04&quot; &quot;0.006641006&quot;
 ## S1_4 &quot;0.0001227370&quot; &quot;0.000972455&quot; &quot;&lt;4.720655e-06&quot; &quot; 9.913376e-05&quot; &quot;0.006193500&quot;
 ## S1_5 &quot;0.0002582984&quot; &quot;0.001135538&quot; &quot;&lt;4.873556e-06&quot; &quot; 1.803216e-04&quot; &quot;0.008479987&quot;
 ## S1_6 &quot;0.0001333485&quot; &quot;0.001713775&quot; &quot;&lt;4.938833e-06&quot; &quot; 1.382873e-04&quot; &quot;0.007783600&quot;
-## S1_7 &quot;0.0003509832&quot; &quot;0.001642797&quot; &quot;&lt;4.874767e-06&quot; &quot; 2.876113e-04&quot; &quot;0.007824001&quot;
 ##      Ar            K            Ca          Sc              Ti           
+## S1_1 &quot;0.003584314&quot; &quot;0.01522147&quot; &quot;0.6689969&quot; &quot;&lt;5.934295e-06&quot; &quot;0.009856865&quot;
 ## S1_2 &quot;0.002927847&quot; &quot;0.01293173&quot; &quot;0.7100004&quot; &quot; 6.889052e-05&quot; &quot;0.008886877&quot;
 ## S1_3 &quot;0.002285952&quot; &quot;0.01074307&quot; &quot;0.7361036&quot; &quot;&lt;4.517691e-06&quot; &quot;0.009582023&quot;
 ## S1_4 &quot;0.002619964&quot; &quot;0.01069228&quot; &quot;0.7231761&quot; &quot;&lt;4.720655e-06&quot; &quot;0.009587651&quot;
 ## S1_5 &quot;0.002880271&quot; &quot;0.01436237&quot; &quot;0.6622139&quot; &quot; 5.165969e-04&quot; &quot;0.008899113&quot;
 ## S1_6 &quot;0.002489172&quot; &quot;0.01570055&quot; &quot;0.6528297&quot; &quot; 6.914366e-05&quot; &quot;0.009497375&quot;
-## S1_7 &quot;0.002846864&quot; &quot;0.01645721&quot; &quot;0.6536770&quot; &quot;&lt;4.874767e-06&quot; &quot;0.010037146&quot;
-##      V               Cr            Mn            Fe          Ni            
-## S1_2 &quot; 4.330261e-04&quot; &quot;0.001604165&quot; &quot;0.002750700&quot; &quot;0.1795779&quot; &quot;0.0005117581&quot;
-## S1_3 &quot; 9.938921e-05&quot; &quot;0.001359825&quot; &quot;0.002182045&quot; &quot;0.1624200&quot; &quot;0.0006053706&quot;
-## S1_4 &quot; 3.540491e-04&quot; &quot;0.001444520&quot; &quot;0.002289518&quot; &quot;0.1676399&quot; &quot;0.0006797744&quot;
-## S1_5 &quot; 4.337464e-04&quot; &quot;0.002144364&quot; &quot;0.003596684&quot; &quot;0.2159131&quot; &quot;0.0008090102&quot;
-## S1_6 &quot; 5.284551e-04&quot; &quot;0.001980472&quot; &quot;0.003911555&quot; &quot;0.2236452&quot; &quot;0.0007457637&quot;
-## S1_7 &quot;&lt;4.874767e-06&quot; &quot;0.002144898&quot; &quot;0.003894939&quot; &quot;0.2227476&quot; &quot;0.0006093459&quot;
+##      V              Cr            Mn            Fe          Ni            
+## S1_1 &quot;3.026491e-04&quot; &quot;0.001531048&quot; &quot;0.003014622&quot; &quot;0.2086973&quot; &quot;0.0007299183&quot;
+## S1_2 &quot;4.330261e-04&quot; &quot;0.001604165&quot; &quot;0.002750700&quot; &quot;0.1795779&quot; &quot;0.0005117581&quot;
+## S1_3 &quot;9.938921e-05&quot; &quot;0.001359825&quot; &quot;0.002182045&quot; &quot;0.1624200&quot; &quot;0.0006053706&quot;
+## S1_4 &quot;3.540491e-04&quot; &quot;0.001444520&quot; &quot;0.002289518&quot; &quot;0.1676399&quot; &quot;0.0006797744&quot;
+## S1_5 &quot;4.337464e-04&quot; &quot;0.002144364&quot; &quot;0.003596684&quot; &quot;0.2159131&quot; &quot;0.0008090102&quot;
+## S1_6 &quot;5.284551e-04&quot; &quot;0.001980472&quot; &quot;0.003911555&quot; &quot;0.2236452&quot; &quot;0.0007457637&quot;
 ##      Cu             Zn            Ga              Ge              Br           
+## S1_1 &quot;0.0016437998&quot; &quot;0.001216531&quot; &quot; 2.373718e-05&quot; &quot;&lt;5.934295e-06&quot; &quot;0.002913739&quot;
 ## S1_2 &quot;0.0011317728&quot; &quot;0.001318761&quot; &quot; 2.361961e-04&quot; &quot; 1.968301e-04&quot; &quot;0.002977055&quot;
 ## S1_3 &quot;0.0006776537&quot; &quot;0.000555676&quot; &quot;&lt;4.517691e-06&quot; &quot; 1.942607e-04&quot; &quot;0.002484730&quot;
 ## S1_4 &quot;0.0009724550&quot; &quot;0.001128237&quot; &quot;&lt;4.720655e-06&quot; &quot;&lt;4.720655e-06&quot; &quot;0.002874879&quot;
 ## S1_5 &quot;0.0013451013&quot; &quot;0.001169653&quot; &quot;&lt;4.873556e-06&quot; &quot;&lt;4.873556e-06&quot; &quot;0.003211673&quot;
 ## S1_6 &quot;0.0012347081&quot; &quot;0.001452017&quot; &quot; 1.975533e-04&quot; &quot; 2.370640e-04&quot; &quot;0.003501632&quot;
-## S1_7 &quot;0.0010578245&quot; &quot;0.001384434&quot; &quot; 3.899814e-05&quot; &quot; 5.605982e-04&quot; &quot;0.002841989&quot;
 ##      Rb             Sr           Y              Zr             Pd            
-## S1_2 &quot;0.0003739771&quot; &quot;0.04517742&quot; &quot;0.0006889052&quot; &quot;0.0015844819&quot; &quot;0.0003838186&quot;
-## S1_3 &quot;0.0013327189&quot; &quot;0.04356861&quot; &quot;0.0005376053&quot; &quot;0.0012649536&quot; &quot;0.0003388268&quot;
-## S1_4 &quot;0.0014775651&quot; &quot;0.04692331&quot; &quot;0.0005051101&quot; &quot;0.0022423112&quot; &quot;0.0003115632&quot;
-## S1_5 &quot;0.0014815609&quot; &quot;0.05013427&quot; &quot;0.0008772400&quot; &quot;0.0007797689&quot; &quot;0.0001510802&quot;
-## S1_6 &quot;0.0015705488&quot; &quot;0.04897840&quot; &quot;0.0005235163&quot; &quot;0.0015409158&quot; &quot;0.0003555959&quot;
-## S1_7 &quot;0.0016427966&quot; &quot;0.04841131&quot; &quot;0.0002534879&quot; &quot;0.0015550507&quot; &quot;0.0001511178&quot;
+## S1_1 &quot;0.0019523832&quot; &quot;0.04929026&quot; &quot;8.901443e-05&quot; &quot;0.0015132453&quot; &quot;0.0001839632&quot;
+## S1_2 &quot;0.0003739771&quot; &quot;0.04517742&quot; &quot;6.889052e-04&quot; &quot;0.0015844819&quot; &quot;0.0003838186&quot;
+## S1_3 &quot;0.0013327189&quot; &quot;0.04356861&quot; &quot;5.376053e-04&quot; &quot;0.0012649536&quot; &quot;0.0003388268&quot;
+## S1_4 &quot;0.0014775651&quot; &quot;0.04692331&quot; &quot;5.051101e-04&quot; &quot;0.0022423112&quot; &quot;0.0003115632&quot;
+## S1_5 &quot;0.0014815609&quot; &quot;0.05013427&quot; &quot;8.772400e-04&quot; &quot;0.0007797689&quot; &quot;0.0001510802&quot;
+## S1_6 &quot;0.0015705488&quot; &quot;0.04897840&quot; &quot;5.235163e-04&quot; &quot;0.0015409158&quot; &quot;0.0003555959&quot;
 ##      Cd             I              Cs              Ba            
-## S1_2 &quot;0.0001673055&quot; &quot;0.0002361961&quot; &quot;&lt;4.920751e-06&quot; &quot;0.0002361961&quot;
-## S1_3 &quot;0.0002484730&quot; &quot;0.0003614153&quot; &quot;&lt;4.517691e-06&quot; &quot;0.0001129423&quot;
-## S1_4 &quot;0.0001132957&quot; &quot;0.0003162839&quot; &quot;&lt;4.720655e-06&quot; &quot;0.0002832393&quot;
-## S1_5 &quot;0.0001657009&quot; &quot;0.0001120918&quot; &quot;&lt;4.873556e-06&quot; &quot;0.0006433093&quot;
-## S1_6 &quot;0.0001382873&quot; &quot;0.0002864523&quot; &quot;&lt;4.938833e-06&quot; &quot;0.0004593114&quot;
-## S1_7 &quot;0.0002729870&quot; &quot;0.0001462430&quot; &quot;&lt;4.874767e-06&quot; &quot;0.0008384600&quot;
+## S1_1 &quot;7.714584e-05&quot; &quot;0.0002255032&quot; &quot;&lt;5.934295e-06&quot; &quot;0.0003738606&quot;
+## S1_2 &quot;1.673055e-04&quot; &quot;0.0002361961&quot; &quot;&lt;4.920751e-06&quot; &quot;0.0002361961&quot;
+## S1_3 &quot;2.484730e-04&quot; &quot;0.0003614153&quot; &quot;&lt;4.517691e-06&quot; &quot;0.0001129423&quot;
+## S1_4 &quot;1.132957e-04&quot; &quot;0.0003162839&quot; &quot;&lt;4.720655e-06&quot; &quot;0.0002832393&quot;
+## S1_5 &quot;1.657009e-04&quot; &quot;0.0001120918&quot; &quot;&lt;4.873556e-06&quot; &quot;0.0006433093&quot;
+## S1_6 &quot;1.382873e-04&quot; &quot;0.0002864523&quot; &quot;&lt;4.938833e-06&quot; &quot;0.0004593114&quot;
 ##      Nd             Sm             Yb             Ta            W            
+## S1_1 &quot;0.0001008830&quot; &quot;2.551747e-04&quot; &quot;0.0008545385&quot; &quot;0.004682159&quot; &quot;0.011821117&quot;
 ## S1_2 &quot;0.0003296903&quot; &quot;2.263546e-04&quot; &quot;0.0013876519&quot; &quot;0.003818503&quot; &quot;0.009934997&quot;
 ## S1_3 &quot;0.0001987784&quot; &quot;1.761900e-04&quot; &quot;0.0007137952&quot; &quot;0.003175937&quot; &quot;0.009107666&quot;
 ## S1_4 &quot;0.0003540491&quot; &quot;3.021219e-04&quot; &quot;0.0010291028&quot; &quot;0.003748200&quot; &quot;0.010196615&quot;
 ## S1_5 &quot;0.0002046893&quot; &quot;1.754480e-04&quot; &quot;0.0007943896&quot; &quot;0.004478798&quot; &quot;0.011423614&quot;
 ## S1_6 &quot;0.0004790668&quot; &quot;5.926599e-05&quot; &quot;0.0009087452&quot; &quot;0.004207885&quot; &quot;0.011537113&quot;
-## S1_7 &quot;0.0004484786&quot; &quot;1.169944e-04&quot; &quot;0.0012089423&quot; &quot;0.004514034&quot; &quot;0.010934103&quot;
 ##      Pb              Bi            
+## S1_1 &quot; 4.569408e-04&quot; &quot;0.0004272693&quot;
 ## S1_2 &quot;&lt;4.920751e-06&quot; &quot;0.0006692222&quot;
 ## S1_3 &quot; 5.872999e-05&quot; &quot;0.0008990206&quot;
 ## S1_4 &quot; 7.175396e-04&quot; &quot;0.0006325678&quot;
 ## S1_5 &quot; 2.631720e-04&quot; &quot;0.0007651482&quot;
 ## S1_6 &quot; 2.666970e-04&quot; &quot;0.0008988675&quot;
-## S1_7 &quot; 3.656075e-04&quot; &quot;0.0007360899&quot;
 ## attr(,&quot;class&quot;)
 ## [1] &quot;acomp&quot;</code></pre>
 <p>Where it is necessary to keep some (or all) of the other information, this can be re-joined to the <code>acomp()</code> object, but only if its <code>acomp</code> class is removed. For example:</p>

@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-12-10" />
+<meta name="date" content="2021-12-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -256,12 +256,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb39-2"><a href="plotting-xrf-data.html#cb39-2"></a><span class="st">  </span><span class="kw">select</span>(<span class="kw">any_of</span>(elementsList), depth, label) <span class="op">%&gt;%</span></span>
 <span id="cb39-3"><a href="plotting-xrf-data.html#cb39-3"></a><span class="st">  </span>tidyr<span class="op">::</span><span class="kw">pivot_longer</span>(<span class="op">!</span><span class="kw">c</span>(<span class="st">&quot;depth&quot;</span>, <span class="st">&quot;label&quot;</span>), <span class="dt">names_to =</span> <span class="st">&quot;elements&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;peakarea&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb39-4"><a href="plotting-xrf-data.html#cb39-4"></a><span class="st">  </span><span class="kw">glimpse</span>()</span></code></pre></div>
-<pre><code>## Rows: 151,416
+<pre><code>## Rows: 151,632
 ## Columns: 4
-## $ depth    &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…
+## $ depth    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…
 ## $ label    &lt;chr&gt; &quot;S1&quot;, &quot;S1&quot;, &quot;S1&quot;, &quot;S1&quot;, &quot;S1&quot;, &quot;S1&quot;, &quot;S1&quot;, &quot;S1&quot;, &quot;S1&quot;, &quot;S1&quot;, &quot;…
 ## $ elements &lt;chr&gt; &quot;Al&quot;, &quot;Si&quot;, &quot;P&quot;, &quot;S&quot;, &quot;Cl&quot;, &quot;Ar&quot;, &quot;K&quot;, &quot;Ca&quot;, &quot;Sc&quot;, &quot;Ti&quot;, &quot;V&quot;,…
-## $ peakarea &lt;dbl&gt; 76, 275, 0, 10, 1318, 604, 2565, 112734, 0, 1661, 51, 258, 50…</code></pre>
+## $ peakarea &lt;dbl&gt; 41, 177, 0, 0, 726, 697, 1412, 59965, 19, 804, 26, 220, 231, …</code></pre>
 </div>
             </section>
 
