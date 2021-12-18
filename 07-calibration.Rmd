@@ -30,7 +30,7 @@ glimpse(icp)
 
 And here is the use of `itrax_reduce()` to reduce our Itrax XRF data (`CD166_19_xrf`), using the shape of the "icp" data (in `icp`). 
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 xrf_icp <- CD166_19_xrf %>%
   drop_na() %>%
   select(-c(label, filename)) %>%
@@ -49,7 +49,7 @@ xrf_icp %>% glimpse()
 
 Note the requirement to remove text based columns (in this case `file` and `label`) from the data before this step is performed - if the reducing function cannot handle a data type (e.g. passing characters to `mean()`), errors will occur. If we wanted to add the standard deviation alongside the mean for each chunk, this can be done my modifying the default reducing function (`mean()`) to `sd()`, for example:
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 CD166_19_xrf %>%
   drop_na() %>%
   select(-c(label, filename)) %>%
