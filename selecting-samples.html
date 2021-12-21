@@ -24,7 +24,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2021-12-18" />
+<meta name="date" content="2021-12-21" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -224,27 +224,30 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">7.3</span> Selecting Samples</h2>
 <p>Unless you plan on sub-sampling the entire core, perhaps contiguously, you will need to decide where best to take your samples for best model coverage. If you are only interested in a single element, this is trivial - simply ensure your sampling strategy encompasses a wide range of samples. However, where you are attempting to calibrate for many elements, developing an optimal sampling strategy manually can be difficult.</p>
 <p>The function below illustrates the use of cluster analysis in optimising the sampling regime. Because it is unrealistic to plan on accurately sub-sampling at the high-resolution of the data (in this case, 1 mm), we use <code>itrax_reduce()</code> to re sample the data to a lower resolution, in this case, 10 mm.</p>
-<p>The following <code>itrax_section()</code> performs an unconstrained cluster analysis, and also reports the central sample in each cluster. This could be considered the most representative of each cluster, and thus the suitable location for sampling.</p>
-<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="selecting-samples.html#cb72-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
-<span id="cb72-2"><a href="selecting-samples.html#cb72-2"></a><span class="st">  </span><span class="kw">filter</span>(qc <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb72-3"><a href="selecting-samples.html#cb72-3"></a><span class="st">  </span><span class="kw">itrax_reduce</span>(<span class="dt">by =</span> <span class="dv">10</span>) <span class="op">%&gt;%</span></span>
-<span id="cb72-4"><a href="selecting-samples.html#cb72-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">uid =</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(uid)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># we have to spoof uid here</span></span>
-<span id="cb72-5"><a href="selecting-samples.html#cb72-5"></a><span class="st">  </span><span class="kw">drop_na</span>(<span class="st">&quot;depth&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb72-6"><a href="selecting-samples.html#cb72-6"></a><span class="st">  </span><span class="kw">itrax_section</span>(<span class="dt">divisions =</span> <span class="dv">50</span>, </span>
-<span id="cb72-7"><a href="selecting-samples.html#cb72-7"></a>                <span class="dt">elementsonly =</span> <span class="kw">c</span>(<span class="st">&quot;Ti&quot;</span>, <span class="st">&quot;Al&quot;</span>, <span class="st">&quot;Fe&quot;</span>, <span class="st">&quot;Mn&quot;</span>, <span class="st">&quot;Mg&quot;</span>, </span>
-<span id="cb72-8"><a href="selecting-samples.html#cb72-8"></a>                                 <span class="st">&quot;Ca&quot;</span>, <span class="st">&quot;Na&quot;</span>, <span class="st">&quot;K&quot;</span> , <span class="st">&quot;P&quot;</span> , <span class="st">&quot;Si&quot;</span>, </span>
-<span id="cb72-9"><a href="selecting-samples.html#cb72-9"></a>                                 <span class="st">&quot;V&quot;</span> , <span class="st">&quot;Cr&quot;</span>, <span class="st">&quot;Co&quot;</span>, <span class="st">&quot;Ni&quot;</span>, <span class="st">&quot;Cu&quot;</span>, </span>
-<span id="cb72-10"><a href="selecting-samples.html#cb72-10"></a>                                 <span class="st">&quot;Zn&quot;</span>, <span class="st">&quot;Sr&quot;</span>, <span class="st">&quot;Nb&quot;</span>, <span class="st">&quot;Y&quot;</span> , <span class="st">&quot;Zr&quot;</span>, </span>
-<span id="cb72-11"><a href="selecting-samples.html#cb72-11"></a>                                 <span class="st">&quot;Ba&quot;</span>, <span class="st">&quot;La&quot;</span>, <span class="st">&quot;Ce&quot;</span>)</span>
-<span id="cb72-12"><a href="selecting-samples.html#cb72-12"></a>                ) <span class="op">%&gt;%</span></span>
-<span id="cb72-13"><a href="selecting-samples.html#cb72-13"></a><span class="st">  </span><span class="kw">filter</span>(calib_sample <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb72-14"><a href="selecting-samples.html#cb72-14"></a><span class="st">  </span><span class="kw">pull</span>(depth)</span></code></pre></div>
-<pre><code>##  [1]  335.500  435.500  445.500  465.500  685.500  845.500  935.500 1025.500
-##  [9] 1105.500 1175.500 1235.500 1365.500 1515.500 1575.500 1715.500 1805.500
-## [17] 1855.500 1885.286 1925.500 1955.500 1995.500 2035.500 2155.500 2335.500
-## [25] 2415.500 2425.500 2635.500 2685.500 2745.500 2795.500 2845.500 2885.500
-## [33] 2925.500 2935.500 2975.500 2985.500 3025.556 3035.500 3085.500 3165.500
-## [41] 3305.500 3395.500 3415.111 3525.500 3625.667 3935.500 4045.500</code></pre>
+<p>The following <code>itrax_section()</code> performs an unconstrained cluster analysis, and also reports the central sample in each cluster. This could be considered the most representative of each cluster, and thus the suitable location for sampling. In the graph below, the black ticks created by <code>geom_rug()</code> are the suggested sampling locations.</p>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="selecting-samples.html#cb74-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
+<span id="cb74-2"><a href="selecting-samples.html#cb74-2"></a><span class="st">  </span><span class="kw">filter</span>(qc <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb74-3"><a href="selecting-samples.html#cb74-3"></a><span class="st">  </span><span class="kw">itrax_reduce</span>(<span class="dt">by =</span> <span class="dv">10</span>) <span class="op">%&gt;%</span></span>
+<span id="cb74-4"><a href="selecting-samples.html#cb74-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">uid =</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(uid)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># we have to spoof uid here</span></span>
+<span id="cb74-5"><a href="selecting-samples.html#cb74-5"></a><span class="st">  </span><span class="kw">drop_na</span>(<span class="st">&quot;depth&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb74-6"><a href="selecting-samples.html#cb74-6"></a><span class="st">  </span><span class="kw">itrax_section</span>(<span class="dt">divisions =</span> <span class="dv">50</span>, </span>
+<span id="cb74-7"><a href="selecting-samples.html#cb74-7"></a>                <span class="dt">elementsonly =</span> <span class="kw">c</span>(<span class="st">&quot;Ti&quot;</span>, <span class="st">&quot;Al&quot;</span>, <span class="st">&quot;Fe&quot;</span>, <span class="st">&quot;Mn&quot;</span>, <span class="st">&quot;Mg&quot;</span>, </span>
+<span id="cb74-8"><a href="selecting-samples.html#cb74-8"></a>                                 <span class="st">&quot;Ca&quot;</span>, <span class="st">&quot;Na&quot;</span>, <span class="st">&quot;K&quot;</span> , <span class="st">&quot;P&quot;</span> , <span class="st">&quot;Si&quot;</span>, </span>
+<span id="cb74-9"><a href="selecting-samples.html#cb74-9"></a>                                 <span class="st">&quot;V&quot;</span> , <span class="st">&quot;Cr&quot;</span>, <span class="st">&quot;Co&quot;</span>, <span class="st">&quot;Ni&quot;</span>, <span class="st">&quot;Cu&quot;</span>, </span>
+<span id="cb74-10"><a href="selecting-samples.html#cb74-10"></a>                                 <span class="st">&quot;Zn&quot;</span>, <span class="st">&quot;Sr&quot;</span>, <span class="st">&quot;Nb&quot;</span>, <span class="st">&quot;Y&quot;</span> , <span class="st">&quot;Zr&quot;</span>, </span>
+<span id="cb74-11"><a href="selecting-samples.html#cb74-11"></a>                                 <span class="st">&quot;Ba&quot;</span>, <span class="st">&quot;La&quot;</span>, <span class="st">&quot;Ce&quot;</span>)</span>
+<span id="cb74-12"><a href="selecting-samples.html#cb74-12"></a>  ) <span class="op">%&gt;%</span></span>
+<span id="cb74-13"><a href="selecting-samples.html#cb74-13"></a><span class="st">  </span></span>
+<span id="cb74-14"><a href="selecting-samples.html#cb74-14"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> depth, <span class="dt">y =</span> <span class="dv">1</span>, <span class="dt">fill =</span> group)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb74-15"><a href="selecting-samples.html#cb74-15"></a><span class="st">  </span><span class="kw">geom_tile</span>(<span class="dt">width =</span> <span class="dv">10</span>) <span class="op">+</span></span>
+<span id="cb74-16"><a href="selecting-samples.html#cb74-16"></a><span class="st">  </span><span class="kw">scale_x_reverse</span>() <span class="op">+</span></span>
+<span id="cb74-17"><a href="selecting-samples.html#cb74-17"></a><span class="st">    </span><span class="kw">geom_rug</span>(<span class="dt">sides =</span> <span class="st">&quot;b&quot;</span>, </span>
+<span id="cb74-18"><a href="selecting-samples.html#cb74-18"></a>             <span class="dt">data =</span> . <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(calib_sample <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>)) <span class="op">+</span></span>
+<span id="cb74-19"><a href="selecting-samples.html#cb74-19"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.title.y =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb74-20"><a href="selecting-samples.html#cb74-20"></a>        <span class="dt">axis.text.y =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb74-21"><a href="selecting-samples.html#cb74-21"></a>        <span class="dt">axis.ticks.y =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb74-22"><a href="selecting-samples.html#cb74-22"></a>        <span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>) </span></code></pre></div>
+<p><img src="itraxBook_files/figure-html/calib_optimisation-1.png" width="672" /></p>
 </div>
             </section>
 
