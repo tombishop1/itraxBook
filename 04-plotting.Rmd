@@ -202,78 +202,84 @@ ggplot() +
   )
 ```
 
-Recall that `ggplot` objects can be saved and recalled rather than immediately printed. Let us take the plot generated in a previous example, but assign it using `imagePlot <- ggplot() + ...`.
+For lengthy sequences, the repetition of the `annotation_custom()` block of code is inefficient, but it can be easily placed inside a function. The functions `ggItraxImage()` and `ggItraxRadio()` shown below allow this, but they might need small modifications depending on your data structure and the desired output. 
 
-```{r imageplot, echo=FALSE}
+```{r plotting_functions}
+ggItraxImage <- function(section, xposition){
+  
+  if(xposition == "l"){
+  annotation_custom(rasterGrob(section$image$image,
+                               width = unit(1, "npc"),
+                               height = unit(1, "npc")),
+                    ymax = max(section$xrf$depth),
+                    ymin = min(section$xrf$depth),
+                    xmin = min(as.numeric(colnames(section$image$image))),
+                    xmax = max(as.numeric(colnames(section$image$image)))
+  )} else if(xposition == "r"){
+    annotation_custom(rasterGrob(section$image$image,
+                                 width = unit(1, "npc"),
+                                 height = unit(1, "npc")),
+                      ymax = max(section$xrf$depth),
+                      ymin = min(section$xrf$depth),
+                      xmin = max(as.numeric(colnames(section$image$image))),
+                      xmax = max(as.numeric(colnames(section$image$image)))*2)
+  } else{stop("Specify `l`eft or `r`ight for the image.")}
+  
+}
+
+ggItraxRadio <- function(section, xposition){
+  if(xposition == "l"){
+    annotation_custom(rasterGrob(section$radiograph$image,
+                                 width = unit(1, "npc"),
+                                 height = unit(1, "npc")),
+                      ymin = min(section$xrf$depth),
+                      ymax = max(section$xrf$depth),
+                      xmin = mean(as.numeric(colnames(section$image$image))) -
+                        mean(as.numeric(colnames(section$radiograph$image))),
+                      xmax = mean(as.numeric(colnames(section$image$image))) +
+                        mean(as.numeric(colnames(section$radiograph$image)))
+    )
+  } else if(xposition == "r"){
+    annotation_custom(rasterGrob(section$radiograph$image,
+                                 width = unit(1, "npc"),
+                                 height = unit(1, "npc")),
+                      ymin = min(section$xrf$depth),
+                      ymax = max(section$xrf$depth),
+                      xmin = max(as.numeric(colnames(section$image$image))) +
+                        mean(as.numeric(colnames(section$image$image))) -
+                        mean(as.numeric(colnames(section$radiograph$image))),
+                      xmax = max(as.numeric(colnames(section$image$image))) +
+                        mean(as.numeric(colnames(section$image$image))) +
+                        mean(as.numeric(colnames(section$radiograph$image)))
+    )
+  } else(stop("Specify `l`eft or `r`ight for the radiograph."))
+}
+```
+
+Recall that `ggplot` objects can be saved and recalled rather than immediately printed. Let us take the plot generated in a previous example, but assign it using `imagePlot <- ggplot() + ...`, whilst also using our newly created functions to shorten the code.
+
+```{r imageplot}
 imagePlot <- ggplot() +
   scale_y_continuous(limits = rev(range(CD166_19_xrf$depth))) +
-  scale_x_continuous(breaks = round(range(as.numeric(colnames(CD166_19_S1$image$image))), 0),
-                     limits = range(as.numeric(colnames(CD166_19_S1$image$image)))) +
-  #coord_fixed(ratio = 1) +
+  scale_x_continuous(breaks = round(c(0, max(as.numeric(colnames(CD166_19_S1$image$image)))*2)),
+                     limits = c(0, max(as.numeric(colnames(CD166_19_S1$image$image)))*2)) +
   labs(y = "Depth [mm]", x = "[mm]") +
-  annotation_custom(rasterGrob(CD166_19_S1$image$image,
-                               width = unit(1, "npc"),
-                               height = unit(1, "npc")),
-                    ymax = max(CD166_19_S1$xrf$depth),
-                    ymin = min(CD166_19_S1$xrf$depth),
-                    xmin = min(as.numeric(colnames(CD166_19_S1$image$image))),
-                    xmax = max(as.numeric(colnames(CD166_19_S1$image$image)))
-  ) +
-  annotation_custom(rasterGrob(CD166_19_S2$image$image,
-                               width = unit(1, "npc"),
-                               height = unit(1, "npc")),
-                    ymax = max(CD166_19_S2$xrf$depth),
-                    ymin = min(CD166_19_S2$xrf$depth),
-                    xmin = min(as.numeric(colnames(CD166_19_S2$image$image))),
-                    xmax = max(as.numeric(colnames(CD166_19_S2$image$image)))
-  ) +
-  annotation_custom(rasterGrob(CD166_19_S3$image$image,
-                               width = unit(1, "npc"),
-                               height = unit(1, "npc")),
-                    ymax = max(CD166_19_S3$xrf$depth),
-                    ymin = min(CD166_19_S3$xrf$depth),
-                    xmin = min(as.numeric(colnames(CD166_19_S3$image$image))),
-                    xmax = max(as.numeric(colnames(CD166_19_S3$image$image)))
-  )
+  ggItraxImage(CD166_19_S1, "l") +
+  ggItraxImage(CD166_19_S2, "r") +
+  ggItraxImage(CD166_19_S3, "l")
 ```
 
 The radiographs can be added afterwards without starting from scratch. We can also modify plot parameters, for example, the x-axis labels can be removed. 
 
 ```{r add_radiographs}
 imagePlot <- imagePlot +
-  annotation_custom(rasterGrob(CD166_19_S1$radiograph$image,
-                               width = unit(1, "npc"),
-                               height = unit(1, "npc")),
-                    ymin = min(CD166_19_S1$xrf$depth),
-                    ymax = max(CD166_19_S1$xrf$depth),
-                    xmin = mean(as.numeric(colnames(CD166_19_S1$image$image))) -
-                      mean(as.numeric(colnames(CD166_19_S1$radiograph$image))),
-                    xmax = mean(as.numeric(colnames(CD166_19_S1$image$image))) +
-                      mean(as.numeric(colnames(CD166_19_S1$radiograph$image)))
-  ) + 
-    annotation_custom(rasterGrob(CD166_19_S2$radiograph$image,
-                               width = unit(1, "npc"),
-                               height = unit(1, "npc")),
-                    ymin = min(CD166_19_S2$xrf$depth),
-                    ymax = max(CD166_19_S2$xrf$depth),
-                    xmin = mean(as.numeric(colnames(CD166_19_S2$image$image))) -
-                      mean(as.numeric(colnames(CD166_19_S2$radiograph$image))),
-                    xmax = mean(as.numeric(colnames(CD166_19_S2$image$image))) +
-                      mean(as.numeric(colnames(CD166_19_S2$radiograph$image)))
-  ) + 
-    annotation_custom(rasterGrob(CD166_19_S3$radiograph$image,
-                               width = unit(1, "npc"),
-                               height = unit(1, "npc")),
-                    ymin = min(CD166_19_S3$xrf$depth),
-                    ymax = max(CD166_19_S3$xrf$depth),
-                    xmin = mean(as.numeric(colnames(CD166_19_S3$image$image))) -
-                      mean(as.numeric(colnames(CD166_19_S3$radiograph$image))),
-                    xmax = mean(as.numeric(colnames(CD166_19_S3$image$image))) +
-                      mean(as.numeric(colnames(CD166_19_S3$radiograph$image)))
-  ) +
+  ggItraxRadio(CD166_19_S1, "l") +
+  ggItraxRadio(CD166_19_S2, "r") +
+  ggItraxRadio(CD166_19_S3, "l") +
     theme(axis.title.x=element_blank(),
         axis.text.x=element_blank(),
         axis.ticks.x=element_blank())
+
 print(imagePlot + coord_fixed(ratio = 1))
 ```
 
