@@ -85,12 +85,11 @@ CD166_19_xrf %>%
   itrax_reduce(by = 10) %>%
   mutate(uid = 1:length(uid)) %>% # we have to spoof uid here
   drop_na("depth") %>%
-  itrax_section(divisions = 50, 
-                elementsonly = c("Ti", "Al", "Fe", "Mn", "Mg", 
-                                 "Ca", "Na", "K" , "P" , "Si", 
-                                 "V" , "Cr", "Co", "Ni", "Cu", 
-                                 "Zn", "Sr", "Nb", "Y" , "Zr", 
-                                 "Ba", "La", "Ce")
+  itrax_section(divisions = 60, 
+                elementsonly = c("Al", "Si", "K" , "Ca", "Ti", 
+                                 "V" , "Cr", "Mn", "Fe", "Ni", 
+                                 "Cu", "Zn","Sr" , "Y" , "Zr", 
+                                 "Ba")
   ) %>%
   
   ggplot(mapping = aes(x = depth, y = 1, fill = group)) + 
@@ -102,6 +101,43 @@ CD166_19_xrf %>%
         axis.text.y = element_blank(),
         axis.ticks.y = element_blank(),
         legend.position = "none") 
+```
+
+To return a core sampling plan, some conversions must be performed:
+```{r message=FALSE, warning=FALSE}
+CD166_19_xrf %>%
+  filter(qc == TRUE) %>%
+  itrax_reduce(breaks_lower = seq(from = 0, to = 4209-10, by = 10),
+               breaks_upper = seq(from = 0+10, to = 4209, by = 10)) %>%
+  # this needs a method for simply adding all the character vectors from each chunk together into a vector...
+  mutate(uid = 1:length(uid)) %>%
+  mutate(breaks_lower = seq(from = 0, to = 4209-10, by = 10),
+         breaks_upper = seq(from = 0+10, to = 4209, by = 10)) %>% # we have to spoof uid here
+  drop_na("depth") %>%
+  itrax_section(divisions = 60, 
+                elementsonly = c("Al", "Si", "K" , "Ca", "Ti", 
+                                 "V" , "Cr", "Mn", "Fe", "Ni", 
+                                 "Cu", "Zn","Sr" , "Y" , "Zr", 
+                                 "Ba")
+  ) %>% 
+  filter(calib_sample == TRUE) %>%
+  select(group, depth, breaks_lower, breaks_upper, everything()) %>%
+  arrange(depth) %>%
+  select(breaks_lower, breaks_upper) %>%
+  
+  mutate(core = if_else(breaks_upper >= min(CD166_19_S1$xrf$depth) & breaks_upper <= max(CD166_19_S1$xrf$depth), "c1", NULL)) %>%
+  mutate(core = if_else(breaks_upper >= min(CD166_19_S2$xrf$depth) & breaks_upper <= max(CD166_19_S2$xrf$depth), "c2", core)) %>%
+  mutate(core = if_else(breaks_upper >= min(CD166_19_S3$xrf$depth) & breaks_upper <= max(CD166_19_S3$xrf$depth), "c3", core)) %>%
+  
+  mutate(core_position_lower = ifelse(core == "c1", breaks_lower-min(CD166_19_S1$xrf$depth), NA)) %>%
+  mutate(core_position_lower = ifelse(core == "c2", breaks_lower-min(CD166_19_S2$xrf$depth), core_position_lower)) %>%
+  mutate(core_position_lower = ifelse(core == "c3", breaks_lower-min(CD166_19_S3$xrf$depth), core_position_lower)) %>%
+  
+  mutate(core_position_upper = ifelse(core == "c1", breaks_upper-min(CD166_19_S1$xrf$depth), NA)) %>%
+  mutate(core_position_upper = ifelse(core == "c2", breaks_upper-min(CD166_19_S2$xrf$depth), core_position_upper)) %>%
+  mutate(core_position_upper = ifelse(core == "c3", breaks_upper-min(CD166_19_S3$xrf$depth), core_position_upper)) %>%
+  
+  select(core, core_position_lower, core_position_upper)
 ```
 
 ## Linear Methods
