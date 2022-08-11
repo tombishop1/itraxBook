@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>3.6 Dead Time | Using Itrax Data in R</title>
   <meta name="description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
-  <meta name="generator" content="bookdown 0.25 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.28 and GitBook 2.6.7" />
 
   <meta property="og:title" content="3.6 Dead Time | Using Itrax Data in R" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2022-04-07" />
+<meta name="date" content="2022-08-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -137,69 +137,69 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="./">Using Itrax Data in R</a></li>
 
 <li class="divider"></li>
-<li><a href="index.html#preface">Preface<span></span></a><ul>
-<li class="chapter" data-level="0.1" data-path="the-itraxr-package.html"><a href="the-itraxr-package.html"><i class="fa fa-check"></i><b>0.1</b> The itraxR Package<span></span></a></li>
-<li class="chapter" data-level="0.2" data-path="prerequisites.html"><a href="prerequisites.html"><i class="fa fa-check"></i><b>0.2</b> Prerequisites<span></span></a></li>
-<li class="chapter" data-level="0.3" data-path="example-data.html"><a href="example-data.html"><i class="fa fa-check"></i><b>0.3</b> Example Data<span></span></a></li>
-<li class="chapter" data-level="0.4" data-path="utility-data.html"><a href="utility-data.html"><i class="fa fa-check"></i><b>0.4</b> Utility Data<span></span></a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a><ul>
+<li class="chapter" data-level="0.1" data-path="the-itraxr-package.html"><a href="the-itraxr-package.html"><i class="fa fa-check"></i><b>0.1</b> The itraxR Package</a></li>
+<li class="chapter" data-level="0.2" data-path="prerequisites.html"><a href="prerequisites.html"><i class="fa fa-check"></i><b>0.2</b> Prerequisites</a></li>
+<li class="chapter" data-level="0.3" data-path="example-data.html"><a href="example-data.html"><i class="fa fa-check"></i><b>0.3</b> Example Data</a></li>
+<li class="chapter" data-level="0.4" data-path="utility-data.html"><a href="utility-data.html"><i class="fa fa-check"></i><b>0.4</b> Utility Data</a></li>
 </ul></li>
-<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Data Structure<span></span></a><ul>
-<li class="chapter" data-level="1.1" data-path="metadata.html"><a href="metadata.html"><i class="fa fa-check"></i><b>1.1</b> Metadata<span></span></a></li>
-<li class="chapter" data-level="1.2" data-path="xrf-data.html"><a href="xrf-data.html"><i class="fa fa-check"></i><b>1.2</b> XRF Data<span></span></a></li>
-<li class="chapter" data-level="1.3" data-path="optical-images.html"><a href="optical-images.html"><i class="fa fa-check"></i><b>1.3</b> Optical Images<span></span></a></li>
-<li class="chapter" data-level="1.4" data-path="radiographic-images.html"><a href="radiographic-images.html"><i class="fa fa-check"></i><b>1.4</b> Radiographic Images<span></span></a></li>
-<li class="chapter" data-level="1.5" data-path="magnetic-susceptability.html"><a href="magnetic-susceptability.html"><i class="fa fa-check"></i><b>1.5</b> Magnetic Susceptability<span></span></a></li>
+<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Data Structure</a><ul>
+<li class="chapter" data-level="1.1" data-path="metadata.html"><a href="metadata.html"><i class="fa fa-check"></i><b>1.1</b> Metadata</a></li>
+<li class="chapter" data-level="1.2" data-path="xrf-data.html"><a href="xrf-data.html"><i class="fa fa-check"></i><b>1.2</b> XRF Data</a></li>
+<li class="chapter" data-level="1.3" data-path="optical-images.html"><a href="optical-images.html"><i class="fa fa-check"></i><b>1.3</b> Optical Images</a></li>
+<li class="chapter" data-level="1.4" data-path="radiographic-images.html"><a href="radiographic-images.html"><i class="fa fa-check"></i><b>1.4</b> Radiographic Images</a></li>
+<li class="chapter" data-level="1.5" data-path="magnetic-susceptability.html"><a href="magnetic-susceptability.html"><i class="fa fa-check"></i><b>1.5</b> Magnetic Susceptability</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="importing.html"><a href="importing.html"><i class="fa fa-check"></i><b>2</b> Importing Data<span></span></a><ul>
-<li class="chapter" data-level="2.1" data-path="metadata-1.html"><a href="metadata-1.html"><i class="fa fa-check"></i><b>2.1</b> Metadata<span></span></a></li>
-<li class="chapter" data-level="2.2" data-path="xrf-data-1.html"><a href="xrf-data-1.html"><i class="fa fa-check"></i><b>2.2</b> XRF Data<span></span></a><ul>
-<li class="chapter" data-level="2.2.1" data-path="xrf-data-1.html"><a href="xrf-data-1.html#processed-data"><i class="fa fa-check"></i><b>2.2.1</b> Processed Data<span></span></a></li>
-<li class="chapter" data-level="2.2.2" data-path="xrf-data-1.html"><a href="xrf-data-1.html#joining-xrf-data"><i class="fa fa-check"></i><b>2.2.2</b> Joining XRF Data<span></span></a></li>
-<li class="chapter" data-level="2.2.3" data-path="xrf-data-1.html"><a href="xrf-data-1.html#raw-data"><i class="fa fa-check"></i><b>2.2.3</b> Raw Data<span></span></a></li>
+<li class="chapter" data-level="2" data-path="importing.html"><a href="importing.html"><i class="fa fa-check"></i><b>2</b> Importing Data</a><ul>
+<li class="chapter" data-level="2.1" data-path="metadata-1.html"><a href="metadata-1.html"><i class="fa fa-check"></i><b>2.1</b> Metadata</a></li>
+<li class="chapter" data-level="2.2" data-path="xrf-data-1.html"><a href="xrf-data-1.html"><i class="fa fa-check"></i><b>2.2</b> XRF Data</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="xrf-data-1.html"><a href="xrf-data-1.html#processed-data"><i class="fa fa-check"></i><b>2.2.1</b> Processed Data</a></li>
+<li class="chapter" data-level="2.2.2" data-path="xrf-data-1.html"><a href="xrf-data-1.html#joining-xrf-data"><i class="fa fa-check"></i><b>2.2.2</b> Joining XRF Data</a></li>
+<li class="chapter" data-level="2.2.3" data-path="xrf-data-1.html"><a href="xrf-data-1.html#raw-data"><i class="fa fa-check"></i><b>2.2.3</b> Raw Data</a></li>
 </ul></li>
-<li class="chapter" data-level="2.3" data-path="optical-images-1.html"><a href="optical-images-1.html"><i class="fa fa-check"></i><b>2.3</b> Optical Images<span></span></a></li>
-<li class="chapter" data-level="2.4" data-path="radiographic-images-1.html"><a href="radiographic-images-1.html"><i class="fa fa-check"></i><b>2.4</b> Radiographic Images<span></span></a></li>
-<li class="chapter" data-level="2.5" data-path="importing-everything.html"><a href="importing-everything.html"><i class="fa fa-check"></i><b>2.5</b> Importing Everything<span></span></a></li>
+<li class="chapter" data-level="2.3" data-path="optical-images-1.html"><a href="optical-images-1.html"><i class="fa fa-check"></i><b>2.3</b> Optical Images</a></li>
+<li class="chapter" data-level="2.4" data-path="radiographic-images-1.html"><a href="radiographic-images-1.html"><i class="fa fa-check"></i><b>2.4</b> Radiographic Images</a></li>
+<li class="chapter" data-level="2.5" data-path="importing-everything.html"><a href="importing-everything.html"><i class="fa fa-check"></i><b>2.5</b> Importing Everything</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="tidying-data.html"><a href="tidying-data.html"><i class="fa fa-check"></i><b>3</b> Tidying Data<span></span></a><ul>
-<li class="chapter" data-level="3.1" data-path="low-count-rates.html"><a href="low-count-rates.html"><i class="fa fa-check"></i><b>3.1</b> Low Count Rates<span></span></a></li>
-<li class="chapter" data-level="3.2" data-path="model-errors-mse.html"><a href="model-errors-mse.html"><i class="fa fa-check"></i><b>3.2</b> Model Errors (MSE)<span></span></a></li>
-<li class="chapter" data-level="3.3" data-path="surface-slope.html"><a href="surface-slope.html"><i class="fa fa-check"></i><b>3.3</b> Surface Slope<span></span></a></li>
-<li class="chapter" data-level="3.4" data-path="combining-validity-flags.html"><a href="combining-validity-flags.html"><i class="fa fa-check"></i><b>3.4</b> Combining “Validity” Flags<span></span></a></li>
-<li class="chapter" data-level="3.5" data-path="tube-current.html"><a href="tube-current.html"><i class="fa fa-check"></i><b>3.5</b> Tube current<span></span></a></li>
-<li class="chapter" data-level="3.6" data-path="dead-time.html"><a href="dead-time.html"><i class="fa fa-check"></i><b>3.6</b> Dead Time<span></span></a></li>
-<li class="chapter" data-level="3.7" data-path="correcting-for-water-content.html"><a href="correcting-for-water-content.html"><i class="fa fa-check"></i><b>3.7</b> Correcting for Water Content<span></span></a></li>
-<li class="chapter" data-level="3.8" data-path="correcting-grain-size.html"><a href="correcting-grain-size.html"><i class="fa fa-check"></i><b>3.8</b> Correcting Grain Size<span></span></a></li>
-<li class="chapter" data-level="3.9" data-path="uncertainties.html"><a href="uncertainties.html"><i class="fa fa-check"></i><b>3.9</b> Uncertainties<span></span></a></li>
-<li class="chapter" data-level="3.10" data-path="noisy-data.html"><a href="noisy-data.html"><i class="fa fa-check"></i><b>3.10</b> Noisy Data<span></span></a></li>
-<li class="chapter" data-level="3.11" data-path="reversing-data.html"><a href="reversing-data.html"><i class="fa fa-check"></i><b>3.11</b> Reversing Data<span></span></a></li>
-<li class="chapter" data-level="3.12" data-path="visualising-raw-data.html"><a href="visualising-raw-data.html"><i class="fa fa-check"></i><b>3.12</b> Visualising Raw Data<span></span></a></li>
+<li class="chapter" data-level="3" data-path="tidying-data.html"><a href="tidying-data.html"><i class="fa fa-check"></i><b>3</b> Tidying Data</a><ul>
+<li class="chapter" data-level="3.1" data-path="low-count-rates.html"><a href="low-count-rates.html"><i class="fa fa-check"></i><b>3.1</b> Low Count Rates</a></li>
+<li class="chapter" data-level="3.2" data-path="model-errors-mse.html"><a href="model-errors-mse.html"><i class="fa fa-check"></i><b>3.2</b> Model Errors (MSE)</a></li>
+<li class="chapter" data-level="3.3" data-path="surface-slope.html"><a href="surface-slope.html"><i class="fa fa-check"></i><b>3.3</b> Surface Slope</a></li>
+<li class="chapter" data-level="3.4" data-path="combining-validity-flags.html"><a href="combining-validity-flags.html"><i class="fa fa-check"></i><b>3.4</b> Combining “Validity” Flags</a></li>
+<li class="chapter" data-level="3.5" data-path="tube-current.html"><a href="tube-current.html"><i class="fa fa-check"></i><b>3.5</b> Tube current</a></li>
+<li class="chapter" data-level="3.6" data-path="dead-time.html"><a href="dead-time.html"><i class="fa fa-check"></i><b>3.6</b> Dead Time</a></li>
+<li class="chapter" data-level="3.7" data-path="correcting-for-water-content.html"><a href="correcting-for-water-content.html"><i class="fa fa-check"></i><b>3.7</b> Correcting for Water Content</a></li>
+<li class="chapter" data-level="3.8" data-path="correcting-grain-size.html"><a href="correcting-grain-size.html"><i class="fa fa-check"></i><b>3.8</b> Correcting Grain Size</a></li>
+<li class="chapter" data-level="3.9" data-path="uncertainties.html"><a href="uncertainties.html"><i class="fa fa-check"></i><b>3.9</b> Uncertainties</a></li>
+<li class="chapter" data-level="3.10" data-path="noisy-data.html"><a href="noisy-data.html"><i class="fa fa-check"></i><b>3.10</b> Noisy Data</a></li>
+<li class="chapter" data-level="3.11" data-path="reversing-data.html"><a href="reversing-data.html"><i class="fa fa-check"></i><b>3.11</b> Reversing Data</a></li>
+<li class="chapter" data-level="3.12" data-path="visualising-raw-data.html"><a href="visualising-raw-data.html"><i class="fa fa-check"></i><b>3.12</b> Visualising Raw Data</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="plotting.html"><a href="plotting.html"><i class="fa fa-check"></i><b>4</b> Plotting<span></span></a><ul>
-<li class="chapter" data-level="4.1" data-path="plotting-xrf-data.html"><a href="plotting-xrf-data.html"><i class="fa fa-check"></i><b>4.1</b> Plotting XRF Data<span></span></a></li>
-<li class="chapter" data-level="4.2" data-path="plotting-images.html"><a href="plotting-images.html"><i class="fa fa-check"></i><b>4.2</b> Plotting Images<span></span></a></li>
-<li class="chapter" data-level="4.3" data-path="combining-images-with-xrf-data.html"><a href="combining-images-with-xrf-data.html"><i class="fa fa-check"></i><b>4.3</b> Combining Images with XRF Data<span></span></a></li>
+<li class="chapter" data-level="4" data-path="plotting.html"><a href="plotting.html"><i class="fa fa-check"></i><b>4</b> Plotting</a><ul>
+<li class="chapter" data-level="4.1" data-path="plotting-xrf-data.html"><a href="plotting-xrf-data.html"><i class="fa fa-check"></i><b>4.1</b> Plotting XRF Data</a></li>
+<li class="chapter" data-level="4.2" data-path="plotting-images.html"><a href="plotting-images.html"><i class="fa fa-check"></i><b>4.2</b> Plotting Images</a></li>
+<li class="chapter" data-level="4.3" data-path="combining-images-with-xrf-data.html"><a href="combining-images-with-xrf-data.html"><i class="fa fa-check"></i><b>4.3</b> Combining Images with XRF Data</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="transforming-data.html"><a href="transforming-data.html"><i class="fa fa-check"></i><b>5</b> Transforming Data<span></span></a><ul>
-<li class="chapter" data-level="5.1" data-path="ratios-and-normalisation.html"><a href="ratios-and-normalisation.html"><i class="fa fa-check"></i><b>5.1</b> Ratios and Normalisation<span></span></a></li>
-<li class="chapter" data-level="5.2" data-path="running-mean-and-other-window-functions.html"><a href="running-mean-and-other-window-functions.html"><i class="fa fa-check"></i><b>5.2</b> Running Mean and Other Window Functions<span></span></a></li>
+<li class="chapter" data-level="5" data-path="transforming-data.html"><a href="transforming-data.html"><i class="fa fa-check"></i><b>5</b> Transforming Data</a><ul>
+<li class="chapter" data-level="5.1" data-path="ratios-and-normalisation.html"><a href="ratios-and-normalisation.html"><i class="fa fa-check"></i><b>5.1</b> Ratios and Normalisation</a></li>
+<li class="chapter" data-level="5.2" data-path="running-mean-and-other-window-functions.html"><a href="running-mean-and-other-window-functions.html"><i class="fa fa-check"></i><b>5.2</b> Running Mean and Other Window Functions</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="multivariate-methods.html"><a href="multivariate-methods.html"><i class="fa fa-check"></i><b>6</b> Multivariate Methods<span></span></a><ul>
-<li class="chapter" data-level="6.1" data-path="preparing-data-for-multivariate-data-analysis.html"><a href="preparing-data-for-multivariate-data-analysis.html"><i class="fa fa-check"></i><b>6.1</b> Preparing Data for Multivariate Data Analysis<span></span></a></li>
-<li class="chapter" data-level="6.2" data-path="principal-component-analysis.html"><a href="principal-component-analysis.html"><i class="fa fa-check"></i><b>6.2</b> Principal Component Analysis<span></span></a></li>
-<li class="chapter" data-level="6.3" data-path="using-ordr-for-pca.html"><a href="using-ordr-for-pca.html"><i class="fa fa-check"></i><b>6.3</b> Using <code>ordr</code> for PCA<span></span></a></li>
-<li class="chapter" data-level="6.4" data-path="unconstrained-cluster-analysis.html"><a href="unconstrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.4</b> Unconstrained Cluster Analysis<span></span></a></li>
-<li class="chapter" data-level="6.5" data-path="constrained-cluster-analysis.html"><a href="constrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.5</b> Constrained Cluster Analysis<span></span></a></li>
+<li class="chapter" data-level="6" data-path="multivariate-methods.html"><a href="multivariate-methods.html"><i class="fa fa-check"></i><b>6</b> Multivariate Methods</a><ul>
+<li class="chapter" data-level="6.1" data-path="preparing-data-for-multivariate-data-analysis.html"><a href="preparing-data-for-multivariate-data-analysis.html"><i class="fa fa-check"></i><b>6.1</b> Preparing Data for Multivariate Data Analysis</a></li>
+<li class="chapter" data-level="6.2" data-path="principal-component-analysis.html"><a href="principal-component-analysis.html"><i class="fa fa-check"></i><b>6.2</b> Principal Component Analysis</a></li>
+<li class="chapter" data-level="6.3" data-path="using-ordr-for-pca.html"><a href="using-ordr-for-pca.html"><i class="fa fa-check"></i><b>6.3</b> Using <code>ordr</code> for PCA</a></li>
+<li class="chapter" data-level="6.4" data-path="unconstrained-cluster-analysis.html"><a href="unconstrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.4</b> Unconstrained Cluster Analysis</a></li>
+<li class="chapter" data-level="6.5" data-path="constrained-cluster-analysis.html"><a href="constrained-cluster-analysis.html"><i class="fa fa-check"></i><b>6.5</b> Constrained Cluster Analysis</a></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="calibrating-data.html"><a href="calibrating-data.html"><i class="fa fa-check"></i><b>7</b> Calibrating Data<span></span></a><ul>
-<li class="chapter" data-level="7.1" data-path="suitable-methods.html"><a href="suitable-methods.html"><i class="fa fa-check"></i><b>7.1</b> Suitable Methods<span></span></a></li>
-<li class="chapter" data-level="7.2" data-path="preparing-data.html"><a href="preparing-data.html"><i class="fa fa-check"></i><b>7.2</b> Preparing Data<span></span></a></li>
-<li class="chapter" data-level="7.3" data-path="selecting-samples.html"><a href="selecting-samples.html"><i class="fa fa-check"></i><b>7.3</b> Selecting Samples<span></span></a></li>
-<li class="chapter" data-level="7.4" data-path="linear-methods.html"><a href="linear-methods.html"><i class="fa fa-check"></i><b>7.4</b> Linear Methods<span></span></a></li>
-<li class="chapter" data-level="7.5" data-path="log-ratio-methods.html"><a href="log-ratio-methods.html"><i class="fa fa-check"></i><b>7.5</b> Log-Ratio Methods<span></span></a></li>
+<li class="chapter" data-level="7" data-path="calibrating-data.html"><a href="calibrating-data.html"><i class="fa fa-check"></i><b>7</b> Calibrating Data</a><ul>
+<li class="chapter" data-level="7.1" data-path="suitable-methods.html"><a href="suitable-methods.html"><i class="fa fa-check"></i><b>7.1</b> Suitable Methods</a></li>
+<li class="chapter" data-level="7.2" data-path="preparing-data.html"><a href="preparing-data.html"><i class="fa fa-check"></i><b>7.2</b> Preparing Data</a></li>
+<li class="chapter" data-level="7.3" data-path="selecting-samples.html"><a href="selecting-samples.html"><i class="fa fa-check"></i><b>7.3</b> Selecting Samples</a></li>
+<li class="chapter" data-level="7.4" data-path="linear-methods.html"><a href="linear-methods.html"><i class="fa fa-check"></i><b>7.4</b> Linear Methods</a></li>
+<li class="chapter" data-level="7.5" data-path="log-ratio-methods.html"><a href="log-ratio-methods.html"><i class="fa fa-check"></i><b>7.5</b> Log-Ratio Methods</a></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="exporting-data.html"><a href="exporting-data.html"><i class="fa fa-check"></i><b>8</b> Exporting Data<span></span></a></li>
-<li><a href="references.html#references">References<span></span></a></li>
+<li class="chapter" data-level="8" data-path="exporting-data.html"><a href="exporting-data.html"><i class="fa fa-check"></i><b>8</b> Exporting Data</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -249,7 +249,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## #   Cs &lt;dbl&gt;, Ba &lt;dbl&gt;, Nd &lt;dbl&gt;, Sm &lt;dbl&gt;, Yb &lt;dbl&gt;, Ta &lt;dbl&gt;, W &lt;dbl&gt;,
 ## #   Pb &lt;dbl&gt;, Bi &lt;dbl&gt;, `Mo inc` &lt;dbl&gt;, `Mo coh` &lt;dbl&gt;, filename &lt;chr&gt;,
 ## #   position &lt;dbl&gt;, `sample surface` &lt;dbl&gt;, `E-gain` &lt;dbl&gt;, `E-offset` &lt;dbl&gt;,
-## #   `F-slope` &lt;dbl&gt;, `F-offset` &lt;dbl&gt;, `Fe a*2` &lt;dbl&gt;, `Fe a+b` &lt;dbl&gt;, …</code></pre>
+## #   `F-slope` &lt;dbl&gt;, `F-offset` &lt;dbl&gt;, `Fe a*2` &lt;dbl&gt;, `Fe a+b` &lt;dbl&gt;, …
+## # ℹ Use `colnames()` to see all variable names</code></pre>
 </div>
             </section>
 
