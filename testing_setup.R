@@ -100,3 +100,59 @@ CD166_19_xrf_acomp_meta <- full_join(CD166_19_xrf_acomp %>%
                                      by = "uid"
                                      ) %>%
   arrange(depth, label) 
+
+# do calibration ----
+# make icp dataset
+icp <- read_csv("calibration_samples/calibration_data.csv") %>%
+  #select(-`Sample Id`) %>%
+  mutate(water_content = (((wet-tare)-(dry-tare))/(wet-tare))*100) %>%
+  select(-c("wet", "tare", "dry")) %>%
+  # remove negative values
+  mutate(across(any_of(elementsList), function(x){replace(x, which(x<0), NA)})) %>%
+  # adjust for dilution
+  mutate(across(any_of(elementsList), function(x){(x*`Dilution`)/`weight`})) %>%
+  # adjust for water content
+  mutate(across(any_of(elementsList), function(x){x*(1-icp$water_content/100)})) %>%
+  # remove Inf or NaN values
+  mutate(across(any_of(elementsList), function(x){replace(x, is.infinite(x) | is.nan(x), NA)})) %>%
+  select(-c("weight", "Dilution")) %>%
+  filter(!top %in% c("BLANK", "MESS-4")) %>%
+  mutate(top = as.numeric(top), bot = as.numeric(bot))
+
+# make obs dataset
+xrf <- CD166_19_xrf %>%
+  filter(qc == TRUE) %>%
+  select(-c(label, filename, uid)) %>%
+  itrax_reduce(names = icp$SampleID,
+               breaks_lower = icp$top,
+               breaks_upper = icp$bot) %>%
+  rename(SampleID = resample_names) %>%
+  mutate(top = icp$top, 
+         bot = icp$bot)
+
+# do comparisons
+full_join(
+  icp %>%
+    select(any_of(c(elementsList, "SampleID"))) %>%
+    pivot_longer(any_of(elementsList),
+                 values_to = "icp",
+                 names_to = "element"),
+  
+  xrf %>% 
+    select(any_of(c(elementsList, "SampleID"))) %>%
+    pivot_longer(any_of(elementsList),
+                 values_to = "xrf",
+                 names_to = "element"),
+  
+  by = c("SampleID", "element")
+  ) %>%
+
+  filter(element %in% myElements) %>%
+  
+  ggplot(aes(x = icp, y = xrf)) +
+  geom_point() +
+  #geom_smooth(method='lm') +
+  ggpmisc::stat_poly_line() +
+  ggpmisc::stat_poly_eq() +
+  facet_wrap(vars(element), 
+             scales = "free")

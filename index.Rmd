@@ -43,7 +43,7 @@ packages = c("kableExtra", "DiagrammeR",
              "tidyverse" , "PeriodicTable", 
              "egg"       , "errors", 
              "forecast"  , "slider",
-             "compositions")
+             "compositions", "ggpmisc")
 
 # Now load or install & load all those CRAN packages
 package.check <- lapply(
