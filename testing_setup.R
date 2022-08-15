@@ -15,7 +15,7 @@ library(slider)
 library(compositions)
 
 # set wording directory ----
-setwd("C:/Github/itraxBook/CD166_19_(2020)/")
+setwd("CD166_19_(2020)/")
 
 # load utility data ----
 data(periodicTable)

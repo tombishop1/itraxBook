@@ -90,7 +90,7 @@ CD166_19_xrf_acomp_meta %>%
   ordr::ggbiplot(., sec.axes = "cols", scale.factor = 8) +
   ordr::geom_rows_point(aes(colour = depth, shape = label), alpha = 0.5) +
   ordr::geom_cols_vector() +
-  ordr::geom_cols_text_radiate(aes(label = .name)) +
+  ordr::geom_cols_text_radiate(aes(label = name)) +
   scale_color_continuous(type = "viridis", trans = "reverse")
 ```
 
