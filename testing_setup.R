@@ -112,7 +112,7 @@ icp <- read_csv("calibration_samples/calibration_data.csv") %>%
   # adjust for dilution
   mutate(across(any_of(elementsList), function(x){(x*`Dilution`)/`weight`})) %>%
   # adjust for water content
-  mutate(across(any_of(elementsList), function(x){x*(1-icp$water_content/100)})) %>%
+  mutate(across(any_of(elementsList), function(x){x*(1-water_content/100)})) %>%
   # remove Inf or NaN values
   mutate(across(any_of(elementsList), function(x){replace(x, is.infinite(x) | is.nan(x), NA)})) %>%
   select(-c("weight", "Dilution")) %>%
@@ -148,11 +148,11 @@ full_join(
   ) %>%
 
   filter(element %in% myElements) %>%
+  drop_na() %>%
   
   ggplot(aes(x = icp, y = xrf)) +
   geom_point() +
-  #geom_smooth(method='lm') +
   ggpmisc::stat_poly_line() +
   ggpmisc::stat_poly_eq() +
   facet_wrap(vars(element), 
-             scales = "free")
+             scales = "free") 

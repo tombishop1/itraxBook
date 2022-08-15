@@ -8,69 +8,6 @@ Rather, an empirical approach is usually required, whereby some subset of the ma
 
 There are a number of published methods for quantifying elemental concentrations from ED-XRF data, and the area is of continued research interest. Most methods fall into the category of bivariate linear models of the relationship between ED-XRF peak area, and independently derived element concentrations (e.g. sub-samples analysed by ICP-MS). However, there are also more complex approaches, like Lee Drake's modern version of the Lucas-Tooth and Price (1961) algorithm, "CloudCal". 
 
-## Preparing Data
-
-In order to perform empirical calibration it is necessary to have some quantitative data that relates directly to the Itrax XRF data. The quantitative data is unlikely to be at the same resolution as the Itrax XRF data. For example, it is typical to scan cores at between 0.2 and 1 mm, but typical to sub-sample for WD-XRF or ICP at between 5 - 10 mm. In addition, where Itrax scans are contiguous, sub-samples may not be, for example a 10 mm sub-sample might be taken every 80 mm.
-
-The function `itraxR::itrax_reduction()` can be used to reduce the data to match the resolution of some other data. The example below uses the hypothetical example of some determinations of Ti on sub-samples on the core sequence that are 10 mm in size, taken every 50 mm. Here is the hypothetical data:
-
-```{r include=FALSE}
-icp <- tibble(top = seq(from = min(CD166_19_xrf$depth), to = max(CD166_19_xrf$depth)-10, by = 10),
-              bot = top + 10,
-              Ti  = rnorm(length(top))
-       ) %>%
-  filter(row_number() %% 5 == 1) %>%
-  mutate(SampleID = paste0("ICP_ID_", 1:length(top))) %>%
-  select(SampleID, everything())
-```
-
-```{r}
-glimpse(icp)
-```
-
-And here is the use of `itrax_reduce()` to reduce our Itrax XRF data (`CD166_19_xrf`), using the shape of the "icp" data (in `icp`). 
-
-```{r message=FALSE, warning=FALSE}
-xrf_icp <- CD166_19_xrf %>%
-  drop_na() %>%
-  select(-c(label, filename)) %>%
-  itrax_reduce(names = icp$SampleID,
-               breaks_lower = icp$top,
-               breaks_upper = icp$bot) %>%
-  select(resample_names, Ti) %>%
-  rename(Ti_XRF = Ti,
-         SampleID = resample_names) %>%
-  
-  inner_join(., icp, by = "SampleID") %>%
-  select(SampleID, Ti, Ti_XRF, everything())
-
-xrf_icp %>% glimpse()
-```
-
-Note the requirement to remove text based columns (in this case `file` and `label`) from the data before this step is performed - if the reducing function cannot handle a data type (e.g. passing characters to `mean()`), errors will occur. If we wanted to add the standard deviation alongside the mean for each chunk, this can be done my modifying the default reducing function (`mean()`) to `sd()`, for example:
-
-```{r message=FALSE, warning=FALSE}
-CD166_19_xrf %>%
-  drop_na() %>%
-  select(-c(label, filename)) %>%
-  itrax_reduce(names = icp$SampleID,
-               breaks_lower = icp$top,
-               breaks_upper = icp$bot,
-               fun = sd) %>%
-  select(resample_names, Ti) %>%
-  rename(Ti_XRF_sd = Ti,
-         SampleID = resample_names) %>%
-  inner_join(., xrf_icp, by = "SampleID") %>%
-  select(SampleID, Ti, Ti_XRF, Ti_XRF_sd, everything()) %>%
-  glimpse()
-```
-
-It is worth reading `?itraxR::itrax_reduce()` as the behaviour can and should be modified depending on your exact use case. For example, in th situation above where none of the samples are contiguous it might be wise to modify the parameters of `itraxR::itrax_reduce()` to include `edges = c(">=", "<=")` so that the "edges" of the sub-samples are captured. This might not be the case for contiguous samples in order to avoid "double-counting". 
-
-```{r include=FALSE}
-rm(icp, xrf_icp)
-```
-
 ## Selecting Samples
 
 Unless you plan on sub-sampling the entire core, perhaps contiguously, you will need to decide where best to take your samples for best model coverage. If you are only interested in a single element, this is trivial - simply ensure your sampling strategy encompasses a wide range of samples. However, where you are attempting to calibrate for many elements, developing an optimal sampling strategy manually can be difficult. 
@@ -104,7 +41,8 @@ CD166_19_xrf %>%
 ```
 
 To return a core sampling plan, some conversions must be performed:
-```{r message=FALSE, warning=FALSE}
+
+```{r core_sampling_plan, message=FALSE, warning=FALSE}
 CD166_19_xrf %>%
   filter(qc == TRUE) %>%
   itrax_reduce(breaks_lower = seq(from = 0, to = 4209-10, by = 10),
@@ -140,6 +78,79 @@ CD166_19_xrf %>%
   select(core, core_position_lower, core_position_upper)
 ```
 
+## Preparing Data
+
+In order to perform empirical calibration it is necessary to have some quantitative data that relates directly to the Itrax XRF data. The quantitative data is unlikely to be at the same resolution as the Itrax XRF data. For example, it is typical to scan cores at between 0.2 and 1 mm, but typical to sub-sample for WD-XRF or ICP at between 5 - 10 mm. In addition, where Itrax scans are contiguous, sub-samples may not be, for example a 10 mm sub-sample might be taken every 80 mm. In this example we have sub-sampled and analysed the 60 samples defined in the previous section. Here they have been freeze-dried, digested in aqua regia using microwave digestion^[see Roje, V. (2010) in Chemical Papaers vol.64(4), pp.409-414], filtered and analysed using ICP-OES. 
+
+```{r icp_data_import}
+icp <- read_csv("calibration_samples/calibration_data.csv") %>%
+  #select(-`Sample Id`) %>%
+  mutate(water_content = (((wet-tare)-(dry-tare))/(wet-tare))*100) %>%
+  select(-c("wet", "tare", "dry")) %>%
+  # remove negative values
+  mutate(across(any_of(elementsList), function(x){replace(x, which(x<0), NA)})) %>%
+  # adjust for dilution
+  mutate(across(any_of(elementsList), function(x){(x*`Dilution`)/`weight`})) %>%
+  # adjust for water content
+  mutate(across(any_of(elementsList), function(x){x*(1-water_content/100)})) %>%
+  # remove Inf or NaN values
+  mutate(across(any_of(elementsList), function(x){replace(x, is.infinite(x) | is.nan(x), NA)})) %>%
+  select(-c("weight", "Dilution")) %>%
+  filter(!top %in% c("BLANK", "MESS-4")) %>%
+  mutate(top = as.numeric(top), bot = as.numeric(bot))
+
+glimpse(icp)
+```
+The function `itraxR::itrax_reduce()` can be used to reduce the Itrax data to match the resolution of some other data. The example below uses the same positions of the ICP-OES analyses of the data to summarise it. And here is the use of `itrax_reduce()` to reduce our Itrax XRF data (`CD166_19_xrf`), using the shape of the "icp" data (in `icp`). Note the requirement to remove text based columns (in this case `file` and `label`) from the data before this step is performed - if the reducing function cannot handle a data type (e.g. passing characters to `mean()`), errors will occur. If we wanted to add the standard deviation alongside the mean for each chunk, this can be done my modifying the default reducing function (`mean()`) to `sd()`, for example:
+
+```{r message=FALSE, warning=FALSE}
+xrf <- CD166_19_xrf %>%
+  filter(qc == TRUE) %>%
+  select(-c(label, filename, uid)) %>%
+  itrax_reduce(names = icp$SampleID,
+               breaks_lower = icp$top,
+               breaks_upper = icp$bot) %>%
+  rename(SampleID = resample_names) %>%
+  mutate(top = icp$top, 
+         bot = icp$bot)
+
+glimpse(xrf)
+```
+
+
+It is worth reading `?itraxR::itrax_reduce()` as the behaviour can and should be modified depending on your exact use case. For example, in th situation above where none of the samples are contiguous it might be wise to modify the parameters of `itraxR::itrax_reduce()` to include `edges = c(">=", "<=")` so that the "edges" of the sub-samples are captured. This might not be the case for contiguous samples in order to avoid "double-counting". 
+
 ## Linear Methods
+We'll use our `xrf` and `icp` datasets. 
+
+```{r}
+full_join(
+  icp %>%
+    select(any_of(c(elementsList, "SampleID"))) %>%
+    pivot_longer(any_of(elementsList),
+                 values_to = "icp",
+                 names_to = "element"),
+  
+  xrf %>% 
+    select(any_of(c(elementsList, "SampleID"))) %>%
+    pivot_longer(any_of(elementsList),
+                 values_to = "xrf",
+                 names_to = "element"),
+  
+  by = c("SampleID", "element")
+  ) %>%
+
+  filter(element %in% myElements) %>%
+  drop_na() %>%
+  
+  ggplot(aes(x = icp, y = xrf)) +
+  geom_point() +
+  ggpmisc::stat_poly_line() +
+  ggpmisc::stat_poly_eq() +
+  facet_wrap(vars(element), 
+             scales = "free") +
+  xlab("ICP-OES [ppm]") + 
+  ylab("Itrax ED-XRF [peak area]")
+```
 
 ## Log-Ratio Methods
