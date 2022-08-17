@@ -130,8 +130,8 @@ xrf <- CD166_19_xrf %>%
   mutate(top = icp$top, 
          bot = icp$bot)
 
-# do comparisons
-full_join(
+# make calibration object
+calibration <- full_join(
   icp %>%
     select(any_of(c(elementsList, "SampleID"))) %>%
     pivot_longer(any_of(elementsList),
@@ -146,13 +146,14 @@ full_join(
   
   by = c("SampleID", "element")
   ) %>%
+  mutate(element = as_factor(element)) %>%
+  drop_na()
 
-  filter(element %in% myElements) %>%
-  drop_na() %>%
-  
-  ggplot(aes(x = icp, y = xrf)) +
-  geom_point() +
-  ggpmisc::stat_poly_line() +
-  ggpmisc::stat_poly_eq() +
-  facet_wrap(vars(element), 
-             scales = "free") 
+calibration <- calibration %>%
+  group_by(element) %>%
+  group_split() %>%
+  lapply(function(x){lm(data = x, icp~xrf)}) %>%
+  `names<-`(calibration %>%
+              group_by(element) %>%
+              group_keys() %>%
+              pull(element))

@@ -1,18 +1,18 @@
 # Calibrating Data
 
-Although much analysis can be done using the peak-area data from the Itrax, it may be desirable to attempt to fully quantify the data. Because of the variability typically encountered in palaeoenvironmental work a "fundamental parameters" type approach is not often possible, although there is some functionality for this in the `Q-Spec` software on the instrument. 
+Although much analysis can be done using the peak-area data from the Itrax, it may be desirable to attempt to fully quantify the data. Because of the variability typically encountered in palaeoenvironmental work a "fundamental parameters" type approach is not often possible, although there is some functionality for this in the `Q-Spec` software on the instrument.
 
-Rather, an empirical approach is usually required, whereby some subset of the material is sampled and a relationship (calibration curve) is calculated for analytes of interest. An empirical approach also has the benefit of being able to estimate the uncertainties of the calibration. 
+Rather, an empirical approach is usually required, whereby some subset of the material is sampled and a relationship (calibration curve) is calculated for analytes of interest. An empirical approach also has the benefit of being able to estimate the uncertainties of the calibration.
 
 ## Suitable Methods
 
-There are a number of published methods for quantifying elemental concentrations from ED-XRF data, and the area is of continued research interest. Most methods fall into the category of bivariate linear models of the relationship between ED-XRF peak area, and independently derived element concentrations (e.g. sub-samples analysed by ICP-MS). However, there are also more complex approaches, like Lee Drake's modern version of the Lucas-Tooth and Price (1961) algorithm, "CloudCal". 
+There are a number of published methods for quantifying elemental concentrations from ED-XRF data, and the area is of continued research interest. Most methods fall into the category of bivariate linear models of the relationship between ED-XRF peak area, and independently derived element concentrations (e.g. sub-samples analysed by ICP-MS). However, there are also more complex approaches, like Lee Drake's modern version of the Lucas-Tooth and Price (1961) algorithm, "CloudCal".
 
 ## Selecting Samples
 
-Unless you plan on sub-sampling the entire core, perhaps contiguously, you will need to decide where best to take your samples for best model coverage. If you are only interested in a single element, this is trivial - simply ensure your sampling strategy encompasses a wide range of samples. However, where you are attempting to calibrate for many elements, developing an optimal sampling strategy manually can be difficult. 
+Unless you plan on sub-sampling the entire core, perhaps contiguously, you will need to decide where best to take your samples for best model coverage. If you are only interested in a single element, this is trivial - simply ensure your sampling strategy encompasses a wide range of samples. However, where you are attempting to calibrate for many elements, developing an optimal sampling strategy manually can be difficult.
 
-The function below illustrates the use of cluster analysis in optimising the sampling regime. Because it is unrealistic to plan on accurately sub-sampling at the high-resolution of the data (in this case, 1 mm), we use `itrax_reduce()` to re sample the data to a lower resolution, in this case, 10 mm. 
+The function below illustrates the use of cluster analysis in optimising the sampling regime. Because it is unrealistic to plan on accurately sub-sampling at the high-resolution of the data (in this case, 1 mm), we use `itrax_reduce()` to re sample the data to a lower resolution, in this case, 10 mm.
 
 The following `itrax_section()` performs an unconstrained cluster analysis, and also reports the central sample in each cluster. This could be considered the most representative of each cluster, and thus the suitable location for sampling. In the graph below, the black ticks created by `geom_rug()` are the suggested sampling locations.
 
@@ -80,7 +80,9 @@ CD166_19_xrf %>%
 
 ## Preparing Data
 
-In order to perform empirical calibration it is necessary to have some quantitative data that relates directly to the Itrax XRF data. The quantitative data is unlikely to be at the same resolution as the Itrax XRF data. For example, it is typical to scan cores at between 0.2 and 1 mm, but typical to sub-sample for WD-XRF or ICP at between 5 - 10 mm. In addition, where Itrax scans are contiguous, sub-samples may not be, for example a 10 mm sub-sample might be taken every 80 mm. In this example we have sub-sampled and analysed the 60 samples defined in the previous section. Here they have been freeze-dried, digested in aqua regia using microwave digestion^[see Roje, V. (2010) in Chemical Papaers vol.64(4), pp.409-414], filtered and analysed using ICP-OES. 
+In order to perform empirical calibration it is necessary to have some quantitative data that relates directly to the Itrax XRF data. The quantitative data is unlikely to be at the same resolution as the Itrax XRF data. For example, it is typical to scan cores at between 0.2 and 1 mm, but typical to sub-sample for WD-XRF or ICP at between 5 - 10 mm. In addition, where Itrax scans are contiguous, sub-samples may not be, for example a 10 mm sub-sample might be taken every 80 mm. In this example we have sub-sampled and analysed the 60 samples defined in the previous section. Here they have been freeze-dried, digested in aqua regia using microwave digestion[^07-calibration-1], filtered and analysed using ICP-OES.
+
+[^07-calibration-1]: see Roje, V. (2010) in Chemical Papers vol.64(4), pp.409-414
 
 ```{r icp_data_import}
 icp <- read_csv("calibration_samples/calibration_data.csv") %>%
@@ -101,6 +103,7 @@ icp <- read_csv("calibration_samples/calibration_data.csv") %>%
 
 glimpse(icp)
 ```
+
 The function `itraxR::itrax_reduce()` can be used to reduce the Itrax data to match the resolution of some other data. The example below uses the same positions of the ICP-OES analyses of the data to summarise it. And here is the use of `itrax_reduce()` to reduce our Itrax XRF data (`CD166_19_xrf`), using the shape of the "icp" data (in `icp`). Note the requirement to remove text based columns (in this case `file` and `label`) from the data before this step is performed - if the reducing function cannot handle a data type (e.g. passing characters to `mean()`), errors will occur. If we wanted to add the standard deviation alongside the mean for each chunk, this can be done my modifying the default reducing function (`mean()`) to `sd()`, for example:
 
 ```{r message=FALSE, warning=FALSE}
@@ -117,13 +120,13 @@ xrf <- CD166_19_xrf %>%
 glimpse(xrf)
 ```
 
-
-It is worth reading `?itraxR::itrax_reduce()` as the behaviour can and should be modified depending on your exact use case. For example, in th situation above where none of the samples are contiguous it might be wise to modify the parameters of `itraxR::itrax_reduce()` to include `edges = c(">=", "<=")` so that the "edges" of the sub-samples are captured. This might not be the case for contiguous samples in order to avoid "double-counting". 
+It is worth reading `?itraxR::itrax_reduce()` as the behaviour can and should be modified depending on your exact use case. For example, in th situation above where none of the samples are contiguous it might be wise to modify the parameters of `itraxR::itrax_reduce()` to include `edges = c(">=", "<=")` so that the "edges" of the sub-samples are captured. This might not be the case for contiguous samples in order to avoid "double-counting".
 
 ## Linear Methods
-We'll use our `xrf` and `icp` datasets. 
 
-```{r}
+We'll use our `xrf` and `icp` datasets to create linear models of all the variables of interest. They must be combined using `pivot_longer()`. The plot indicates that some, but not all variables are suitable for calibration.
+
+```{r linear_calib_graph}
 full_join(
   icp %>%
     select(any_of(c(elementsList, "SampleID"))) %>%
@@ -151,6 +154,57 @@ full_join(
              scales = "free") +
   xlab("ICP-OES [ppm]") + 
   ylab("Itrax ED-XRF [peak area]")
+```
+
+To apply these calibration models to our existing data, we first need to save the models created using `lm()`.
+
+```{r linear_calibration_model_save}
+calibration <- full_join(
+  icp %>%
+    select(any_of(c(elementsList, "SampleID"))) %>%
+    pivot_longer(any_of(elementsList),
+                 values_to = "icp",
+                 names_to = "element"),
+  
+  xrf %>% 
+    select(any_of(c(elementsList, "SampleID"))) %>%
+    pivot_longer(any_of(elementsList),
+                 values_to = "xrf",
+                 names_to = "element"),
+  
+  by = c("SampleID", "element")
+  ) %>%
+  mutate(element = as_factor(element)) %>%
+  drop_na()
+
+calibration <- calibration %>%
+  group_by(element) %>%
+  group_split() %>%
+  lapply(function(x){lm(data = x, icp~xrf)}) %>%
+  `names<-`(calibration %>%
+              group_by(element) %>%
+              group_keys() %>%
+              pull(element))
+```
+
+Now we can use `predict()` to apply those models to the data.
+
+```{r predict_calibration}
+CD166_19_xrf %>%
+mutate(Ca_ppm =
+         predict(calibration$Ca, 
+                 newdata = 
+                   CD166_19_xrf %>%
+                   select(Ca) %>% 
+                   rename(xrf = Ca))
+       ) %>%
+  ggplot(aes(x = Ca_ppm, y = depth)) +
+  geom_lineh() +
+  scale_y_reverse() +
+  scale_x_continuous(labels = function(x){x/10000}) +
+  ylab("Depth [mm]") +
+  xlab("Ca [%]")
+  
 ```
 
 ## Log-Ratio Methods
