@@ -23,7 +23,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2022-08-17" />
+<meta name="date" content="2022-08-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -222,7 +222,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="preparing-data" class="section level2 hasAnchor">
 <h2><span class="header-section-number">7.3</span> Preparing Data<a href="preparing-data.html#preparing-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>In order to perform empirical calibration it is necessary to have some quantitative data that relates directly to the Itrax XRF data. The quantitative data is unlikely to be at the same resolution as the Itrax XRF data. For example, it is typical to scan cores at between 0.2 and 1 mm, but typical to sub-sample for WD-XRF or ICP at between 5 - 10 mm. In addition, where Itrax scans are contiguous, sub-samples may not be, for example a 10 mm sub-sample might be taken every 80 mm. In this example we have sub-sampled and analysed the 60 samples defined in the previous section. Here they have been freeze-dried, digested in aqua regia using microwave digestion<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>, filtered and analysed using ICP-OES.</p>
+<p>In order to perform empirical calibration it is necessary to have some quantitative data that relates directly to the Itrax XRF data. The quantitative data is unlikely to be at the same resolution as the Itrax XRF data. For example, it is typical to scan cores at between 0.2 and 1 mm, but typical to sub-sample for WD-XRF or ICP at between 5 - 10 mm. In addition, where Itrax scans are contiguous, sub-samples may not be, for example a 10 mm sub-sample might be taken every 80 mm. In this example we have sub-sampled and analysed the 60 samples defined in the previous section. Here they have been freeze-dried, digested in aqua regia using microwave digestion (<span class="citation">Roje (<a href="#ref-Roje2010" role="doc-biblioref">2010</a>)</span>), filtered and analysed using ICP-OES.</p>
 <div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="preparing-data.html#cb71-1"></a>icp &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;calibration_samples/calibration_data.csv&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb71-2"><a href="preparing-data.html#cb71-2"></a><span class="st">  </span><span class="co">#select(-`Sample Id`) %&gt;%</span></span>
 <span id="cb71-3"><a href="preparing-data.html#cb71-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">water_content =</span> (((wet<span class="op">-</span>tare)<span class="op">-</span>(dry<span class="op">-</span>tare))<span class="op">/</span>(wet<span class="op">-</span>tare))<span class="op">*</span><span class="dv">100</span>) <span class="op">%&gt;%</span></span>
@@ -358,11 +358,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## $ bot              &lt;dbl&gt; 340, 440, 450, 470, 680, 780, 810, 850, 940, 1030, 11…</code></pre>
 <p>It is worth reading <code>?itraxR::itrax_reduce()</code> as the behaviour can and should be modified depending on your exact use case. For example, in th situation above where none of the samples are contiguous it might be wise to modify the parameters of <code>itraxR::itrax_reduce()</code> to include <code>edges = c("&gt;=", "&lt;=")</code> so that the “edges” of the sub-samples are captured. This might not be the case for contiguous samples in order to avoid “double-counting”.</p>
 </div>
-<div class="footnotes">
-<hr />
-<ol start="1">
-<li id="fn1"><p>see Roje, V. (2010) in Chemical Papers vol.64(4), pp.409-414<a href="preparing-data.html#fnref1" class="footnote-back">↩︎</a></p></li>
-</ol>
+<h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="refs" class="references">
+<div id="ref-Roje2010">
+<p>Roje, V. 2010. “Multi-Elemental Analysis of Marine Sediment Reference Material Mess-3: One-Step Microwave Digestion and Determination by High Resolution Inductively Coupled Plasma-Mass Spectrometry (Hr-Icp-Ms).” <em>Chemical Papers</em> 64: 41–50. <a href="https://doi.org/10.2478/s11696-010-0022-x">https://doi.org/10.2478/s11696-010-0022-x</a>.</p>
+</div>
 </div>
             </section>
 
