@@ -80,9 +80,7 @@ CD166_19_xrf %>%
 
 ## Preparing Data
 
-In order to perform empirical calibration it is necessary to have some quantitative data that relates directly to the Itrax XRF data. The quantitative data is unlikely to be at the same resolution as the Itrax XRF data. For example, it is typical to scan cores at between 0.2 and 1 mm, but typical to sub-sample for WD-XRF or ICP at between 5 - 10 mm. In addition, where Itrax scans are contiguous, sub-samples may not be, for example a 10 mm sub-sample might be taken every 80 mm. In this example we have sub-sampled and analysed the 60 samples defined in the previous section. Here they have been freeze-dried, digested in aqua regia using microwave digestion[^07-calibration-1], filtered and analysed using ICP-OES.
-
-[^07-calibration-1]: see Roje, V. (2010) in Chemical Papers vol.64(4), pp.409-414
+In order to perform empirical calibration it is necessary to have some quantitative data that relates directly to the Itrax XRF data. The quantitative data is unlikely to be at the same resolution as the Itrax XRF data. For example, it is typical to scan cores at between 0.2 and 1 mm, but typical to sub-sample for WD-XRF or ICP at between 5 - 10 mm. In addition, where Itrax scans are contiguous, sub-samples may not be, for example a 10 mm sub-sample might be taken every 80 mm. In this example we have sub-sampled and analysed the 60 samples defined in the previous section. Here they have been freeze-dried, digested in aqua regia using microwave digestion (@Roje2010), filtered and analysed using ICP-OES.
 
 ```{r icp_data_import}
 icp <- read_csv("calibration_samples/calibration_data.csv") %>%
