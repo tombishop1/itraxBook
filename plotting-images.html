@@ -23,7 +23,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2022-08-29" />
+<meta name="date" content="2022-09-12" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -223,7 +223,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="plotting-images" class="section level2 hasAnchor">
 <h2><span class="header-section-number">4.2</span> Plotting Images<a href="plotting-images.html#plotting-images" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The package <code>itraxR</code> provides functions for importing and creating basic plots of both the photographic and radiographic images. For the optical images, it is almost always necessary to trim the image to the extent of the actual scan, or extraneous image is included (e.g. the calibration card in the example shown below). The function <code>itraxR::itrax_image()</code> allows the extent of the scan to be defined, or extracted from the metadata. In the example below, <code>trim = FALSE</code> forces the whole image to be shown. When dealing with high aspect ratio images like these, it is often useful to use <code>svgPanZoom::svgPanZoom()</code> instead of <code>print()</code> to view the output.</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="plotting-images.html#cb41-1"></a>myImage &lt;-<span class="st"> </span><span class="kw">itrax_image</span>(<span class="dt">file =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1/optical.tif&quot;</span>,</span>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="plotting-images.html#cb41-1"></a>myImage &lt;-<span class="st"> </span><span class="kw">itrax_image</span>(<span class="dt">file =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1/optical0.tif&quot;</span>,</span>
 <span id="cb41-2"><a href="plotting-images.html#cb41-2"></a>                       <span class="dt">meta =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1/document.txt&quot;</span>,</span>
 <span id="cb41-3"><a href="plotting-images.html#cb41-3"></a>                       <span class="dt">trim =</span> <span class="ot">FALSE</span>,</span>
 <span id="cb41-4"><a href="plotting-images.html#cb41-4"></a>                       <span class="dt">plot =</span> <span class="ot">TRUE</span></span>
