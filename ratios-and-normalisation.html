@@ -250,7 +250,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb52-21"><a href="ratios-and-normalisation.html#cb52-21"></a><span class="st">    </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;peak area / Mo. inc.&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Depth [mm]&quot;</span>) <span class="op">+</span></span>
 <span id="cb52-22"><a href="ratios-and-normalisation.html#cb52-22"></a><span class="st">    </span>tidypaleo<span class="op">::</span><span class="kw">theme_paleo</span>() <span class="op">+</span></span>
 <span id="cb52-23"><a href="ratios-and-normalisation.html#cb52-23"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>)</span></code></pre></div>
-<p><img src="itraxBook_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><img src="itraxBook_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 <p>Note that where zero values are encountered in divisions, dividing by zero will lead to <code>Inf</code> values. This can cause issues with plotting data, and these values should be cleaned into <code>NA</code> before plotting. For example:</p>
 <div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="ratios-and-normalisation.html#cb53-1"></a><span class="kw">ggarrange</span>(</span>
 <span id="cb53-2"><a href="ratios-and-normalisation.html#cb53-2"></a>  </span>
@@ -270,7 +270,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb53-16"><a href="ratios-and-normalisation.html#cb53-16"></a><span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;na_if(., Inf)&quot;</span>)</span>
 <span id="cb53-17"><a href="ratios-and-normalisation.html#cb53-17"></a>  </span>
 <span id="cb53-18"><a href="ratios-and-normalisation.html#cb53-18"></a>)</span></code></pre></div>
-<p><img src="itraxBook_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p><img src="itraxBook_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 </div>
             </section>
 
