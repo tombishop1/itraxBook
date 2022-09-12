@@ -24,7 +24,45 @@ Although the brightness of the lighting in the scanner is adjustable, images som
 
 By including an appropriate colour reference card in the scan the image can be calibrated, although it is often desirable to increase the contrast and gamma to elucidate features of the core. The photograph is always of the entire length of the bed scanned, rather than cropped to the limits of an individual scan section. If multiple scan sections are placed on the bed and are scanned together, it will include all of the scanned sections. The image needs to be cropped using the metadata for the relevant scan section; this process is covered in later chapters.
 
-In this case, the colour reference information for the card in the image is given in the file `greywhitebalancecolourcard.csv`. The plugin for `imageJ`, [`ijp-color`](https://github.com/ij-plugins/ijp-color), can be used to perform colour calibration on the images. In this case a `linear - no incercept` model has been used. to generate the image files `image0.tif`.  
+In this case, the colour reference information for the card in the image is given in the file `greywhitebalancecolourcard.csv`. The plugin for `imageJ`, [`ijp-color`](https://github.com/ij-plugins/ijp-color), can be used to perform colour calibration on the images. In this case a `linear - no intercept` model has been used. to generate the image files `image0.tif`. The image below shows the uncorrected image (left hand side) and the colour corrected image (right hand side). 
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+myImage <- itrax_image(file = "CD166_19_S1/CD166_19_S1/optical.tif",
+                       meta = "CD166_19_S1/CD166_19_S1/document.txt",
+                       trim = FALSE,
+                       plot = FALSE
+)
+
+myImage0 <- itrax_image(file = "CD166_19_S1/CD166_19_S1/optical0.tif",
+                        meta = "CD166_19_S1/CD166_19_S1/document.txt",
+                        trim = FALSE,
+                        plot = FALSE
+)
+ggplot() +
+  scale_y_continuous(limits = rev(range(as.numeric(rownames(myImage$image))))) +
+  scale_x_continuous(breaks = round(c(0, max(range(as.numeric(colnames(myImage$image))))*2)),
+                     limits = c(0, max(range(as.numeric(colnames(myImage$image))))*2)) +
+  coord_fixed(ratio = 1) +
+  labs(y = "Position [mm]", x = "[mm]") +
+  annotation_custom(rasterGrob(myImage$image,
+                               width = unit(1, "npc"),
+                               height = unit(1, "npc")),
+                    ymax = max(as.numeric(rownames(myImage$image))),
+                    ymin = min(as.numeric(rownames(myImage$image))),
+                    xmin = min(as.numeric(colnames(myImage$image))),
+                    xmax = max(as.numeric(colnames(myImage$image)))
+  ) +
+  annotation_custom(rasterGrob(myImage0$image,
+                               width = unit(1, "npc"),
+                               height = unit(1, "npc")),
+                    ymax = max(as.numeric(rownames(myImage$image))),
+                    ymin = min(as.numeric(rownames(myImage$image))),
+                    xmin = max(as.numeric(colnames(myImage$image))),
+                    xmax = max(as.numeric(colnames(myImage$image)))*2
+  )
+
+rm(myImage, myImage0)
+```
 
 ## Radiographic Images
 
