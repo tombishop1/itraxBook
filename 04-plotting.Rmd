@@ -50,7 +50,7 @@ CD166_19_xrf %>%
 The package `itraxR` provides functions for importing and creating basic plots of both the photographic and radiographic images. For the optical images, it is almost always necessary to trim the image to the extent of the actual scan, or extraneous image is included (e.g. the calibration card in the example shown below). The function `itraxR::itrax_image()` allows the extent of the scan to be defined, or extracted from the metadata. In the example below, `trim = FALSE` forces the whole image to be shown. When dealing with high aspect ratio images like these, it is often useful to use `svgPanZoom::svgPanZoom()` instead of `print()` to view the output.
 
 ```{r plot_image}
-myImage <- itrax_image(file = "CD166_19_S1/CD166_19_S1/optical.tif",
+myImage <- itrax_image(file = "CD166_19_S1/CD166_19_S1/optical0.tif",
                        meta = "CD166_19_S1/CD166_19_S1/document.txt",
                        trim = FALSE,
                        plot = TRUE
