@@ -1,4 +1,4 @@
-# this setups up the workspace as it is laid out in the book... I think!
+# this sets up the workspace as it is laid out in the book... I think!
 
 # load things ----
 library(itraxR)

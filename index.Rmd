@@ -97,3 +97,16 @@ data(periodicTable)
 elementsList <- periodicTable$symb
 rm(periodicTable)
 ```
+
+## Citing This Work 
+
+`R` and `itraxR` can be cited as follows:
+
+```{r}
+citation()
+citation("itraxR")
+```
+
+You should also cite other packages you use, for example `dplyr` and `tidypaleo`. 
+
+This book can be cited as per the citation information in the Github repository in which it is located: [github.com/tombishop1/itraxBook](https://github.com/tombishop1/itraxBook). 
