@@ -31,6 +31,19 @@ CD166_19_xrf %>%
   geom_rug(sides = "b", data = . %>% filter(in_cps_tolerance == FALSE)) 
 ```
 
+It is possible, and sometimes preferable, to use some statistic to define the limits, rather than using arbitrary limits. For example, using the standard deviation (or even a confidence interval) to identify outlier data. For example:
+
+```{r}
+CD166_19_xrf %>%
+  mutate(in_cps_tolerance = ifelse(cps <= mean(cps)-(3*sd(cps)) | cps >=mean(cps)+(3*sd(cps)) | is.na(cps) == TRUE, FALSE, TRUE)) %>%
+  
+  ggplot(mapping = aes(x = depth, y = cps, col = in_cps_tolerance)) + 
+  geom_line(aes(group = 1)) +
+  scale_x_reverse() +
+  geom_hline(yintercept = c(mean(CD166_19_xrf$cps)-(3*sd(CD166_19_xrf$cps)), mean(CD166_19_xrf$cps)+(3*sd(CD166_19_xrf$cps)))) +
+  geom_rug(sides = "b", data = . %>% filter(in_cps_tolerance == FALSE)) 
+```
+
 ## Model Errors (MSE)
 
 The mean-squared-error (MSE) of the model provides an indication of the goodness-of-fit for the peak fitting model implemented in the Q-Spec software. Operators aim to produce models with the lowest possible MSE, but compromises are sometimes required because normally the same model should be applied to observations that are being compared (for example, for the same core sequence). 
