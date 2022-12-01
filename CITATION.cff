@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: "Bishop"
+    given-names: "Thomas"
+    orcid: "https://orcid.org/0000-0001-8253-9293"
+title: "Using Itrax Data in R"
+date-released: 2022-12-01
+url: "https://tombishop1.github.io/itraxBook/"
+preferred-citation:
+  type: book
+  authors:
+    - family-names: "Lisa"
+      given-names: "Mona"
+      orcid: "https://orcid.org/0000-0001-8253-9293"
+  title: "Using Itrax Data in R"
+  year: 2022
+  url: "https://tombishop1.github.io/itraxBook/"
