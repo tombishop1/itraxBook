@@ -23,7 +23,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2022-11-15" />
+<meta name="date" content="2022-12-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -142,6 +142,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="0.2" data-path="prerequisites.html"><a href="prerequisites.html"><i class="fa fa-check"></i><b>0.2</b> Prerequisites</a></li>
 <li class="chapter" data-level="0.3" data-path="example-data.html"><a href="example-data.html"><i class="fa fa-check"></i><b>0.3</b> Example Data</a></li>
 <li class="chapter" data-level="0.4" data-path="utility-data.html"><a href="utility-data.html"><i class="fa fa-check"></i><b>0.4</b> Utility Data</a></li>
+<li class="chapter" data-level="0.5" data-path="citing-this-work.html"><a href="citing-this-work.html"><i class="fa fa-check"></i><b>0.5</b> Citing This Work</a></li>
 </ul></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Data Structure</a><ul>
 <li class="chapter" data-level="1.1" data-path="metadata.html"><a href="metadata.html"><i class="fa fa-check"></i><b>1.1</b> Metadata</a></li>
@@ -223,9 +224,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="radiographic-images-1" class="section level2 hasAnchor">
 <h2><span class="header-section-number">2.4</span> Radiographic Images<a href="radiographic-images-1.html#radiographic-images-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The function <code>itraxR::itrax_radio()</code> imports the processed radiographic images (<code>*.tif</code>) in a very similar way to that for the optical images, the main difference being the matrix only has two dimensions (length and width) as the image is greyscale.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="radiographic-images-1.html#cb13-1"></a><span class="kw">itrax_radiograph</span>(<span class="dt">file =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1_RAD/radiograph0.tif&quot;</span>,</span>
-<span id="cb13-2"><a href="radiographic-images-1.html#cb13-2"></a>                 <span class="dt">meta =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1_RAD/document.txt&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb13-3"><a href="radiographic-images-1.html#cb13-3"></a><span class="st">  </span><span class="kw">str</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="radiographic-images-1.html#cb17-1"></a><span class="kw">itrax_radiograph</span>(<span class="dt">file =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1_RAD/radiograph0.tif&quot;</span>,</span>
+<span id="cb17-2"><a href="radiographic-images-1.html#cb17-2"></a>                 <span class="dt">meta =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1_RAD/document.txt&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb17-3"><a href="radiographic-images-1.html#cb17-3"></a><span class="st">  </span><span class="kw">str</span>()</span></code></pre></div>
 <pre><code>## List of 2
 ##  $ image: num [1:6570, 1:67] 1 1 0.755 0.686 0.755 ...
 ##   ..- attr(*, &quot;dimnames&quot;)=List of 2

@@ -23,7 +23,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2022-11-15" />
+<meta name="date" content="2022-12-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -142,6 +142,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="0.2" data-path="prerequisites.html"><a href="prerequisites.html"><i class="fa fa-check"></i><b>0.2</b> Prerequisites</a></li>
 <li class="chapter" data-level="0.3" data-path="example-data.html"><a href="example-data.html"><i class="fa fa-check"></i><b>0.3</b> Example Data</a></li>
 <li class="chapter" data-level="0.4" data-path="utility-data.html"><a href="utility-data.html"><i class="fa fa-check"></i><b>0.4</b> Utility Data</a></li>
+<li class="chapter" data-level="0.5" data-path="citing-this-work.html"><a href="citing-this-work.html"><i class="fa fa-check"></i><b>0.5</b> Citing This Work</a></li>
 </ul></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Data Structure</a><ul>
 <li class="chapter" data-level="1.1" data-path="metadata.html"><a href="metadata.html"><i class="fa fa-check"></i><b>1.1</b> Metadata</a></li>
@@ -223,54 +224,74 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="ratios-and-normalisation" class="section level2 hasAnchor">
 <h2><span class="header-section-number">5.1</span> Ratios and Normalisation<a href="ratios-and-normalisation.html#ratios-and-normalisation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>These data are compositional, and represent the changes in the relative proportions of all components of the matrix, measured and un-measured. As such it is likely the data will need transforming for certain types of multivariate analysis. As previously mentioned, these data are dimensionless, and as such do not represent a quantity, but are directly related to the absolute amount of a particular element in the matrix. It is often the case that ratios of elements are used to represent changes in composition — this is sometimes referred to as normalisation, or normalising one element against another.</p>
+<p>For example, particular element ratios can be used to make some environmental inference. Log-ratios are usually preferable here as they are resilient to matrix effects. In this context, the Ca/Ti log-ratio is used to infer a relative measure of productivity (that it, it can identify the hemipelagic sediments in the sequence). Note the use of <code>abs()</code> has the effect of ensuring that switching the denominator and numerator has no effect.</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="ratios-and-normalisation.html#cb56-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
+<span id="cb56-2"><a href="ratios-and-normalisation.html#cb56-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="st">`</span><span class="dt">log(Fe/Ca)</span><span class="st">`</span> =<span class="st"> </span><span class="kw">abs</span>(<span class="kw">log</span>(Fe<span class="op">/</span>Ca))) <span class="op">%&gt;%</span></span>
+<span id="cb56-3"><a href="ratios-and-normalisation.html#cb56-3"></a><span class="st">  </span><span class="kw">filter</span>(qc <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb56-4"><a href="ratios-and-normalisation.html#cb56-4"></a><span class="st">  </span></span>
+<span id="cb56-5"><a href="ratios-and-normalisation.html#cb56-5"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> depth, <span class="dt">y =</span> <span class="st">`</span><span class="dt">log(Fe/Ca)</span><span class="st">`</span>)) <span class="op">+</span></span>
+<span id="cb56-6"><a href="ratios-and-normalisation.html#cb56-6"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb56-7"><a href="ratios-and-normalisation.html#cb56-7"></a><span class="st">  </span><span class="kw">scale_x_reverse</span>()</span></code></pre></div>
+<p><img src="itraxBook_files/figure-html/unnamed-chunk-14-1.png" width="672" />
+Sometimes z-scores are useful to use when units don’t have meaningful units. They scale the data in standard deviations from their mean, so give a useful quantity for the magnitude of change. For example:</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="ratios-and-normalisation.html#cb57-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
+<span id="cb57-2"><a href="ratios-and-normalisation.html#cb57-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="st">`</span><span class="dt">log(Fe/Ca)</span><span class="st">`</span> =<span class="st"> </span><span class="kw">abs</span>(<span class="kw">log</span>(Fe<span class="op">/</span>Ca))) <span class="op">%&gt;%</span></span>
+<span id="cb57-3"><a href="ratios-and-normalisation.html#cb57-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">zscore =</span> (<span class="st">`</span><span class="dt">log(Fe/Ca)</span><span class="st">`</span> <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(<span class="st">`</span><span class="dt">log(Fe/Ca)</span><span class="st">`</span>, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))<span class="op">/</span><span class="kw">sd</span>(<span class="st">`</span><span class="dt">log(Fe/Ca)</span><span class="st">`</span>, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb57-4"><a href="ratios-and-normalisation.html#cb57-4"></a><span class="st">  </span><span class="kw">filter</span>(qc <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb57-5"><a href="ratios-and-normalisation.html#cb57-5"></a><span class="st">  </span></span>
+<span id="cb57-6"><a href="ratios-and-normalisation.html#cb57-6"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> depth, <span class="dt">y =</span> zscore)) <span class="op">+</span></span>
+<span id="cb57-7"><a href="ratios-and-normalisation.html#cb57-7"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb57-8"><a href="ratios-and-normalisation.html#cb57-8"></a><span class="st">  </span><span class="kw">scale_x_reverse</span>() <span class="op">+</span></span>
+<span id="cb57-9"><a href="ratios-and-normalisation.html#cb57-9"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;log(Fe/Ca) [z-score]&quot;</span>) </span></code></pre></div>
+<p><img src="itraxBook_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 <p>It is trivial to calculate element ratios, to the extent that these can often simply be calculated where they are required rather than saving them to memory. For example, if a plot of the Compton divided by the Rayleigh scatter was desired, there is no need to save the computed value to a new variable (e.g. <code>coh_inc &lt;- df$Mo.coh/df$Mo.inc</code>) — simply define the calculation during plotting. To calculate ratios for all elements at once, use <code>mutate(across(any_ofelementsList))</code>, where <code>elementsList</code> is a list of chemical elements extracted from <code>data(PeriodicTable)</code>.</p>
 <pre><code>CD166_19_xrf %&gt;% 
   mutate(across(any_of(elementsList)) /`Mo inc`)</code></pre>
 <p>This can be integrated into the work flow from the data tidying chapter, for example:</p>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="ratios-and-normalisation.html#cb52-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb52-2"><a href="ratios-and-normalisation.html#cb52-2"></a><span class="st">  </span><span class="co"># transform</span></span>
-<span id="cb52-3"><a href="ratios-and-normalisation.html#cb52-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">any_of</span>(elementsList)) <span class="op">/</span><span class="st">`</span><span class="dt">Mo inc</span><span class="st">`</span>) <span class="op">%&gt;%</span></span>
-<span id="cb52-4"><a href="ratios-and-normalisation.html#cb52-4"></a><span class="st">  </span></span>
-<span id="cb52-5"><a href="ratios-and-normalisation.html#cb52-5"></a><span class="st">  </span><span class="co"># identify acceptable observations</span></span>
-<span id="cb52-6"><a href="ratios-and-normalisation.html#cb52-6"></a><span class="st">  </span><span class="kw">filter</span>(validity <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb52-7"><a href="ratios-and-normalisation.html#cb52-7"></a><span class="st">  </span></span>
-<span id="cb52-8"><a href="ratios-and-normalisation.html#cb52-8"></a><span class="st">  </span><span class="co"># identify acceptable variables</span></span>
-<span id="cb52-9"><a href="ratios-and-normalisation.html#cb52-9"></a><span class="st">  </span><span class="kw">select</span>(<span class="kw">any_of</span>(myElements), depth, label) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb52-10"><a href="ratios-and-normalisation.html#cb52-10"></a><span class="st">  </span></span>
-<span id="cb52-11"><a href="ratios-and-normalisation.html#cb52-11"></a><span class="st">  </span><span class="co"># pivot</span></span>
-<span id="cb52-12"><a href="ratios-and-normalisation.html#cb52-12"></a><span class="st">  </span>tidyr<span class="op">::</span><span class="kw">pivot_longer</span>(<span class="op">!</span><span class="kw">c</span>(<span class="st">&quot;depth&quot;</span>, <span class="st">&quot;label&quot;</span>), <span class="dt">names_to =</span> <span class="st">&quot;elements&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;peakarea&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb52-13"><a href="ratios-and-normalisation.html#cb52-13"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">elements =</span> <span class="kw">factor</span>(elements, <span class="dt">levels =</span> <span class="kw">c</span>(elementsList, <span class="st">&quot;coh/inc&quot;</span>))) <span class="op">%&gt;%</span></span>
-<span id="cb52-14"><a href="ratios-and-normalisation.html#cb52-14"></a><span class="st">  </span></span>
-<span id="cb52-15"><a href="ratios-and-normalisation.html#cb52-15"></a><span class="st">  </span><span class="co"># plot</span></span>
-<span id="cb52-16"><a href="ratios-and-normalisation.html#cb52-16"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> peakarea, <span class="dt">y =</span> depth)) <span class="op">+</span></span>
-<span id="cb52-17"><a href="ratios-and-normalisation.html#cb52-17"></a><span class="st">    </span>tidypaleo<span class="op">::</span><span class="kw">geom_lineh</span>(<span class="kw">aes</span>(<span class="dt">color =</span> label)) <span class="op">+</span></span>
-<span id="cb52-18"><a href="ratios-and-normalisation.html#cb52-18"></a><span class="st">    </span><span class="kw">scale_y_reverse</span>() <span class="op">+</span></span>
-<span id="cb52-19"><a href="ratios-and-normalisation.html#cb52-19"></a><span class="st">    </span><span class="kw">scale_x_continuous</span>(<span class="dt">n.breaks =</span> <span class="dv">2</span>) <span class="op">+</span></span>
-<span id="cb52-20"><a href="ratios-and-normalisation.html#cb52-20"></a><span class="st">    </span><span class="kw">facet_geochem_gridh</span>(<span class="kw">vars</span>(elements)) <span class="op">+</span></span>
-<span id="cb52-21"><a href="ratios-and-normalisation.html#cb52-21"></a><span class="st">    </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;peak area / Mo. inc.&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Depth [mm]&quot;</span>) <span class="op">+</span></span>
-<span id="cb52-22"><a href="ratios-and-normalisation.html#cb52-22"></a><span class="st">    </span>tidypaleo<span class="op">::</span><span class="kw">theme_paleo</span>() <span class="op">+</span></span>
-<span id="cb52-23"><a href="ratios-and-normalisation.html#cb52-23"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>)</span></code></pre></div>
-<p><img src="itraxBook_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="ratios-and-normalisation.html#cb59-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb59-2"><a href="ratios-and-normalisation.html#cb59-2"></a><span class="st">  </span><span class="co"># transform</span></span>
+<span id="cb59-3"><a href="ratios-and-normalisation.html#cb59-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">any_of</span>(elementsList)) <span class="op">/</span><span class="st">`</span><span class="dt">Mo inc</span><span class="st">`</span>) <span class="op">%&gt;%</span></span>
+<span id="cb59-4"><a href="ratios-and-normalisation.html#cb59-4"></a><span class="st">  </span></span>
+<span id="cb59-5"><a href="ratios-and-normalisation.html#cb59-5"></a><span class="st">  </span><span class="co"># identify acceptable observations</span></span>
+<span id="cb59-6"><a href="ratios-and-normalisation.html#cb59-6"></a><span class="st">  </span><span class="kw">filter</span>(validity <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb59-7"><a href="ratios-and-normalisation.html#cb59-7"></a><span class="st">  </span></span>
+<span id="cb59-8"><a href="ratios-and-normalisation.html#cb59-8"></a><span class="st">  </span><span class="co"># identify acceptable variables</span></span>
+<span id="cb59-9"><a href="ratios-and-normalisation.html#cb59-9"></a><span class="st">  </span><span class="kw">select</span>(<span class="kw">any_of</span>(myElements), depth, label) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb59-10"><a href="ratios-and-normalisation.html#cb59-10"></a><span class="st">  </span></span>
+<span id="cb59-11"><a href="ratios-and-normalisation.html#cb59-11"></a><span class="st">  </span><span class="co"># pivot</span></span>
+<span id="cb59-12"><a href="ratios-and-normalisation.html#cb59-12"></a><span class="st">  </span>tidyr<span class="op">::</span><span class="kw">pivot_longer</span>(<span class="op">!</span><span class="kw">c</span>(<span class="st">&quot;depth&quot;</span>, <span class="st">&quot;label&quot;</span>), <span class="dt">names_to =</span> <span class="st">&quot;elements&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;peakarea&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb59-13"><a href="ratios-and-normalisation.html#cb59-13"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">elements =</span> <span class="kw">factor</span>(elements, <span class="dt">levels =</span> <span class="kw">c</span>(elementsList, <span class="st">&quot;coh/inc&quot;</span>))) <span class="op">%&gt;%</span></span>
+<span id="cb59-14"><a href="ratios-and-normalisation.html#cb59-14"></a><span class="st">  </span></span>
+<span id="cb59-15"><a href="ratios-and-normalisation.html#cb59-15"></a><span class="st">  </span><span class="co"># plot</span></span>
+<span id="cb59-16"><a href="ratios-and-normalisation.html#cb59-16"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> peakarea, <span class="dt">y =</span> depth)) <span class="op">+</span></span>
+<span id="cb59-17"><a href="ratios-and-normalisation.html#cb59-17"></a><span class="st">    </span>tidypaleo<span class="op">::</span><span class="kw">geom_lineh</span>(<span class="kw">aes</span>(<span class="dt">color =</span> label)) <span class="op">+</span></span>
+<span id="cb59-18"><a href="ratios-and-normalisation.html#cb59-18"></a><span class="st">    </span><span class="kw">scale_y_reverse</span>() <span class="op">+</span></span>
+<span id="cb59-19"><a href="ratios-and-normalisation.html#cb59-19"></a><span class="st">    </span><span class="kw">scale_x_continuous</span>(<span class="dt">n.breaks =</span> <span class="dv">2</span>) <span class="op">+</span></span>
+<span id="cb59-20"><a href="ratios-and-normalisation.html#cb59-20"></a><span class="st">    </span><span class="kw">facet_geochem_gridh</span>(<span class="kw">vars</span>(elements)) <span class="op">+</span></span>
+<span id="cb59-21"><a href="ratios-and-normalisation.html#cb59-21"></a><span class="st">    </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;peak area / Mo. inc.&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Depth [mm]&quot;</span>) <span class="op">+</span></span>
+<span id="cb59-22"><a href="ratios-and-normalisation.html#cb59-22"></a><span class="st">    </span>tidypaleo<span class="op">::</span><span class="kw">theme_paleo</span>() <span class="op">+</span></span>
+<span id="cb59-23"><a href="ratios-and-normalisation.html#cb59-23"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>)</span></code></pre></div>
+<p><img src="itraxBook_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
 <p>Note that where zero values are encountered in divisions, dividing by zero will lead to <code>Inf</code> values. This can cause issues with plotting data, and these values should be cleaned into <code>NA</code> before plotting. For example:</p>
-<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="ratios-and-normalisation.html#cb53-1"></a><span class="kw">ggarrange</span>(</span>
-<span id="cb53-2"><a href="ratios-and-normalisation.html#cb53-2"></a>  </span>
-<span id="cb53-3"><a href="ratios-and-normalisation.html#cb53-3"></a>  CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
-<span id="cb53-4"><a href="ratios-and-normalisation.html#cb53-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="st">`</span><span class="dt">Fe/Sc</span><span class="st">`</span> =<span class="st"> </span>Fe<span class="op">/</span>Sc) <span class="op">%&gt;%</span></span>
-<span id="cb53-5"><a href="ratios-and-normalisation.html#cb53-5"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> depth, <span class="dt">y =</span> <span class="st">`</span><span class="dt">Fe/Sc</span><span class="st">`</span>)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb53-6"><a href="ratios-and-normalisation.html#cb53-6"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb53-7"><a href="ratios-and-normalisation.html#cb53-7"></a><span class="st">    </span><span class="kw">scale_x_reverse</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb53-8"><a href="ratios-and-normalisation.html#cb53-8"></a><span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;w/ Inf.&quot;</span>),</span>
-<span id="cb53-9"><a href="ratios-and-normalisation.html#cb53-9"></a>  </span>
-<span id="cb53-10"><a href="ratios-and-normalisation.html#cb53-10"></a>  CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
-<span id="cb53-11"><a href="ratios-and-normalisation.html#cb53-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="st">`</span><span class="dt">Fe/Sc</span><span class="st">`</span> =<span class="st"> </span>Fe<span class="op">/</span>Sc) <span class="op">%&gt;%</span></span>
-<span id="cb53-12"><a href="ratios-and-normalisation.html#cb53-12"></a><span class="st">  </span><span class="kw">mutate_if</span>(is.numeric, <span class="kw">list</span>(<span class="op">~</span><span class="kw">na_if</span>(., <span class="ot">Inf</span>))) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># convert all Inf to NA</span></span>
-<span id="cb53-13"><a href="ratios-and-normalisation.html#cb53-13"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> depth, <span class="dt">y =</span> <span class="st">`</span><span class="dt">Fe/Sc</span><span class="st">`</span>)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb53-14"><a href="ratios-and-normalisation.html#cb53-14"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb53-15"><a href="ratios-and-normalisation.html#cb53-15"></a><span class="st">    </span><span class="kw">scale_x_reverse</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb53-16"><a href="ratios-and-normalisation.html#cb53-16"></a><span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;na_if(., Inf)&quot;</span>)</span>
-<span id="cb53-17"><a href="ratios-and-normalisation.html#cb53-17"></a>  </span>
-<span id="cb53-18"><a href="ratios-and-normalisation.html#cb53-18"></a>)</span></code></pre></div>
-<p><img src="itraxBook_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="ratios-and-normalisation.html#cb60-1"></a><span class="kw">ggarrange</span>(</span>
+<span id="cb60-2"><a href="ratios-and-normalisation.html#cb60-2"></a>  </span>
+<span id="cb60-3"><a href="ratios-and-normalisation.html#cb60-3"></a>  CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
+<span id="cb60-4"><a href="ratios-and-normalisation.html#cb60-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="st">`</span><span class="dt">Fe/Sc</span><span class="st">`</span> =<span class="st"> </span>Fe<span class="op">/</span>Sc) <span class="op">%&gt;%</span></span>
+<span id="cb60-5"><a href="ratios-and-normalisation.html#cb60-5"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> depth, <span class="dt">y =</span> <span class="st">`</span><span class="dt">Fe/Sc</span><span class="st">`</span>)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb60-6"><a href="ratios-and-normalisation.html#cb60-6"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb60-7"><a href="ratios-and-normalisation.html#cb60-7"></a><span class="st">    </span><span class="kw">scale_x_reverse</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb60-8"><a href="ratios-and-normalisation.html#cb60-8"></a><span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;w/ Inf.&quot;</span>),</span>
+<span id="cb60-9"><a href="ratios-and-normalisation.html#cb60-9"></a>  </span>
+<span id="cb60-10"><a href="ratios-and-normalisation.html#cb60-10"></a>  CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
+<span id="cb60-11"><a href="ratios-and-normalisation.html#cb60-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="st">`</span><span class="dt">Fe/Sc</span><span class="st">`</span> =<span class="st"> </span>Fe<span class="op">/</span>Sc) <span class="op">%&gt;%</span></span>
+<span id="cb60-12"><a href="ratios-and-normalisation.html#cb60-12"></a><span class="st">  </span><span class="kw">mutate_if</span>(is.numeric, <span class="kw">list</span>(<span class="op">~</span><span class="kw">na_if</span>(., <span class="ot">Inf</span>))) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># convert all Inf to NA</span></span>
+<span id="cb60-13"><a href="ratios-and-normalisation.html#cb60-13"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> depth, <span class="dt">y =</span> <span class="st">`</span><span class="dt">Fe/Sc</span><span class="st">`</span>)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb60-14"><a href="ratios-and-normalisation.html#cb60-14"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb60-15"><a href="ratios-and-normalisation.html#cb60-15"></a><span class="st">    </span><span class="kw">scale_x_reverse</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb60-16"><a href="ratios-and-normalisation.html#cb60-16"></a><span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;na_if(., Inf)&quot;</span>)</span>
+<span id="cb60-17"><a href="ratios-and-normalisation.html#cb60-17"></a>  </span>
+<span id="cb60-18"><a href="ratios-and-normalisation.html#cb60-18"></a>)</span></code></pre></div>
+<p><img src="itraxBook_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
 </div>
             </section>
 

@@ -23,7 +23,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2022-11-15" />
+<meta name="date" content="2022-12-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -142,6 +142,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="0.2" data-path="prerequisites.html"><a href="prerequisites.html"><i class="fa fa-check"></i><b>0.2</b> Prerequisites</a></li>
 <li class="chapter" data-level="0.3" data-path="example-data.html"><a href="example-data.html"><i class="fa fa-check"></i><b>0.3</b> Example Data</a></li>
 <li class="chapter" data-level="0.4" data-path="utility-data.html"><a href="utility-data.html"><i class="fa fa-check"></i><b>0.4</b> Utility Data</a></li>
+<li class="chapter" data-level="0.5" data-path="citing-this-work.html"><a href="citing-this-work.html"><i class="fa fa-check"></i><b>0.5</b> Citing This Work</a></li>
 </ul></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Data Structure</a><ul>
 <li class="chapter" data-level="1.1" data-path="metadata.html"><a href="metadata.html"><i class="fa fa-check"></i><b>1.1</b> Metadata</a></li>
@@ -225,8 +226,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="processed-data" class="section level3 hasAnchor">
 <h3><span class="header-section-number">2.2.1</span> Processed Data<a href="xrf-data-1.html#processed-data" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>This is the data most commonly used in analysis and it can be quickly imported using <code>itraxR::itrax_import()</code>. Note that, like for the example data, it is possible to have more than one processed data file. Typically cores have at least two, one created at the time of the scan based on settings for a single point near the top of the sequence, and another from a holistic re-analysis of the sequence.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="xrf-data-1.html#cb6-1"></a><span class="kw">itrax_import</span>(<span class="st">&quot;CD166_19_S1/CD166_19_S1/Results.txt&quot;</span>, <span class="dt">depth =</span> <span class="dv">0</span>) <span class="op">%&gt;%</span></span>
-<span id="cb6-2"><a href="xrf-data-1.html#cb6-2"></a><span class="st">  </span><span class="kw">glimpse</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="xrf-data-1.html#cb10-1"></a><span class="kw">itrax_import</span>(<span class="st">&quot;CD166_19_S1/CD166_19_S1/Results.txt&quot;</span>, <span class="dt">depth =</span> <span class="dv">0</span>) <span class="op">%&gt;%</span></span>
+<span id="cb10-2"><a href="xrf-data-1.html#cb10-2"></a><span class="st">  </span><span class="kw">glimpse</span>()</span></code></pre></div>
 <pre><code>## Rows: 1,283
 ## Columns: 43
 ## $ depth    &lt;dbl&gt; 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,…
@@ -282,14 +283,14 @@ df &lt;- lapply(names(mylist), function(i) within(mylist[[i]], {label &lt;- i}))
   bind_rows() %&gt;% 
   arrange(depth)</code></pre>
 <p>This process can be simplified using <code>itraxR::itrax_join()</code>, for example:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="xrf-data-1.html#cb9-1"></a><span class="co"># import the core sections</span></span>
-<span id="cb9-2"><a href="xrf-data-1.html#cb9-2"></a>CD166_<span class="dv">19</span>_S1 &lt;-<span class="st"> </span><span class="kw">itrax_import</span>(<span class="st">&quot;CD166_19_S1/CD166_19_S1/Results.txt&quot;</span>, <span class="dt">depth_top =</span> <span class="dv">0</span>)</span>
-<span id="cb9-3"><a href="xrf-data-1.html#cb9-3"></a>CD166_<span class="dv">19</span>_S2 &lt;-<span class="st"> </span><span class="kw">itrax_import</span>(<span class="st">&quot;CD166_19_S2/CD166_19_S2/Results.txt&quot;</span>, <span class="dt">depth_top =</span> <span class="kw">max</span>(CD166_<span class="dv">19</span>_S1<span class="op">$</span>depth))</span>
-<span id="cb9-4"><a href="xrf-data-1.html#cb9-4"></a>CD166_<span class="dv">19</span>_S3 &lt;-<span class="st"> </span><span class="kw">itrax_import</span>(<span class="st">&quot;CD166_19_S3/CD166_19_S3/Results.txt&quot;</span>, <span class="dt">depth_top =</span> <span class="kw">max</span>(CD166_<span class="dv">19</span>_S2<span class="op">$</span>depth))</span>
-<span id="cb9-5"><a href="xrf-data-1.html#cb9-5"></a><span class="co">#join them together</span></span>
-<span id="cb9-6"><a href="xrf-data-1.html#cb9-6"></a>CD166_<span class="dv">19</span> &lt;-<span class="st"> </span><span class="kw">itrax_join</span>(<span class="kw">list</span>(<span class="dt">S1 =</span> CD166_<span class="dv">19</span>_S1, <span class="dt">S2 =</span> CD166_<span class="dv">19</span>_S2, <span class="dt">S3 =</span> CD166_<span class="dv">19</span>_S3))</span>
-<span id="cb9-7"><a href="xrf-data-1.html#cb9-7"></a><span class="kw">rm</span>(CD166_<span class="dv">19</span>_S1, CD166_<span class="dv">19</span>_S2, CD166_<span class="dv">19</span>_S3)</span>
-<span id="cb9-8"><a href="xrf-data-1.html#cb9-8"></a><span class="kw">glimpse</span>(CD166_<span class="dv">19</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="xrf-data-1.html#cb13-1"></a><span class="co"># import the core sections</span></span>
+<span id="cb13-2"><a href="xrf-data-1.html#cb13-2"></a>CD166_<span class="dv">19</span>_S1 &lt;-<span class="st"> </span><span class="kw">itrax_import</span>(<span class="st">&quot;CD166_19_S1/CD166_19_S1/Results.txt&quot;</span>, <span class="dt">depth_top =</span> <span class="dv">0</span>)</span>
+<span id="cb13-3"><a href="xrf-data-1.html#cb13-3"></a>CD166_<span class="dv">19</span>_S2 &lt;-<span class="st"> </span><span class="kw">itrax_import</span>(<span class="st">&quot;CD166_19_S2/CD166_19_S2/Results.txt&quot;</span>, <span class="dt">depth_top =</span> <span class="kw">max</span>(CD166_<span class="dv">19</span>_S1<span class="op">$</span>depth))</span>
+<span id="cb13-4"><a href="xrf-data-1.html#cb13-4"></a>CD166_<span class="dv">19</span>_S3 &lt;-<span class="st"> </span><span class="kw">itrax_import</span>(<span class="st">&quot;CD166_19_S3/CD166_19_S3/Results.txt&quot;</span>, <span class="dt">depth_top =</span> <span class="kw">max</span>(CD166_<span class="dv">19</span>_S2<span class="op">$</span>depth))</span>
+<span id="cb13-5"><a href="xrf-data-1.html#cb13-5"></a><span class="co">#join them together</span></span>
+<span id="cb13-6"><a href="xrf-data-1.html#cb13-6"></a>CD166_<span class="dv">19</span> &lt;-<span class="st"> </span><span class="kw">itrax_join</span>(<span class="kw">list</span>(<span class="dt">S1 =</span> CD166_<span class="dv">19</span>_S1, <span class="dt">S2 =</span> CD166_<span class="dv">19</span>_S2, <span class="dt">S3 =</span> CD166_<span class="dv">19</span>_S3))</span>
+<span id="cb13-7"><a href="xrf-data-1.html#cb13-7"></a><span class="kw">rm</span>(CD166_<span class="dv">19</span>_S1, CD166_<span class="dv">19</span>_S2, CD166_<span class="dv">19</span>_S3)</span>
+<span id="cb13-8"><a href="xrf-data-1.html#cb13-8"></a><span class="kw">glimpse</span>(CD166_<span class="dv">19</span>)</span></code></pre></div>
 <pre><code>## Rows: 4,212
 ## Columns: 44
 ## $ depth    &lt;dbl&gt; 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,…

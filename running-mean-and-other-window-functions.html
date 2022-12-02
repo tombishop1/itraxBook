@@ -23,7 +23,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2022-11-15" />
+<meta name="date" content="2022-12-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -142,6 +142,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="0.2" data-path="prerequisites.html"><a href="prerequisites.html"><i class="fa fa-check"></i><b>0.2</b> Prerequisites</a></li>
 <li class="chapter" data-level="0.3" data-path="example-data.html"><a href="example-data.html"><i class="fa fa-check"></i><b>0.3</b> Example Data</a></li>
 <li class="chapter" data-level="0.4" data-path="utility-data.html"><a href="utility-data.html"><i class="fa fa-check"></i><b>0.4</b> Utility Data</a></li>
+<li class="chapter" data-level="0.5" data-path="citing-this-work.html"><a href="citing-this-work.html"><i class="fa fa-check"></i><b>0.5</b> Citing This Work</a></li>
 </ul></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Data Structure</a><ul>
 <li class="chapter" data-level="1.1" data-path="metadata.html"><a href="metadata.html"><i class="fa fa-check"></i><b>1.1</b> Metadata</a></li>
@@ -223,54 +224,54 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="running-mean-and-other-window-functions" class="section level2 hasAnchor">
 <h2><span class="header-section-number">5.2</span> Running Mean and Other Window Functions<a href="running-mean-and-other-window-functions.html#running-mean-and-other-window-functions" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Where a signal is noisy but appears to exhibit some signal it may be appropriate to use a running mean to “smooth” the signal. However, considerable caution should be exercised in the use of this tool. It is rare for an analysis to be genuinely improved by the use of running means, although it can artificially improve statistics for some tests. When visualising data using a running mean the original, unmodified data should always be shown alongside to avoid any misunderstanding. This method can be used for any suitable window function (e.g. <code>min()</code>, <code>max()</code>, <code>range()</code> and <code>sd</code>.)</p>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="running-mean-and-other-window-functions.html#cb54-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
-<span id="cb54-2"><a href="running-mean-and-other-window-functions.html#cb54-2"></a><span class="st">  </span><span class="co"># uses a 50 point running mean (50 mm for this data); 25 before, 25 after</span></span>
-<span id="cb54-3"><a href="running-mean-and-other-window-functions.html#cb54-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">any_of</span>(elementsList), </span>
-<span id="cb54-4"><a href="running-mean-and-other-window-functions.html#cb54-4"></a>                <span class="cf">function</span>(x){<span class="kw">unlist</span>(slider<span class="op">::</span><span class="kw">slide</span>(x, mean, <span class="dt">.before =</span> <span class="dv">25</span>, <span class="dt">.after =</span> <span class="dv">25</span>))}</span>
-<span id="cb54-5"><a href="running-mean-and-other-window-functions.html#cb54-5"></a>                )</span>
-<span id="cb54-6"><a href="running-mean-and-other-window-functions.html#cb54-6"></a>         ) <span class="op">%&gt;%</span></span>
-<span id="cb54-7"><a href="running-mean-and-other-window-functions.html#cb54-7"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> depth, <span class="dt">y =</span> Ca)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb54-8"><a href="running-mean-and-other-window-functions.html#cb54-8"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data =</span> CD166_<span class="dv">19</span>_xrf, <span class="dt">col =</span> <span class="st">&quot;grey80&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb54-9"><a href="running-mean-and-other-window-functions.html#cb54-9"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb54-10"><a href="running-mean-and-other-window-functions.html#cb54-10"></a><span class="st">  </span><span class="kw">scale_x_reverse</span>() <span class="op">+</span></span>
-<span id="cb54-11"><a href="running-mean-and-other-window-functions.html#cb54-11"></a><span class="st">  </span><span class="kw">theme_paleo</span>()</span></code></pre></div>
-<p><img src="itraxBook_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="running-mean-and-other-window-functions.html#cb61-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
+<span id="cb61-2"><a href="running-mean-and-other-window-functions.html#cb61-2"></a><span class="st">  </span><span class="co"># uses a 50 point running mean (50 mm for this data); 25 before, 25 after</span></span>
+<span id="cb61-3"><a href="running-mean-and-other-window-functions.html#cb61-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">any_of</span>(elementsList), </span>
+<span id="cb61-4"><a href="running-mean-and-other-window-functions.html#cb61-4"></a>                <span class="cf">function</span>(x){<span class="kw">unlist</span>(slider<span class="op">::</span><span class="kw">slide</span>(x, mean, <span class="dt">.before =</span> <span class="dv">25</span>, <span class="dt">.after =</span> <span class="dv">25</span>))}</span>
+<span id="cb61-5"><a href="running-mean-and-other-window-functions.html#cb61-5"></a>                )</span>
+<span id="cb61-6"><a href="running-mean-and-other-window-functions.html#cb61-6"></a>         ) <span class="op">%&gt;%</span></span>
+<span id="cb61-7"><a href="running-mean-and-other-window-functions.html#cb61-7"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">x =</span> depth, <span class="dt">y =</span> Ca)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb61-8"><a href="running-mean-and-other-window-functions.html#cb61-8"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data =</span> CD166_<span class="dv">19</span>_xrf, <span class="dt">col =</span> <span class="st">&quot;grey80&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb61-9"><a href="running-mean-and-other-window-functions.html#cb61-9"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb61-10"><a href="running-mean-and-other-window-functions.html#cb61-10"></a><span class="st">  </span><span class="kw">scale_x_reverse</span>() <span class="op">+</span></span>
+<span id="cb61-11"><a href="running-mean-and-other-window-functions.html#cb61-11"></a><span class="st">  </span><span class="kw">theme_paleo</span>()</span></code></pre></div>
+<p><img src="itraxBook_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 <p>To plot the running means in a stratigraphic diagram, the smoothed data has to be labelled and combined with the original data so it can be faceted.</p>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="running-mean-and-other-window-functions.html#cb55-1"></a><span class="co"># make the xrf plot with running means</span></span>
-<span id="cb55-2"><a href="running-mean-and-other-window-functions.html#cb55-2"></a><span class="kw">full_join</span>(<span class="dt">y =</span> CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
-<span id="cb55-3"><a href="running-mean-and-other-window-functions.html#cb55-3"></a><span class="st">                        </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span></span>
-<span id="cb55-4"><a href="running-mean-and-other-window-functions.html#cb55-4"></a><span class="st">                        </span><span class="co"># uses a 50 point running mean (50 mm for this data); 25 before, 25 after</span></span>
-<span id="cb55-5"><a href="running-mean-and-other-window-functions.html#cb55-5"></a><span class="st">                        </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">any_of</span>(<span class="kw">c</span>(elementsList)), </span>
-<span id="cb55-6"><a href="running-mean-and-other-window-functions.html#cb55-6"></a>                                      <span class="cf">function</span>(x){<span class="kw">unlist</span>(slider<span class="op">::</span><span class="kw">slide</span>(x, mean, <span class="dt">.before =</span> <span class="dv">25</span>, <span class="dt">.after =</span> <span class="dv">25</span>))}</span>
-<span id="cb55-7"><a href="running-mean-and-other-window-functions.html#cb55-7"></a>                                      )</span>
-<span id="cb55-8"><a href="running-mean-and-other-window-functions.html#cb55-8"></a>                               ) <span class="op">%&gt;%</span></span>
-<span id="cb55-9"><a href="running-mean-and-other-window-functions.html#cb55-9"></a><span class="st">                        </span><span class="kw">mutate</span>(<span class="dt">type =</span> <span class="st">&quot;mean&quot;</span>), </span>
-<span id="cb55-10"><a href="running-mean-and-other-window-functions.html#cb55-10"></a>                      <span class="dt">x =</span> CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb55-11"><a href="running-mean-and-other-window-functions.html#cb55-11"></a><span class="st">                        </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb55-12"><a href="running-mean-and-other-window-functions.html#cb55-12"></a><span class="st">                        </span><span class="kw">mutate</span>(<span class="dt">type =</span> <span class="st">&quot;raw&quot;</span>)</span>
-<span id="cb55-13"><a href="running-mean-and-other-window-functions.html#cb55-13"></a>                      ) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb55-14"><a href="running-mean-and-other-window-functions.html#cb55-14"></a><span class="st">  </span><span class="kw">filter</span>(validity <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb55-15"><a href="running-mean-and-other-window-functions.html#cb55-15"></a><span class="st">  </span><span class="kw">select</span>(Fe, Ti, Cu, Pb, Si, MSE, Mn, depth, label, type) <span class="op">%&gt;%</span></span>
-<span id="cb55-16"><a href="running-mean-and-other-window-functions.html#cb55-16"></a><span class="st">  </span>tidyr<span class="op">::</span><span class="kw">pivot_longer</span>(<span class="op">!</span><span class="kw">c</span>(<span class="st">&quot;depth&quot;</span>, <span class="st">&quot;label&quot;</span>, <span class="st">&quot;type&quot;</span>), <span class="dt">names_to =</span> <span class="st">&quot;elements&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;peakarea&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb55-17"><a href="running-mean-and-other-window-functions.html#cb55-17"></a><span class="st">  </span>tidyr<span class="op">::</span><span class="kw">drop_na</span>() <span class="op">%&gt;%</span></span>
-<span id="cb55-18"><a href="running-mean-and-other-window-functions.html#cb55-18"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">elements =</span> <span class="kw">factor</span>(elements, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;MSE&quot;</span>, elementsList))) <span class="op">%&gt;%</span></span>
-<span id="cb55-19"><a href="running-mean-and-other-window-functions.html#cb55-19"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">label =</span> <span class="kw">as_factor</span>(label),</span>
-<span id="cb55-20"><a href="running-mean-and-other-window-functions.html#cb55-20"></a>         <span class="dt">type =</span> <span class="kw">as_factor</span>(type)</span>
-<span id="cb55-21"><a href="running-mean-and-other-window-functions.html#cb55-21"></a>         ) <span class="op">%&gt;%</span></span>
-<span id="cb55-22"><a href="running-mean-and-other-window-functions.html#cb55-22"></a><span class="st">  </span></span>
-<span id="cb55-23"><a href="running-mean-and-other-window-functions.html#cb55-23"></a><span class="st">  </span><span class="kw">glimpse</span>() <span class="op">%&gt;%</span></span>
-<span id="cb55-24"><a href="running-mean-and-other-window-functions.html#cb55-24"></a><span class="st">  </span></span>
-<span id="cb55-25"><a href="running-mean-and-other-window-functions.html#cb55-25"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> peakarea, <span class="dt">y =</span> depth)) <span class="op">+</span></span>
-<span id="cb55-26"><a href="running-mean-and-other-window-functions.html#cb55-26"></a><span class="st">  </span>tidypaleo<span class="op">::</span><span class="kw">geom_lineh</span>(<span class="kw">aes</span>(<span class="dt">group =</span> type, <span class="dt">colour =</span> label, <span class="dt">alpha =</span> type)) <span class="op">+</span></span>
-<span id="cb55-27"><a href="running-mean-and-other-window-functions.html#cb55-27"></a><span class="st">  </span><span class="kw">scale_alpha_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="fl">0.1</span>, <span class="dv">1</span>)) <span class="op">+</span></span>
-<span id="cb55-28"><a href="running-mean-and-other-window-functions.html#cb55-28"></a><span class="st">  </span><span class="kw">scale_y_reverse</span>() <span class="op">+</span></span>
-<span id="cb55-29"><a href="running-mean-and-other-window-functions.html#cb55-29"></a><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">n.breaks =</span> <span class="dv">2</span>) <span class="op">+</span></span>
-<span id="cb55-30"><a href="running-mean-and-other-window-functions.html#cb55-30"></a><span class="st">  </span><span class="kw">facet_geochem_gridh</span>(<span class="kw">vars</span>(elements)) <span class="op">+</span></span>
-<span id="cb55-31"><a href="running-mean-and-other-window-functions.html#cb55-31"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;peak area&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Depth [mm]&quot;</span>) <span class="op">+</span></span>
-<span id="cb55-32"><a href="running-mean-and-other-window-functions.html#cb55-32"></a><span class="st">  </span>tidypaleo<span class="op">::</span><span class="kw">theme_paleo</span>() <span class="op">+</span></span>
-<span id="cb55-33"><a href="running-mean-and-other-window-functions.html#cb55-33"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>,</span>
-<span id="cb55-34"><a href="running-mean-and-other-window-functions.html#cb55-34"></a>        <span class="dt">axis.text.x =</span> <span class="kw">element_blank</span>(),</span>
-<span id="cb55-35"><a href="running-mean-and-other-window-functions.html#cb55-35"></a>        <span class="dt">axis.ticks.x =</span> <span class="kw">element_blank</span>())</span></code></pre></div>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="running-mean-and-other-window-functions.html#cb62-1"></a><span class="co"># make the xrf plot with running means</span></span>
+<span id="cb62-2"><a href="running-mean-and-other-window-functions.html#cb62-2"></a><span class="kw">full_join</span>(<span class="dt">y =</span> CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
+<span id="cb62-3"><a href="running-mean-and-other-window-functions.html#cb62-3"></a><span class="st">                        </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span></span>
+<span id="cb62-4"><a href="running-mean-and-other-window-functions.html#cb62-4"></a><span class="st">                        </span><span class="co"># uses a 50 point running mean (50 mm for this data); 25 before, 25 after</span></span>
+<span id="cb62-5"><a href="running-mean-and-other-window-functions.html#cb62-5"></a><span class="st">                        </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">any_of</span>(<span class="kw">c</span>(elementsList)), </span>
+<span id="cb62-6"><a href="running-mean-and-other-window-functions.html#cb62-6"></a>                                      <span class="cf">function</span>(x){<span class="kw">unlist</span>(slider<span class="op">::</span><span class="kw">slide</span>(x, mean, <span class="dt">.before =</span> <span class="dv">25</span>, <span class="dt">.after =</span> <span class="dv">25</span>))}</span>
+<span id="cb62-7"><a href="running-mean-and-other-window-functions.html#cb62-7"></a>                                      )</span>
+<span id="cb62-8"><a href="running-mean-and-other-window-functions.html#cb62-8"></a>                               ) <span class="op">%&gt;%</span></span>
+<span id="cb62-9"><a href="running-mean-and-other-window-functions.html#cb62-9"></a><span class="st">                        </span><span class="kw">mutate</span>(<span class="dt">type =</span> <span class="st">&quot;mean&quot;</span>), </span>
+<span id="cb62-10"><a href="running-mean-and-other-window-functions.html#cb62-10"></a>                      <span class="dt">x =</span> CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb62-11"><a href="running-mean-and-other-window-functions.html#cb62-11"></a><span class="st">                        </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb62-12"><a href="running-mean-and-other-window-functions.html#cb62-12"></a><span class="st">                        </span><span class="kw">mutate</span>(<span class="dt">type =</span> <span class="st">&quot;raw&quot;</span>)</span>
+<span id="cb62-13"><a href="running-mean-and-other-window-functions.html#cb62-13"></a>                      ) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb62-14"><a href="running-mean-and-other-window-functions.html#cb62-14"></a><span class="st">  </span><span class="kw">filter</span>(validity <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb62-15"><a href="running-mean-and-other-window-functions.html#cb62-15"></a><span class="st">  </span><span class="kw">select</span>(Fe, Ti, Cu, Pb, Si, MSE, Mn, depth, label, type) <span class="op">%&gt;%</span></span>
+<span id="cb62-16"><a href="running-mean-and-other-window-functions.html#cb62-16"></a><span class="st">  </span>tidyr<span class="op">::</span><span class="kw">pivot_longer</span>(<span class="op">!</span><span class="kw">c</span>(<span class="st">&quot;depth&quot;</span>, <span class="st">&quot;label&quot;</span>, <span class="st">&quot;type&quot;</span>), <span class="dt">names_to =</span> <span class="st">&quot;elements&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;peakarea&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb62-17"><a href="running-mean-and-other-window-functions.html#cb62-17"></a><span class="st">  </span>tidyr<span class="op">::</span><span class="kw">drop_na</span>() <span class="op">%&gt;%</span></span>
+<span id="cb62-18"><a href="running-mean-and-other-window-functions.html#cb62-18"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">elements =</span> <span class="kw">factor</span>(elements, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;MSE&quot;</span>, elementsList))) <span class="op">%&gt;%</span></span>
+<span id="cb62-19"><a href="running-mean-and-other-window-functions.html#cb62-19"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">label =</span> <span class="kw">as_factor</span>(label),</span>
+<span id="cb62-20"><a href="running-mean-and-other-window-functions.html#cb62-20"></a>         <span class="dt">type =</span> <span class="kw">as_factor</span>(type)</span>
+<span id="cb62-21"><a href="running-mean-and-other-window-functions.html#cb62-21"></a>         ) <span class="op">%&gt;%</span></span>
+<span id="cb62-22"><a href="running-mean-and-other-window-functions.html#cb62-22"></a><span class="st">  </span></span>
+<span id="cb62-23"><a href="running-mean-and-other-window-functions.html#cb62-23"></a><span class="st">  </span><span class="kw">glimpse</span>() <span class="op">%&gt;%</span></span>
+<span id="cb62-24"><a href="running-mean-and-other-window-functions.html#cb62-24"></a><span class="st">  </span></span>
+<span id="cb62-25"><a href="running-mean-and-other-window-functions.html#cb62-25"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> peakarea, <span class="dt">y =</span> depth)) <span class="op">+</span></span>
+<span id="cb62-26"><a href="running-mean-and-other-window-functions.html#cb62-26"></a><span class="st">  </span>tidypaleo<span class="op">::</span><span class="kw">geom_lineh</span>(<span class="kw">aes</span>(<span class="dt">group =</span> type, <span class="dt">colour =</span> label, <span class="dt">alpha =</span> type)) <span class="op">+</span></span>
+<span id="cb62-27"><a href="running-mean-and-other-window-functions.html#cb62-27"></a><span class="st">  </span><span class="kw">scale_alpha_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="fl">0.1</span>, <span class="dv">1</span>)) <span class="op">+</span></span>
+<span id="cb62-28"><a href="running-mean-and-other-window-functions.html#cb62-28"></a><span class="st">  </span><span class="kw">scale_y_reverse</span>() <span class="op">+</span></span>
+<span id="cb62-29"><a href="running-mean-and-other-window-functions.html#cb62-29"></a><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">n.breaks =</span> <span class="dv">2</span>) <span class="op">+</span></span>
+<span id="cb62-30"><a href="running-mean-and-other-window-functions.html#cb62-30"></a><span class="st">  </span><span class="kw">facet_geochem_gridh</span>(<span class="kw">vars</span>(elements)) <span class="op">+</span></span>
+<span id="cb62-31"><a href="running-mean-and-other-window-functions.html#cb62-31"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;peak area&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Depth [mm]&quot;</span>) <span class="op">+</span></span>
+<span id="cb62-32"><a href="running-mean-and-other-window-functions.html#cb62-32"></a><span class="st">  </span>tidypaleo<span class="op">::</span><span class="kw">theme_paleo</span>() <span class="op">+</span></span>
+<span id="cb62-33"><a href="running-mean-and-other-window-functions.html#cb62-33"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>,</span>
+<span id="cb62-34"><a href="running-mean-and-other-window-functions.html#cb62-34"></a>        <span class="dt">axis.text.x =</span> <span class="kw">element_blank</span>(),</span>
+<span id="cb62-35"><a href="running-mean-and-other-window-functions.html#cb62-35"></a>        <span class="dt">axis.ticks.x =</span> <span class="kw">element_blank</span>())</span></code></pre></div>
 <pre><code>## Rows: 57,134
 ## Columns: 5
 ## $ depth    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2…
@@ -278,7 +279,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## $ type     &lt;fct&gt; raw, raw, raw, raw, raw, raw, raw, raw, raw, raw, raw, raw, r…
 ## $ elements &lt;fct&gt; Fe, Ti, Cu, Pb, Si, MSE, Mn, Fe, Ti, Cu, Pb, Si, MSE, Mn, Fe,…
 ## $ peakarea &lt;dbl&gt; 19786.00, 804.00, 117.00, 22.00, 177.00, 1.26, 231.00, 35168.…</code></pre>
-<p><img src="itraxBook_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p><img src="itraxBook_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
 
 </div>
 <!-- </div> -->

@@ -23,7 +23,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2022-11-15" />
+<meta name="date" content="2022-12-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -142,6 +142,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="0.2" data-path="prerequisites.html"><a href="prerequisites.html"><i class="fa fa-check"></i><b>0.2</b> Prerequisites</a></li>
 <li class="chapter" data-level="0.3" data-path="example-data.html"><a href="example-data.html"><i class="fa fa-check"></i><b>0.3</b> Example Data</a></li>
 <li class="chapter" data-level="0.4" data-path="utility-data.html"><a href="utility-data.html"><i class="fa fa-check"></i><b>0.4</b> Utility Data</a></li>
+<li class="chapter" data-level="0.5" data-path="citing-this-work.html"><a href="citing-this-work.html"><i class="fa fa-check"></i><b>0.5</b> Citing This Work</a></li>
 </ul></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Data Structure</a><ul>
 <li class="chapter" data-level="1.1" data-path="metadata.html"><a href="metadata.html"><i class="fa fa-check"></i><b>1.1</b> Metadata</a></li>
@@ -223,21 +224,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="preparing-data" class="section level2 hasAnchor">
 <h2><span class="header-section-number">7.3</span> Preparing Data<a href="preparing-data.html#preparing-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>In order to perform empirical calibration it is necessary to have some quantitative data that relates directly to the Itrax XRF data. The quantitative data is unlikely to be at the same resolution as the Itrax XRF data. For example, it is typical to scan cores at between 0.2 and 1 mm, but typical to sub-sample for WD-XRF or ICP at between 5 - 10 mm. In addition, where Itrax scans are contiguous, sub-samples may not be, for example a 10 mm sub-sample might be taken every 80 mm. In this example we have sub-sampled and analysed the 60 samples defined in the previous section. Here they have been freeze-dried, digested in aqua regia using microwave digestion (<span class="citation">Roje (<a href="#ref-Roje2010" role="doc-biblioref">2010</a>)</span>), filtered and analysed using ICP-OES.</p>
-<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="preparing-data.html#cb71-1"></a>icp &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;calibration_samples/calibration_data.csv&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb71-2"><a href="preparing-data.html#cb71-2"></a><span class="st">  </span><span class="co">#select(-`Sample Id`) %&gt;%</span></span>
-<span id="cb71-3"><a href="preparing-data.html#cb71-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">water_content =</span> (((wet<span class="op">-</span>tare)<span class="op">-</span>(dry<span class="op">-</span>tare))<span class="op">/</span>(wet<span class="op">-</span>tare))<span class="op">*</span><span class="dv">100</span>) <span class="op">%&gt;%</span></span>
-<span id="cb71-4"><a href="preparing-data.html#cb71-4"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(<span class="st">&quot;wet&quot;</span>, <span class="st">&quot;tare&quot;</span>, <span class="st">&quot;dry&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb71-5"><a href="preparing-data.html#cb71-5"></a><span class="st">  </span><span class="co"># remove negative values</span></span>
-<span id="cb71-6"><a href="preparing-data.html#cb71-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">any_of</span>(elementsList), <span class="cf">function</span>(x){<span class="kw">replace</span>(x, <span class="kw">which</span>(x<span class="op">&lt;</span><span class="dv">0</span>), <span class="ot">NA</span>)})) <span class="op">%&gt;%</span></span>
-<span id="cb71-7"><a href="preparing-data.html#cb71-7"></a><span class="st">  </span><span class="co"># adjust for dilution</span></span>
-<span id="cb71-8"><a href="preparing-data.html#cb71-8"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">any_of</span>(elementsList), <span class="cf">function</span>(x){(x<span class="op">*</span><span class="st">`</span><span class="dt">Dilution</span><span class="st">`</span>)<span class="op">/</span><span class="st">`</span><span class="dt">weight</span><span class="st">`</span>})) <span class="op">%&gt;%</span></span>
-<span id="cb71-9"><a href="preparing-data.html#cb71-9"></a><span class="st">  </span><span class="co"># adjust for water content</span></span>
-<span id="cb71-10"><a href="preparing-data.html#cb71-10"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">any_of</span>(elementsList), <span class="cf">function</span>(x){x<span class="op">*</span>(<span class="dv">1</span><span class="op">-</span>water_content<span class="op">/</span><span class="dv">100</span>)})) <span class="op">%&gt;%</span></span>
-<span id="cb71-11"><a href="preparing-data.html#cb71-11"></a><span class="st">  </span><span class="co"># remove Inf or NaN values</span></span>
-<span id="cb71-12"><a href="preparing-data.html#cb71-12"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">any_of</span>(elementsList), <span class="cf">function</span>(x){<span class="kw">replace</span>(x, <span class="kw">is.infinite</span>(x) <span class="op">|</span><span class="st"> </span><span class="kw">is.nan</span>(x), <span class="ot">NA</span>)})) <span class="op">%&gt;%</span></span>
-<span id="cb71-13"><a href="preparing-data.html#cb71-13"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(<span class="st">&quot;weight&quot;</span>, <span class="st">&quot;Dilution&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb71-14"><a href="preparing-data.html#cb71-14"></a><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span>top <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;BLANK&quot;</span>, <span class="st">&quot;MESS-4&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb71-15"><a href="preparing-data.html#cb71-15"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">top =</span> <span class="kw">as.numeric</span>(top), <span class="dt">bot =</span> <span class="kw">as.numeric</span>(bot))</span></code></pre></div>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="preparing-data.html#cb78-1"></a>icp &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;calibration_samples/calibration_data.csv&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb78-2"><a href="preparing-data.html#cb78-2"></a><span class="st">  </span><span class="co">#select(-`Sample Id`) %&gt;%</span></span>
+<span id="cb78-3"><a href="preparing-data.html#cb78-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">water_content =</span> (((wet<span class="op">-</span>tare)<span class="op">-</span>(dry<span class="op">-</span>tare))<span class="op">/</span>(wet<span class="op">-</span>tare))<span class="op">*</span><span class="dv">100</span>) <span class="op">%&gt;%</span></span>
+<span id="cb78-4"><a href="preparing-data.html#cb78-4"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(<span class="st">&quot;wet&quot;</span>, <span class="st">&quot;tare&quot;</span>, <span class="st">&quot;dry&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb78-5"><a href="preparing-data.html#cb78-5"></a><span class="st">  </span><span class="co"># remove negative values</span></span>
+<span id="cb78-6"><a href="preparing-data.html#cb78-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">any_of</span>(elementsList), <span class="cf">function</span>(x){<span class="kw">replace</span>(x, <span class="kw">which</span>(x<span class="op">&lt;</span><span class="dv">0</span>), <span class="ot">NA</span>)})) <span class="op">%&gt;%</span></span>
+<span id="cb78-7"><a href="preparing-data.html#cb78-7"></a><span class="st">  </span><span class="co"># adjust for dilution</span></span>
+<span id="cb78-8"><a href="preparing-data.html#cb78-8"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">any_of</span>(elementsList), <span class="cf">function</span>(x){(x<span class="op">*</span><span class="st">`</span><span class="dt">Dilution</span><span class="st">`</span>)<span class="op">/</span><span class="st">`</span><span class="dt">weight</span><span class="st">`</span>})) <span class="op">%&gt;%</span></span>
+<span id="cb78-9"><a href="preparing-data.html#cb78-9"></a><span class="st">  </span><span class="co"># adjust for water content</span></span>
+<span id="cb78-10"><a href="preparing-data.html#cb78-10"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">any_of</span>(elementsList), <span class="cf">function</span>(x){x<span class="op">*</span>(<span class="dv">1</span><span class="op">-</span>water_content<span class="op">/</span><span class="dv">100</span>)})) <span class="op">%&gt;%</span></span>
+<span id="cb78-11"><a href="preparing-data.html#cb78-11"></a><span class="st">  </span><span class="co"># remove Inf or NaN values</span></span>
+<span id="cb78-12"><a href="preparing-data.html#cb78-12"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">any_of</span>(elementsList), <span class="cf">function</span>(x){<span class="kw">replace</span>(x, <span class="kw">is.infinite</span>(x) <span class="op">|</span><span class="st"> </span><span class="kw">is.nan</span>(x), <span class="ot">NA</span>)})) <span class="op">%&gt;%</span></span>
+<span id="cb78-13"><a href="preparing-data.html#cb78-13"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(<span class="st">&quot;weight&quot;</span>, <span class="st">&quot;Dilution&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb78-14"><a href="preparing-data.html#cb78-14"></a><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span>top <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;BLANK&quot;</span>, <span class="st">&quot;MESS-4&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb78-15"><a href="preparing-data.html#cb78-15"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">top =</span> <span class="kw">as.numeric</span>(top), <span class="dt">bot =</span> <span class="kw">as.numeric</span>(bot))</span></code></pre></div>
 <pre><code>## Rows: 65 Columns: 39
 ## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
@@ -246,7 +247,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="preparing-data.html#cb73-1"></a><span class="kw">glimpse</span>(icp)</span></code></pre></div>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="preparing-data.html#cb80-1"></a><span class="kw">glimpse</span>(icp)</span></code></pre></div>
 <pre><code>## Rows: 60
 ## Columns: 35
 ## $ top           &lt;dbl&gt; 330, 430, 440, 460, 670, 770, 800, 840, 930, 1020, 1090,…
@@ -285,17 +286,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## $ Mo            &lt;dbl&gt; NA, NA, 2.6257140, NA, NA, NA, NA, NA, NA, NA, NA, 0.602…
 ## $ water_content &lt;dbl&gt; 30.58300, 30.35867, 31.20629, 28.42351, 30.85152, 29.921…</code></pre>
 <p>The function <code>itraxR::itrax_reduce()</code> can be used to reduce the Itrax data to match the resolution of some other data. The example below uses the same positions of the ICP-OES analyses of the data to summarise it. And here is the use of <code>itrax_reduce()</code> to reduce our Itrax XRF data (<code>CD166_19_xrf</code>), using the shape of the “icp” data (in <code>icp</code>). Note the requirement to remove text based columns (in this case <code>file</code> and <code>label</code>) from the data before this step is performed - if the reducing function cannot handle a data type (e.g. passing characters to <code>mean()</code>), errors will occur. If we wanted to add the standard deviation alongside the mean for each chunk, this can be done my modifying the default reducing function (<code>mean()</code>) to <code>sd()</code>, for example:</p>
-<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="preparing-data.html#cb75-1"></a>xrf &lt;-<span class="st"> </span>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
-<span id="cb75-2"><a href="preparing-data.html#cb75-2"></a><span class="st">  </span><span class="kw">filter</span>(qc <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb75-3"><a href="preparing-data.html#cb75-3"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(label, filename, uid)) <span class="op">%&gt;%</span></span>
-<span id="cb75-4"><a href="preparing-data.html#cb75-4"></a><span class="st">  </span><span class="kw">itrax_reduce</span>(<span class="dt">names =</span> icp<span class="op">$</span>SampleID,</span>
-<span id="cb75-5"><a href="preparing-data.html#cb75-5"></a>               <span class="dt">breaks_lower =</span> icp<span class="op">$</span>top,</span>
-<span id="cb75-6"><a href="preparing-data.html#cb75-6"></a>               <span class="dt">breaks_upper =</span> icp<span class="op">$</span>bot) <span class="op">%&gt;%</span></span>
-<span id="cb75-7"><a href="preparing-data.html#cb75-7"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">SampleID =</span> resample_names) <span class="op">%&gt;%</span></span>
-<span id="cb75-8"><a href="preparing-data.html#cb75-8"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">top =</span> icp<span class="op">$</span>top, </span>
-<span id="cb75-9"><a href="preparing-data.html#cb75-9"></a>         <span class="dt">bot =</span> icp<span class="op">$</span>bot)</span>
-<span id="cb75-10"><a href="preparing-data.html#cb75-10"></a></span>
-<span id="cb75-11"><a href="preparing-data.html#cb75-11"></a><span class="kw">glimpse</span>(xrf)</span></code></pre></div>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="preparing-data.html#cb82-1"></a>xrf &lt;-<span class="st"> </span>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
+<span id="cb82-2"><a href="preparing-data.html#cb82-2"></a><span class="st">  </span><span class="kw">filter</span>(qc <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb82-3"><a href="preparing-data.html#cb82-3"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span><span class="kw">c</span>(label, filename, uid)) <span class="op">%&gt;%</span></span>
+<span id="cb82-4"><a href="preparing-data.html#cb82-4"></a><span class="st">  </span><span class="kw">itrax_reduce</span>(<span class="dt">names =</span> icp<span class="op">$</span>SampleID,</span>
+<span id="cb82-5"><a href="preparing-data.html#cb82-5"></a>               <span class="dt">breaks_lower =</span> icp<span class="op">$</span>top,</span>
+<span id="cb82-6"><a href="preparing-data.html#cb82-6"></a>               <span class="dt">breaks_upper =</span> icp<span class="op">$</span>bot) <span class="op">%&gt;%</span></span>
+<span id="cb82-7"><a href="preparing-data.html#cb82-7"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">SampleID =</span> resample_names) <span class="op">%&gt;%</span></span>
+<span id="cb82-8"><a href="preparing-data.html#cb82-8"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">top =</span> icp<span class="op">$</span>top, </span>
+<span id="cb82-9"><a href="preparing-data.html#cb82-9"></a>         <span class="dt">bot =</span> icp<span class="op">$</span>bot)</span>
+<span id="cb82-10"><a href="preparing-data.html#cb82-10"></a></span>
+<span id="cb82-11"><a href="preparing-data.html#cb82-11"></a><span class="kw">glimpse</span>(xrf)</span></code></pre></div>
 <pre><code>## Rows: 60
 ## Columns: 58
 ## $ SampleID         &lt;chr&gt; &quot;B14&quot;, &quot;A29&quot;, &quot;B01&quot;, &quot;B03&quot;, &quot;A18&quot;, &quot;A20&quot;, &quot;B16&quot;, &quot;A08…

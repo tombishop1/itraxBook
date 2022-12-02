@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>0.1 The itraxR Package | Using Itrax Data in R</title>
+  <title>0.5 Citing This Work | Using Itrax Data in R</title>
   <meta name="description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
   <meta name="generator" content="bookdown 0.30 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="0.1 The itraxR Package | Using Itrax Data in R" />
+  <meta property="og:title" content="0.5 Citing This Work | Using Itrax Data in R" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="0.1 The itraxR Package | Using Itrax Data in R" />
+  <meta name="twitter:title" content="0.5 Citing This Work | Using Itrax Data in R" />
   
   <meta name="twitter:description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="index.html"/>
-<link rel="next" href="prerequisites.html"/>
+<link rel="prev" href="utility-data.html"/>
+<link rel="next" href="intro.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -221,19 +221,63 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="the-itraxr-package" class="section level2 hasAnchor">
-<h2><span class="header-section-number">0.1</span> The itraxR Package<a href="the-itraxr-package.html#the-itraxr-package" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>The <code>itraxR</code> package offers a range of convenience functions for working with Itrax data. The book mostly uses the functions in this package, but the source code is available and fully commented, so is easy to as a basis for other work. The package and code are available from <a href="https://github.com/tombishop1/itraxR">github.com/tombishop1/itraxR</a>. The package is available via CRAN, so can be installed using <code>install.packages("itraxR")</code>, but the CRAN repository is updated less frequently. <em>This guide always uses the latest version available on the Github repo.</em></p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="the-itraxr-package.html#cb1-1"></a><span class="kw">packageVersion</span>(<span class="st">&quot;itraxR&quot;</span>)</span></code></pre></div>
-<pre><code>## [1] &#39;1.8&#39;</code></pre>
+<div id="citing-this-work" class="section level2 hasAnchor">
+<h2><span class="header-section-number">0.5</span> Citing This Work<a href="citing-this-work.html#citing-this-work" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><code>R</code> and <code>itraxR</code> can be cited as follows:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="citing-this-work.html#cb4-1"></a><span class="kw">citation</span>()</span></code></pre></div>
+<pre><code>## 
+## To cite R in publications use:
+## 
+##   R Core Team (2022). R: A language and environment for statistical
+##   computing. R Foundation for Statistical Computing, Vienna, Austria.
+##   URL https://www.R-project.org/.
+## 
+## A BibTeX entry for LaTeX users is
+## 
+##   @Manual{,
+##     title = {R: A Language and Environment for Statistical Computing},
+##     author = {{R Core Team}},
+##     organization = {R Foundation for Statistical Computing},
+##     address = {Vienna, Austria},
+##     year = {2022},
+##     url = {https://www.R-project.org/},
+##   }
+## 
+## We have invested a lot of time and effort in creating R, please cite it
+## when using it for data analysis. See also &#39;citation(&quot;pkgname&quot;)&#39; for
+## citing R packages.</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="citing-this-work.html#cb6-1"></a><span class="kw">citation</span>(<span class="st">&quot;itraxR&quot;</span>)</span></code></pre></div>
+<pre><code>## 
+## To cite package &#39;itraxR&#39; in publications use:
+## 
+##   Bishop T (2022). _itraxR: Itrax Data Analysis Tools_. R package
+##   version 1.8, &lt;https://github.com/tombishop1/itraxR/&gt;.
+## 
+## A BibTeX entry for LaTeX users is
+## 
+##   @Manual{,
+##     title = {itraxR: Itrax Data Analysis Tools},
+##     author = {Thomas Bishop},
+##     year = {2022},
+##     note = {R package version 1.8},
+##     url = {https://github.com/tombishop1/itraxR/},
+##   }
+## 
+## ATTENTION: This citation information has been auto-generated from the
+## package DESCRIPTION file and may need manual editing, see
+## &#39;help(&quot;citation&quot;)&#39;.</code></pre>
+<p>You should also cite other packages you use, for example <code>dplyr</code> and <code>tidypaleo</code>.</p>
+<p>This book can be cited as per the citation information in the Github repository in which it is located: <a href="https://github.com/tombishop1/itraxBook">github.com/tombishop1/itraxBook</a>.</p>
+
 </div>
+<!-- </div> -->
             </section>
 
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="prerequisites.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="utility-data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="intro.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

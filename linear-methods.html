@@ -23,7 +23,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2022-11-15" />
+<meta name="date" content="2022-12-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -142,6 +142,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="0.2" data-path="prerequisites.html"><a href="prerequisites.html"><i class="fa fa-check"></i><b>0.2</b> Prerequisites</a></li>
 <li class="chapter" data-level="0.3" data-path="example-data.html"><a href="example-data.html"><i class="fa fa-check"></i><b>0.3</b> Example Data</a></li>
 <li class="chapter" data-level="0.4" data-path="utility-data.html"><a href="utility-data.html"><i class="fa fa-check"></i><b>0.4</b> Utility Data</a></li>
+<li class="chapter" data-level="0.5" data-path="citing-this-work.html"><a href="citing-this-work.html"><i class="fa fa-check"></i><b>0.5</b> Citing This Work</a></li>
 </ul></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Data Structure</a><ul>
 <li class="chapter" data-level="1.1" data-path="metadata.html"><a href="metadata.html"><i class="fa fa-check"></i><b>1.1</b> Metadata</a></li>
@@ -223,78 +224,118 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="linear-methods" class="section level2 hasAnchor">
 <h2><span class="header-section-number">7.4</span> Linear Methods<a href="linear-methods.html#linear-methods" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>We’ll use our <code>xrf</code> and <code>icp</code> datasets to create linear models of all the variables of interest. They must be combined using <code>pivot_longer()</code>. The plot indicates that some, but not all variables are suitable for calibration.</p>
-<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="linear-methods.html#cb77-1"></a><span class="kw">full_join</span>(</span>
-<span id="cb77-2"><a href="linear-methods.html#cb77-2"></a>  icp <span class="op">%&gt;%</span></span>
-<span id="cb77-3"><a href="linear-methods.html#cb77-3"></a><span class="st">    </span><span class="kw">select</span>(<span class="kw">any_of</span>(<span class="kw">c</span>(elementsList, <span class="st">&quot;SampleID&quot;</span>))) <span class="op">%&gt;%</span></span>
-<span id="cb77-4"><a href="linear-methods.html#cb77-4"></a><span class="st">    </span><span class="kw">pivot_longer</span>(<span class="kw">any_of</span>(elementsList),</span>
-<span id="cb77-5"><a href="linear-methods.html#cb77-5"></a>                 <span class="dt">values_to =</span> <span class="st">&quot;icp&quot;</span>,</span>
-<span id="cb77-6"><a href="linear-methods.html#cb77-6"></a>                 <span class="dt">names_to =</span> <span class="st">&quot;element&quot;</span>),</span>
-<span id="cb77-7"><a href="linear-methods.html#cb77-7"></a>  </span>
-<span id="cb77-8"><a href="linear-methods.html#cb77-8"></a>  xrf <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb77-9"><a href="linear-methods.html#cb77-9"></a><span class="st">    </span><span class="kw">select</span>(<span class="kw">any_of</span>(<span class="kw">c</span>(elementsList, <span class="st">&quot;SampleID&quot;</span>))) <span class="op">%&gt;%</span></span>
-<span id="cb77-10"><a href="linear-methods.html#cb77-10"></a><span class="st">    </span><span class="kw">pivot_longer</span>(<span class="kw">any_of</span>(elementsList),</span>
-<span id="cb77-11"><a href="linear-methods.html#cb77-11"></a>                 <span class="dt">values_to =</span> <span class="st">&quot;xrf&quot;</span>,</span>
-<span id="cb77-12"><a href="linear-methods.html#cb77-12"></a>                 <span class="dt">names_to =</span> <span class="st">&quot;element&quot;</span>),</span>
-<span id="cb77-13"><a href="linear-methods.html#cb77-13"></a>  </span>
-<span id="cb77-14"><a href="linear-methods.html#cb77-14"></a>  <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;SampleID&quot;</span>, <span class="st">&quot;element&quot;</span>)</span>
-<span id="cb77-15"><a href="linear-methods.html#cb77-15"></a>  ) <span class="op">%&gt;%</span></span>
-<span id="cb77-16"><a href="linear-methods.html#cb77-16"></a></span>
-<span id="cb77-17"><a href="linear-methods.html#cb77-17"></a><span class="st">  </span><span class="kw">filter</span>(element <span class="op">%in%</span><span class="st"> </span>myElements) <span class="op">%&gt;%</span></span>
-<span id="cb77-18"><a href="linear-methods.html#cb77-18"></a><span class="st">  </span><span class="kw">drop_na</span>() <span class="op">%&gt;%</span></span>
-<span id="cb77-19"><a href="linear-methods.html#cb77-19"></a><span class="st">  </span></span>
-<span id="cb77-20"><a href="linear-methods.html#cb77-20"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> icp, <span class="dt">y =</span> xrf)) <span class="op">+</span></span>
-<span id="cb77-21"><a href="linear-methods.html#cb77-21"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
-<span id="cb77-22"><a href="linear-methods.html#cb77-22"></a><span class="st">  </span>ggpmisc<span class="op">::</span><span class="kw">stat_poly_line</span>() <span class="op">+</span></span>
-<span id="cb77-23"><a href="linear-methods.html#cb77-23"></a><span class="st">  </span>ggpmisc<span class="op">::</span><span class="kw">stat_poly_eq</span>() <span class="op">+</span></span>
-<span id="cb77-24"><a href="linear-methods.html#cb77-24"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="kw">vars</span>(element), </span>
-<span id="cb77-25"><a href="linear-methods.html#cb77-25"></a>             <span class="dt">scales =</span> <span class="st">&quot;free&quot;</span>) <span class="op">+</span></span>
-<span id="cb77-26"><a href="linear-methods.html#cb77-26"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;ICP-OES [ppm]&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb77-27"><a href="linear-methods.html#cb77-27"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Itrax ED-XRF [peak area]&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="linear-methods.html#cb84-1"></a><span class="kw">full_join</span>(</span>
+<span id="cb84-2"><a href="linear-methods.html#cb84-2"></a>  icp <span class="op">%&gt;%</span></span>
+<span id="cb84-3"><a href="linear-methods.html#cb84-3"></a><span class="st">    </span><span class="kw">select</span>(<span class="kw">any_of</span>(<span class="kw">c</span>(elementsList, <span class="st">&quot;SampleID&quot;</span>))) <span class="op">%&gt;%</span></span>
+<span id="cb84-4"><a href="linear-methods.html#cb84-4"></a><span class="st">    </span><span class="kw">pivot_longer</span>(<span class="kw">any_of</span>(elementsList),</span>
+<span id="cb84-5"><a href="linear-methods.html#cb84-5"></a>                 <span class="dt">values_to =</span> <span class="st">&quot;icp&quot;</span>,</span>
+<span id="cb84-6"><a href="linear-methods.html#cb84-6"></a>                 <span class="dt">names_to =</span> <span class="st">&quot;element&quot;</span>),</span>
+<span id="cb84-7"><a href="linear-methods.html#cb84-7"></a>  </span>
+<span id="cb84-8"><a href="linear-methods.html#cb84-8"></a>  xrf <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb84-9"><a href="linear-methods.html#cb84-9"></a><span class="st">    </span><span class="kw">select</span>(<span class="kw">any_of</span>(<span class="kw">c</span>(elementsList, <span class="st">&quot;SampleID&quot;</span>))) <span class="op">%&gt;%</span></span>
+<span id="cb84-10"><a href="linear-methods.html#cb84-10"></a><span class="st">    </span><span class="kw">pivot_longer</span>(<span class="kw">any_of</span>(elementsList),</span>
+<span id="cb84-11"><a href="linear-methods.html#cb84-11"></a>                 <span class="dt">values_to =</span> <span class="st">&quot;xrf&quot;</span>,</span>
+<span id="cb84-12"><a href="linear-methods.html#cb84-12"></a>                 <span class="dt">names_to =</span> <span class="st">&quot;element&quot;</span>),</span>
+<span id="cb84-13"><a href="linear-methods.html#cb84-13"></a>  </span>
+<span id="cb84-14"><a href="linear-methods.html#cb84-14"></a>  <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;SampleID&quot;</span>, <span class="st">&quot;element&quot;</span>)</span>
+<span id="cb84-15"><a href="linear-methods.html#cb84-15"></a>  ) <span class="op">%&gt;%</span></span>
+<span id="cb84-16"><a href="linear-methods.html#cb84-16"></a></span>
+<span id="cb84-17"><a href="linear-methods.html#cb84-17"></a><span class="st">  </span><span class="kw">filter</span>(element <span class="op">%in%</span><span class="st"> </span>myElements) <span class="op">%&gt;%</span></span>
+<span id="cb84-18"><a href="linear-methods.html#cb84-18"></a><span class="st">  </span><span class="kw">drop_na</span>() <span class="op">%&gt;%</span></span>
+<span id="cb84-19"><a href="linear-methods.html#cb84-19"></a><span class="st">  </span></span>
+<span id="cb84-20"><a href="linear-methods.html#cb84-20"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> icp, <span class="dt">y =</span> xrf)) <span class="op">+</span></span>
+<span id="cb84-21"><a href="linear-methods.html#cb84-21"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
+<span id="cb84-22"><a href="linear-methods.html#cb84-22"></a><span class="st">  </span>ggpmisc<span class="op">::</span><span class="kw">stat_poly_line</span>() <span class="op">+</span></span>
+<span id="cb84-23"><a href="linear-methods.html#cb84-23"></a><span class="st">  </span>ggpmisc<span class="op">::</span><span class="kw">stat_poly_eq</span>() <span class="op">+</span></span>
+<span id="cb84-24"><a href="linear-methods.html#cb84-24"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="kw">vars</span>(element), </span>
+<span id="cb84-25"><a href="linear-methods.html#cb84-25"></a>             <span class="dt">scales =</span> <span class="st">&quot;free&quot;</span>) <span class="op">+</span></span>
+<span id="cb84-26"><a href="linear-methods.html#cb84-26"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;ICP-OES [ppm]&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb84-27"><a href="linear-methods.html#cb84-27"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Itrax ED-XRF [peak area]&quot;</span>)</span></code></pre></div>
 <p><img src="itraxBook_files/figure-html/linear_calib_graph-1.png" width="672" /></p>
-<p>To apply these calibration models to our existing data, we first need to save the models created using <code>lm()</code>.</p>
-<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="linear-methods.html#cb78-1"></a>calibration &lt;-<span class="st"> </span><span class="kw">full_join</span>(</span>
-<span id="cb78-2"><a href="linear-methods.html#cb78-2"></a>  icp <span class="op">%&gt;%</span></span>
-<span id="cb78-3"><a href="linear-methods.html#cb78-3"></a><span class="st">    </span><span class="kw">select</span>(<span class="kw">any_of</span>(<span class="kw">c</span>(elementsList, <span class="st">&quot;SampleID&quot;</span>))) <span class="op">%&gt;%</span></span>
-<span id="cb78-4"><a href="linear-methods.html#cb78-4"></a><span class="st">    </span><span class="kw">pivot_longer</span>(<span class="kw">any_of</span>(elementsList),</span>
-<span id="cb78-5"><a href="linear-methods.html#cb78-5"></a>                 <span class="dt">values_to =</span> <span class="st">&quot;icp&quot;</span>,</span>
-<span id="cb78-6"><a href="linear-methods.html#cb78-6"></a>                 <span class="dt">names_to =</span> <span class="st">&quot;element&quot;</span>),</span>
-<span id="cb78-7"><a href="linear-methods.html#cb78-7"></a>  </span>
-<span id="cb78-8"><a href="linear-methods.html#cb78-8"></a>  xrf <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb78-9"><a href="linear-methods.html#cb78-9"></a><span class="st">    </span><span class="kw">select</span>(<span class="kw">any_of</span>(<span class="kw">c</span>(elementsList, <span class="st">&quot;SampleID&quot;</span>))) <span class="op">%&gt;%</span></span>
-<span id="cb78-10"><a href="linear-methods.html#cb78-10"></a><span class="st">    </span><span class="kw">pivot_longer</span>(<span class="kw">any_of</span>(elementsList),</span>
-<span id="cb78-11"><a href="linear-methods.html#cb78-11"></a>                 <span class="dt">values_to =</span> <span class="st">&quot;xrf&quot;</span>,</span>
-<span id="cb78-12"><a href="linear-methods.html#cb78-12"></a>                 <span class="dt">names_to =</span> <span class="st">&quot;element&quot;</span>),</span>
-<span id="cb78-13"><a href="linear-methods.html#cb78-13"></a>  </span>
-<span id="cb78-14"><a href="linear-methods.html#cb78-14"></a>  <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;SampleID&quot;</span>, <span class="st">&quot;element&quot;</span>)</span>
-<span id="cb78-15"><a href="linear-methods.html#cb78-15"></a>  ) <span class="op">%&gt;%</span></span>
-<span id="cb78-16"><a href="linear-methods.html#cb78-16"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">element =</span> <span class="kw">as_factor</span>(element)) <span class="op">%&gt;%</span></span>
-<span id="cb78-17"><a href="linear-methods.html#cb78-17"></a><span class="st">  </span><span class="kw">drop_na</span>()</span>
-<span id="cb78-18"><a href="linear-methods.html#cb78-18"></a></span>
-<span id="cb78-19"><a href="linear-methods.html#cb78-19"></a>calibration &lt;-<span class="st"> </span>calibration <span class="op">%&gt;%</span></span>
-<span id="cb78-20"><a href="linear-methods.html#cb78-20"></a><span class="st">  </span><span class="kw">group_by</span>(element) <span class="op">%&gt;%</span></span>
-<span id="cb78-21"><a href="linear-methods.html#cb78-21"></a><span class="st">  </span><span class="kw">group_split</span>() <span class="op">%&gt;%</span></span>
-<span id="cb78-22"><a href="linear-methods.html#cb78-22"></a><span class="st">  </span><span class="kw">lapply</span>(<span class="cf">function</span>(x){<span class="kw">lm</span>(<span class="dt">data =</span> x, icp<span class="op">~</span>xrf)}) <span class="op">%&gt;%</span></span>
-<span id="cb78-23"><a href="linear-methods.html#cb78-23"></a><span class="st">  `</span><span class="dt">names&lt;-</span><span class="st">`</span>(calibration <span class="op">%&gt;%</span></span>
-<span id="cb78-24"><a href="linear-methods.html#cb78-24"></a><span class="st">              </span><span class="kw">group_by</span>(element) <span class="op">%&gt;%</span></span>
-<span id="cb78-25"><a href="linear-methods.html#cb78-25"></a><span class="st">              </span><span class="kw">group_keys</span>() <span class="op">%&gt;%</span></span>
-<span id="cb78-26"><a href="linear-methods.html#cb78-26"></a><span class="st">              </span><span class="kw">pull</span>(element))</span></code></pre></div>
+<p>To apply these calibration models to our existing data, we first need to save the models created using <code>lm()</code>. We don’t force the intercept through zero (e.g. <code>icp ~ 0 + xrf</code>) because of background (high baseline) conditions that may be present.</p>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="linear-methods.html#cb85-1"></a>calibration &lt;-<span class="st"> </span><span class="kw">full_join</span>(</span>
+<span id="cb85-2"><a href="linear-methods.html#cb85-2"></a>  icp <span class="op">%&gt;%</span></span>
+<span id="cb85-3"><a href="linear-methods.html#cb85-3"></a><span class="st">    </span><span class="kw">select</span>(<span class="kw">any_of</span>(<span class="kw">c</span>(elementsList, <span class="st">&quot;SampleID&quot;</span>))) <span class="op">%&gt;%</span></span>
+<span id="cb85-4"><a href="linear-methods.html#cb85-4"></a><span class="st">    </span><span class="kw">pivot_longer</span>(<span class="kw">any_of</span>(elementsList),</span>
+<span id="cb85-5"><a href="linear-methods.html#cb85-5"></a>                 <span class="dt">values_to =</span> <span class="st">&quot;icp&quot;</span>,</span>
+<span id="cb85-6"><a href="linear-methods.html#cb85-6"></a>                 <span class="dt">names_to =</span> <span class="st">&quot;element&quot;</span>),</span>
+<span id="cb85-7"><a href="linear-methods.html#cb85-7"></a>  </span>
+<span id="cb85-8"><a href="linear-methods.html#cb85-8"></a>  xrf <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb85-9"><a href="linear-methods.html#cb85-9"></a><span class="st">    </span><span class="kw">select</span>(<span class="kw">any_of</span>(<span class="kw">c</span>(elementsList, <span class="st">&quot;SampleID&quot;</span>))) <span class="op">%&gt;%</span></span>
+<span id="cb85-10"><a href="linear-methods.html#cb85-10"></a><span class="st">    </span><span class="kw">pivot_longer</span>(<span class="kw">any_of</span>(elementsList),</span>
+<span id="cb85-11"><a href="linear-methods.html#cb85-11"></a>                 <span class="dt">values_to =</span> <span class="st">&quot;xrf&quot;</span>,</span>
+<span id="cb85-12"><a href="linear-methods.html#cb85-12"></a>                 <span class="dt">names_to =</span> <span class="st">&quot;element&quot;</span>),</span>
+<span id="cb85-13"><a href="linear-methods.html#cb85-13"></a>  </span>
+<span id="cb85-14"><a href="linear-methods.html#cb85-14"></a>  <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;SampleID&quot;</span>, <span class="st">&quot;element&quot;</span>)</span>
+<span id="cb85-15"><a href="linear-methods.html#cb85-15"></a>  ) <span class="op">%&gt;%</span></span>
+<span id="cb85-16"><a href="linear-methods.html#cb85-16"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">element =</span> <span class="kw">as_factor</span>(element)) <span class="op">%&gt;%</span></span>
+<span id="cb85-17"><a href="linear-methods.html#cb85-17"></a><span class="st">  </span><span class="kw">drop_na</span>()</span>
+<span id="cb85-18"><a href="linear-methods.html#cb85-18"></a></span>
+<span id="cb85-19"><a href="linear-methods.html#cb85-19"></a>calibration &lt;-<span class="st"> </span>calibration <span class="op">%&gt;%</span></span>
+<span id="cb85-20"><a href="linear-methods.html#cb85-20"></a><span class="st">  </span><span class="kw">group_by</span>(element) <span class="op">%&gt;%</span></span>
+<span id="cb85-21"><a href="linear-methods.html#cb85-21"></a><span class="st">  </span><span class="kw">group_split</span>() <span class="op">%&gt;%</span></span>
+<span id="cb85-22"><a href="linear-methods.html#cb85-22"></a><span class="st">  </span><span class="kw">lapply</span>(<span class="cf">function</span>(x){<span class="kw">lm</span>(<span class="dt">data =</span> x, icp<span class="op">~</span>xrf)}) <span class="op">%&gt;%</span></span>
+<span id="cb85-23"><a href="linear-methods.html#cb85-23"></a><span class="st">  `</span><span class="dt">names&lt;-</span><span class="st">`</span>(calibration <span class="op">%&gt;%</span></span>
+<span id="cb85-24"><a href="linear-methods.html#cb85-24"></a><span class="st">              </span><span class="kw">group_by</span>(element) <span class="op">%&gt;%</span></span>
+<span id="cb85-25"><a href="linear-methods.html#cb85-25"></a><span class="st">              </span><span class="kw">group_keys</span>() <span class="op">%&gt;%</span></span>
+<span id="cb85-26"><a href="linear-methods.html#cb85-26"></a><span class="st">              </span><span class="kw">pull</span>(element))</span></code></pre></div>
+<p>We can see the performance of our model using <code>summary()</code>, for example:</p>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="linear-methods.html#cb86-1"></a><span class="kw">summary</span>(calibration<span class="op">$</span>Ca)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = icp ~ xrf, data = x)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -57743 -11240   1136  11452  71443 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 3.344e+04  9.347e+03   3.578 0.000708 ***
+## xrf         5.700e-01  4.463e-02  12.770  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 24770 on 58 degrees of freedom
+## Multiple R-squared:  0.7377, Adjusted R-squared:  0.7331 
+## F-statistic: 163.1 on 1 and 58 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>Now we can use <code>predict()</code> to apply those models to the data.</p>
-<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="linear-methods.html#cb79-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
-<span id="cb79-2"><a href="linear-methods.html#cb79-2"></a><span class="kw">mutate</span>(<span class="dt">Ca_ppm =</span></span>
-<span id="cb79-3"><a href="linear-methods.html#cb79-3"></a>         <span class="kw">predict</span>(calibration<span class="op">$</span>Ca, </span>
-<span id="cb79-4"><a href="linear-methods.html#cb79-4"></a>                 <span class="dt">newdata =</span> </span>
-<span id="cb79-5"><a href="linear-methods.html#cb79-5"></a>                   CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
-<span id="cb79-6"><a href="linear-methods.html#cb79-6"></a><span class="st">                   </span><span class="kw">select</span>(Ca) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb79-7"><a href="linear-methods.html#cb79-7"></a><span class="st">                   </span><span class="kw">rename</span>(<span class="dt">xrf =</span> Ca))</span>
-<span id="cb79-8"><a href="linear-methods.html#cb79-8"></a>       ) <span class="op">%&gt;%</span></span>
-<span id="cb79-9"><a href="linear-methods.html#cb79-9"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Ca_ppm, <span class="dt">y =</span> depth)) <span class="op">+</span></span>
-<span id="cb79-10"><a href="linear-methods.html#cb79-10"></a><span class="st">  </span><span class="kw">geom_lineh</span>() <span class="op">+</span></span>
-<span id="cb79-11"><a href="linear-methods.html#cb79-11"></a><span class="st">  </span><span class="kw">scale_y_reverse</span>() <span class="op">+</span></span>
-<span id="cb79-12"><a href="linear-methods.html#cb79-12"></a><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">labels =</span> <span class="cf">function</span>(x){x<span class="op">/</span><span class="dv">10000</span>}) <span class="op">+</span></span>
-<span id="cb79-13"><a href="linear-methods.html#cb79-13"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Depth [mm]&quot;</span>) <span class="op">+</span></span>
-<span id="cb79-14"><a href="linear-methods.html#cb79-14"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Ca [%]&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="linear-methods.html#cb88-1"></a>CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
+<span id="cb88-2"><a href="linear-methods.html#cb88-2"></a><span class="kw">mutate</span>(<span class="dt">Ca_ppm =</span></span>
+<span id="cb88-3"><a href="linear-methods.html#cb88-3"></a>         <span class="kw">predict</span>(calibration<span class="op">$</span>Ca, </span>
+<span id="cb88-4"><a href="linear-methods.html#cb88-4"></a>                 <span class="dt">newdata =</span> </span>
+<span id="cb88-5"><a href="linear-methods.html#cb88-5"></a>                   CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
+<span id="cb88-6"><a href="linear-methods.html#cb88-6"></a><span class="st">                   </span><span class="kw">select</span>(Ca) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb88-7"><a href="linear-methods.html#cb88-7"></a><span class="st">                   </span><span class="kw">rename</span>(<span class="dt">xrf =</span> Ca))</span>
+<span id="cb88-8"><a href="linear-methods.html#cb88-8"></a>       ) <span class="op">%&gt;%</span></span>
+<span id="cb88-9"><a href="linear-methods.html#cb88-9"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Ca_ppm, <span class="dt">y =</span> depth)) <span class="op">+</span></span>
+<span id="cb88-10"><a href="linear-methods.html#cb88-10"></a><span class="st">  </span><span class="kw">geom_lineh</span>() <span class="op">+</span></span>
+<span id="cb88-11"><a href="linear-methods.html#cb88-11"></a><span class="st">  </span><span class="kw">scale_y_reverse</span>() <span class="op">+</span></span>
+<span id="cb88-12"><a href="linear-methods.html#cb88-12"></a><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">labels =</span> <span class="cf">function</span>(x){x<span class="op">/</span><span class="dv">10000</span>}) <span class="op">+</span></span>
+<span id="cb88-13"><a href="linear-methods.html#cb88-13"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Depth [mm]&quot;</span>) <span class="op">+</span></span>
+<span id="cb88-14"><a href="linear-methods.html#cb88-14"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Ca [%]&quot;</span>)</span></code></pre></div>
 <pre><code>## Warning: Removed 3 rows containing missing values (`geom_lineh()`).</code></pre>
 <p><img src="itraxBook_files/figure-html/predict_calibration-1.png" width="672" /></p>
+<p>We can also extract the confidence intervals, for example:</p>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="linear-methods.html#cb90-1"></a><span class="kw">predict</span>(calibration<span class="op">$</span>Ca, </span>
+<span id="cb90-2"><a href="linear-methods.html#cb90-2"></a>        <span class="dt">newdata =</span> </span>
+<span id="cb90-3"><a href="linear-methods.html#cb90-3"></a>          CD166_<span class="dv">19</span>_xrf <span class="op">%&gt;%</span></span>
+<span id="cb90-4"><a href="linear-methods.html#cb90-4"></a><span class="st">          </span><span class="kw">select</span>(Ca) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb90-5"><a href="linear-methods.html#cb90-5"></a><span class="st">          </span><span class="kw">rename</span>(<span class="dt">xrf =</span> Ca),</span>
+<span id="cb90-6"><a href="linear-methods.html#cb90-6"></a>        <span class="dt">interval =</span> <span class="st">&quot;confidence&quot;</span>,</span>
+<span id="cb90-7"><a href="linear-methods.html#cb90-7"></a>        <span class="dt">level =</span> <span class="fl">0.95</span>,</span>
+<span id="cb90-8"><a href="linear-methods.html#cb90-8"></a>        <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb90-9"><a href="linear-methods.html#cb90-9"></a><span class="st">  </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span></span>
+<span id="cb90-10"><a href="linear-methods.html#cb90-10"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">depth =</span> CD166_<span class="dv">19</span>_xrf<span class="op">$</span>depth) <span class="op">%&gt;%</span></span>
+<span id="cb90-11"><a href="linear-methods.html#cb90-11"></a><span class="st">  </span></span>
+<span id="cb90-12"><a href="linear-methods.html#cb90-12"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> depth, <span class="dt">x =</span> fit)) <span class="op">+</span></span>
+<span id="cb90-13"><a href="linear-methods.html#cb90-13"></a><span class="st">  </span><span class="kw">geom_errorbar</span>(<span class="kw">aes</span>(<span class="dt">xmin =</span> lwr, <span class="dt">xmax =</span> upr), <span class="dt">col =</span> <span class="st">&quot;grey&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb90-14"><a href="linear-methods.html#cb90-14"></a><span class="st">  </span><span class="kw">geom_lineh</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb90-15"><a href="linear-methods.html#cb90-15"></a><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">labels =</span> <span class="cf">function</span>(x){x<span class="op">/</span><span class="dv">10000</span>},</span>
+<span id="cb90-16"><a href="linear-methods.html#cb90-16"></a>                     <span class="dt">name =</span> <span class="st">&quot;Ca [%]&quot;</span>) <span class="op">+</span></span>
+<span id="cb90-17"><a href="linear-methods.html#cb90-17"></a><span class="st">  </span><span class="kw">scale_y_reverse</span>(<span class="dt">name =</span> <span class="st">&quot;Depth [mm]&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb90-18"><a href="linear-methods.html#cb90-18"></a><span class="st">  </span><span class="kw">theme_paleo</span>() </span></code></pre></div>
+<p><img src="itraxBook_files/figure-html/predict_calibration_-1.png" width="672" /></p>
 </div>
             </section>
 
