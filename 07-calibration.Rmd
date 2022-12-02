@@ -154,7 +154,7 @@ full_join(
   ylab("Itrax ED-XRF [peak area]")
 ```
 
-To apply these calibration models to our existing data, we first need to save the models created using `lm()`.
+To apply these calibration models to our existing data, we first need to save the models created using `lm()`. We don't force the intercept through zero (e.g. `icp ~ 0 + xrf`) because of background (high baseline) conditions that may be present. 
 
 ```{r linear_calibration_model_save}
 calibration <- full_join(
@@ -185,6 +185,12 @@ calibration <- calibration %>%
               pull(element))
 ```
 
+We can see the performance of our model using `summary()`, for example:
+
+```{r}
+summary(calibration$Ca)
+```
+
 Now we can use `predict()` to apply those models to the data.
 
 ```{r predict_calibration}
@@ -202,7 +208,30 @@ mutate(Ca_ppm =
   scale_x_continuous(labels = function(x){x/10000}) +
   ylab("Depth [mm]") +
   xlab("Ca [%]")
+```
+
+We can also extract the confidence intervals, for example:
+
+```{r predict_calibration_, warning=FALSE}
+predict(calibration$Ca, 
+        newdata = 
+          CD166_19_xrf %>%
+          select(Ca) %>% 
+          rename(xrf = Ca),
+        interval = "confidence",
+        level = 0.95,
+        type = "response") %>%
+  as_tibble() %>%
+  mutate(depth = CD166_19_xrf$depth) %>%
   
+  ggplot(aes(y = depth, x = fit)) +
+  geom_errorbar(aes(xmin = lwr, xmax = upr), col = "grey") + 
+  geom_lineh() + 
+  scale_x_continuous(labels = function(x){x/10000},
+                     name = "Ca [%]") +
+  scale_y_reverse(name = "Depth [mm]") + 
+  theme_paleo() 
 ```
 
 ## Log-Ratio Methods
+
