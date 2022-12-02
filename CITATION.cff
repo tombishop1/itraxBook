@@ -10,8 +10,8 @@ url: "https://tombishop1.github.io/itraxBook/"
 preferred-citation:
   type: book
   authors:
-    - family-names: "Lisa"
-      given-names: "Mona"
+    - family-names: "Bishop"
+      given-names: "Thomas"
       orcid: "https://orcid.org/0000-0001-8253-9293"
   title: "Using Itrax Data in R"
   year: 2022
