@@ -86,7 +86,7 @@ The split core sections were analysed using the Cox Analytical Systems Itrax cor
 
 XRF data were acquired using a Molybdenum X-ray tube set at 30 kV and 30 mA with a dwell time of 30 seconds and a step size of 1 mm. X-radiographs were acquired with voltage and current set to 55 kV and 50 mA, respectively, and dwell time set to 500 ms. Step size for the x-radiography was set to 200 µm. Two replicate XRF scans were also performed for each of the three core sections that make up this core. The XRF settings for the replicates were kept consistent with those of the main XRF scan. The interval selected for the replicate scans ranged from 10 cm to 15 cm of the the total sample length. All raw XRF raw data were reprocessed using the QSpec spectral analysis software to optimise peak fitting. 
 
-The data can be downloaded from the Github pages that form the source for this document, available at [github.com/tombishop1/itraxBook](https://github.com/tombishop1/itraxBook). 
+The data can be downloaded from the Github pages that form the source for this document, available at [github.com/tombishop1/itraxBook](https://github.com/tombishop1/itraxBook). They are also available in the same form from the [PANGAEA database](https://doi.pangaea.de/10.1594/PANGAEA.955347) (@Bishop2023).
 
 ## Utility Data
 
