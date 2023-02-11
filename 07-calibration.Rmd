@@ -63,7 +63,7 @@ CD166_19_xrf %>%
   arrange(depth) %>%
   select(breaks_lower, breaks_upper) %>%
   
-  mutate(core = if_else(breaks_upper >= min(CD166_19_S1$xrf$depth) & breaks_upper <= max(CD166_19_S1$xrf$depth), "c1", NULL)) %>%
+  mutate(core = if_else(breaks_upper >= min(CD166_19_S1$xrf$depth) & breaks_upper <= max(CD166_19_S1$xrf$depth), "c1", "")) %>%
   mutate(core = if_else(breaks_upper >= min(CD166_19_S2$xrf$depth) & breaks_upper <= max(CD166_19_S2$xrf$depth), "c2", core)) %>%
   mutate(core = if_else(breaks_upper >= min(CD166_19_S3$xrf$depth) & breaks_upper <= max(CD166_19_S3$xrf$depth), "c3", core)) %>%
   
