@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>7.2 Selecting Samples | Using Itrax Data in R</title>
   <meta name="description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
-  <meta name="generator" content="bookdown 0.31 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.32 and GitBook 2.6.7" />
 
   <meta property="og:title" content="7.2 Selecting Samples | Using Itrax Data in R" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2023-01-05" />
+<meta name="date" content="2023-02-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -269,7 +269,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb76-18"><a href="selecting-samples.html#cb76-18"></a><span class="st">  </span><span class="kw">arrange</span>(depth) <span class="op">%&gt;%</span></span>
 <span id="cb76-19"><a href="selecting-samples.html#cb76-19"></a><span class="st">  </span><span class="kw">select</span>(breaks_lower, breaks_upper) <span class="op">%&gt;%</span></span>
 <span id="cb76-20"><a href="selecting-samples.html#cb76-20"></a><span class="st">  </span></span>
-<span id="cb76-21"><a href="selecting-samples.html#cb76-21"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">core =</span> <span class="kw">if_else</span>(breaks_upper <span class="op">&gt;=</span><span class="st"> </span><span class="kw">min</span>(CD166_<span class="dv">19</span>_S1<span class="op">$</span>xrf<span class="op">$</span>depth) <span class="op">&amp;</span><span class="st"> </span>breaks_upper <span class="op">&lt;=</span><span class="st"> </span><span class="kw">max</span>(CD166_<span class="dv">19</span>_S1<span class="op">$</span>xrf<span class="op">$</span>depth), <span class="st">&quot;c1&quot;</span>, <span class="ot">NULL</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb76-21"><a href="selecting-samples.html#cb76-21"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">core =</span> <span class="kw">if_else</span>(breaks_upper <span class="op">&gt;=</span><span class="st"> </span><span class="kw">min</span>(CD166_<span class="dv">19</span>_S1<span class="op">$</span>xrf<span class="op">$</span>depth) <span class="op">&amp;</span><span class="st"> </span>breaks_upper <span class="op">&lt;=</span><span class="st"> </span><span class="kw">max</span>(CD166_<span class="dv">19</span>_S1<span class="op">$</span>xrf<span class="op">$</span>depth), <span class="st">&quot;c1&quot;</span>, <span class="st">&quot;&quot;</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb76-22"><a href="selecting-samples.html#cb76-22"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">core =</span> <span class="kw">if_else</span>(breaks_upper <span class="op">&gt;=</span><span class="st"> </span><span class="kw">min</span>(CD166_<span class="dv">19</span>_S2<span class="op">$</span>xrf<span class="op">$</span>depth) <span class="op">&amp;</span><span class="st"> </span>breaks_upper <span class="op">&lt;=</span><span class="st"> </span><span class="kw">max</span>(CD166_<span class="dv">19</span>_S2<span class="op">$</span>xrf<span class="op">$</span>depth), <span class="st">&quot;c2&quot;</span>, core)) <span class="op">%&gt;%</span></span>
 <span id="cb76-23"><a href="selecting-samples.html#cb76-23"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">core =</span> <span class="kw">if_else</span>(breaks_upper <span class="op">&gt;=</span><span class="st"> </span><span class="kw">min</span>(CD166_<span class="dv">19</span>_S3<span class="op">$</span>xrf<span class="op">$</span>depth) <span class="op">&amp;</span><span class="st"> </span>breaks_upper <span class="op">&lt;=</span><span class="st"> </span><span class="kw">max</span>(CD166_<span class="dv">19</span>_S3<span class="op">$</span>xrf<span class="op">$</span>depth), <span class="st">&quot;c3&quot;</span>, core)) <span class="op">%&gt;%</span></span>
 <span id="cb76-24"><a href="selecting-samples.html#cb76-24"></a><span class="st">  </span></span>
