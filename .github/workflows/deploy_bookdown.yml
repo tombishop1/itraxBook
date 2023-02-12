@@ -15,7 +15,7 @@ name: renderbook
 jobs:
   bookdown:
     name: Render-Book
-    runs-on: windows-latest
+    runs-on: macOS-latest
     steps:
       - uses: actions/checkout@v3
       - uses: r-lib/actions/setup-r@v2
