@@ -22,7 +22,7 @@ jobs:
       - uses: r-lib/actions/setup-pandoc@v2
       - name: Install rmarkdown
         #run: Rscript -e 'install.packages(c("rmarkdown","bookdown"), type = "source")'
-        run: Rscript -e 'install.packages(c("rmarkdown","bookdown","remotes"))'
+        run: Rscript -e 'install.packages(c("rmarkdown","bookdown","remotes", "pacman"))'
       - name: Install itraxR
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
