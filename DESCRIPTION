@@ -1,7 +1,7 @@
 Package: itraxBook
 Title: Using Itrax Data in R
-Description: This book is a guide to importing, tidying, manipulating and analysing
-  Itrax core scanner data in R.
+Description: This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R.
+Version: 1.0
 Encoding: UTF-8
 Imports:
     rmarkdown
