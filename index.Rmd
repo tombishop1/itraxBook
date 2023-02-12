@@ -17,46 +17,21 @@ opts_knit$set(root.dir = "CD166_19_(2020)/")
 #setwd("CD166_19_(2020)/")
 
 # check if non-CRAN repo's are installed, if not, install
-install.packages("remotes", repos = "http://cran.uk.r-project.org")
+# install.packages("remotes", repos = "http://cran.uk.r-project.org")
 
 if (!require("itraxR", character.only = TRUE)) {
 
   remotes::install_github("tombishop1/itraxR", method = "curl")
-  library(itraxR)
 }
 
-if (!require("tidypaleo", character.only = TRUE)) {
-  install.packages("remotes")
-  remotes::install_github("paleolimbot/tidypaleo", method = "curl")
-  library(tidypaleo)
-}
-
-if (!require("ordr", character.only = TRUE)) {
-  install.packages("remotes")
-  remotes::install_github("corybrunson/ordr", method = "curl")
-  library(ordr)
-}
-
-# now check dependencies
-# First specify the packages of interest
-packages = c("kableExtra", "DiagrammeR", 
-             "tidyverse" , "PeriodicTable", 
-             "egg"       , "errors", 
-             "forecast"  , "slider",
-             "compositions", "ggpmisc")
-
-# Now load or install & load all those CRAN packages
-package.check <- lapply(
-  packages,
-  FUN = function(x) {
-    if (!require(x, character.only = TRUE)) {
-      install.packages(x, dependencies = TRUE, repos = "http://cran.uk.r-project.org")
-      library(x, character.only = TRUE)
-    }
-  }
-)
-rm(package.check, packages)
-
+pacman::p_load("kableExtra", "DiagrammeR", 
+               "tidyverse" , "PeriodicTable", 
+               "egg", "errors", 
+               "forecast"  , "slider",
+               "compositions", "ggpmisc",
+               "itraxR", "tidypaleo",
+               "ordr", "knitr",
+               install = TRUE)
 ```
 
 # Preface {-}

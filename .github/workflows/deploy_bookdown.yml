@@ -10,19 +10,16 @@ on:
        
   workflow_dispatch:  
 
-  
-
 name: renderbook
 
 jobs:
   bookdown:
     name: Render-Book
-    #runs-on: macos-latest
-    runs-on: macOS-10.15
+    runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: r-lib/actions/setup-r@v1
-      - uses: r-lib/actions/setup-pandoc@v1
+      - uses: actions/checkout@v3
+      - uses: r-lib/actions/setup-r@v2
+      - uses: r-lib/actions/setup-pandoc@v2
       - name: Install rmarkdown
         #run: Rscript -e 'install.packages(c("rmarkdown","bookdown"), type = "source")'
         run: Rscript -e 'install.packages(c("rmarkdown","bookdown","remotes"))'
@@ -30,14 +27,6 @@ jobs:
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
         run: Rscript -e 'remotes::install_github("tombishop1/itraxR")'
-      - name: Install tidypaleo
-        env:
-          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-        run: Rscript -e 'remotes::install_github("paleolimbot/tidypaleo")'
-      - name: Install ordr
-        env:
-          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-        run: Rscript -e 'remotes::install_github("corybrunson/ordr")'
       - name: Render Book
         run: Rscript -e 'bookdown::render_book("index.Rmd", encoding = "UTF-8")'
       - uses: actions/upload-artifact@v1
@@ -56,14 +45,14 @@ jobs:
      - name: Checkout
        uses: actions/checkout@master
      - name: Download artifact
-       uses: actions/download-artifact@v1.0.0
+       uses: actions/download-artifact@v3
        with:
          # Artifact name
          name: _book # optional
          # Destination path
          path: _book # optional
      - name: Deploy to GitHub Pages
-       uses: Cecilapp/GitHub-Pages-deploy@master
+       uses: Cecilapp/GitHub-Pages-deploy@v3
        env:
           EMAIL: ${{ secrets.EMAIL }}  # must be a verified email
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
