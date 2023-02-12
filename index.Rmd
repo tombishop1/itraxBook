@@ -19,9 +19,9 @@ opts_knit$set(root.dir = "CD166_19_(2020)/")
 # check if non-CRAN repo's are installed, if not, install
 # install.packages("remotes", repos = "http://cran.uk.r-project.org")
 
-if (!require("itraxR", character.only = TRUE)) {
-  remotes::install_github("tombishop1/itraxR", method = "curl")
-}
+#if (!require("itraxR", character.only = TRUE)) {
+#  remotes::install_github("tombishop1/itraxR", method = "curl")
+#}
 
 pacman::p_load("kableExtra", "DiagrammeR", 
                "tidyverse" , "PeriodicTable", 
@@ -30,7 +30,7 @@ pacman::p_load("kableExtra", "DiagrammeR",
                "compositions", "ggpmisc",
                "itraxR", "tidypaleo",
                "ordr", "knitr",
-               install = TRUE)
+               install = FALSE)
 ```
 
 # Preface {-}
