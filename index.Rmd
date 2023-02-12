@@ -20,7 +20,6 @@ opts_knit$set(root.dir = "CD166_19_(2020)/")
 # install.packages("remotes", repos = "http://cran.uk.r-project.org")
 
 if (!require("itraxR", character.only = TRUE)) {
-
   remotes::install_github("tombishop1/itraxR", method = "curl")
 }
 
