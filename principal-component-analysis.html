@@ -254,38 +254,38 @@ div.csl-indent {
 <div id="principal-component-analysis" class="section level2 hasAnchor" number="6.2">
 <h2><span class="header-section-number">6.2</span> Principal Component Analysis<a href="principal-component-analysis.html#principal-component-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Principal component analysis (PCA) is a common method for exploring multivariate data. Note the use of <code>zeroreplace()</code> - this is because the <code>princomp()</code> method defined for th <code>acomp</code> class uses a centred-log-ratio (<code>clr()</code>) transformation that is intolerant to zero-values.</p>
-<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="principal-component-analysis.html#cb68-1" aria-hidden="true" tabindex="-1"></a>CD166_19_xrf_acomp <span class="sc">%&gt;%</span></span>
-<span id="cb68-2"><a href="principal-component-analysis.html#cb68-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">zeroreplace</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb68-3"><a href="principal-component-analysis.html#cb68-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">princomp</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb68-4"><a href="principal-component-analysis.html#cb68-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">biplot</span>(<span class="at">xlabs =</span> <span class="fu">rep</span>(<span class="st">&quot;.&quot;</span>,<span class="at">times =</span> <span class="fu">nrow</span>(CD166_19_xrf_acomp)))</span></code></pre></div>
-<p><img src="itraxBook_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
-<p>It is useful to plot components over depth. They can be extracted and plotted as follows:</p>
-<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="principal-component-analysis.html#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bind_rows</span>(</span>
-<span id="cb69-2"><a href="principal-component-analysis.html#cb69-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">depth =</span> CD166_19_xrf <span class="sc">%&gt;%</span></span>
-<span id="cb69-3"><a href="principal-component-analysis.html#cb69-3" aria-hidden="true" tabindex="-1"></a>           <span class="fu">filter</span>(qc <span class="sc">==</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb69-4"><a href="principal-component-analysis.html#cb69-4" aria-hidden="true" tabindex="-1"></a>           <span class="fu">pull</span>(<span class="st">&quot;depth&quot;</span>),</span>
-<span id="cb69-5"><a href="principal-component-analysis.html#cb69-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">Comp.1 =</span> <span class="cn">NA</span></span>
-<span id="cb69-6"><a href="principal-component-analysis.html#cb69-6" aria-hidden="true" tabindex="-1"></a>        ),</span>
-<span id="cb69-7"><a href="principal-component-analysis.html#cb69-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb69-8"><a href="principal-component-analysis.html#cb69-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(</span>
-<span id="cb69-9"><a href="principal-component-analysis.html#cb69-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">depth =</span> CD166_19_xrf <span class="sc">%&gt;%</span></span>
-<span id="cb69-10"><a href="principal-component-analysis.html#cb69-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(qc <span class="sc">==</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb69-11"><a href="principal-component-analysis.html#cb69-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pull</span>(<span class="st">&quot;depth&quot;</span>),</span>
-<span id="cb69-12"><a href="principal-component-analysis.html#cb69-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">Comp.1 =</span> CD166_19_xrf_acomp <span class="sc">%&gt;%</span></span>
-<span id="cb69-13"><a href="principal-component-analysis.html#cb69-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">zeroreplace</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb69-14"><a href="principal-component-analysis.html#cb69-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">princomp</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb69-15"><a href="principal-component-analysis.html#cb69-15" aria-hidden="true" tabindex="-1"></a>      magrittr<span class="sc">::</span><span class="fu">extract2</span>(<span class="st">&quot;scores&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb69-16"><a href="principal-component-analysis.html#cb69-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb69-17"><a href="principal-component-analysis.html#cb69-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pull</span>(<span class="st">&quot;Comp.1&quot;</span>)</span>
-<span id="cb69-18"><a href="principal-component-analysis.html#cb69-18" aria-hidden="true" tabindex="-1"></a>    )) <span class="sc">%&gt;%</span></span>
-<span id="cb69-19"><a href="principal-component-analysis.html#cb69-19" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb69-20"><a href="principal-component-analysis.html#cb69-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(depth) <span class="sc">%&gt;%</span></span>
-<span id="cb69-21"><a href="principal-component-analysis.html#cb69-21" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb69-22"><a href="principal-component-analysis.html#cb69-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> depth, <span class="at">y =</span> Comp<span class="fl">.1</span>)) <span class="sc">+</span></span>
-<span id="cb69-23"><a href="principal-component-analysis.html#cb69-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> </span>
-<span id="cb69-24"><a href="principal-component-analysis.html#cb69-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_reverse</span>(<span class="at">name =</span> <span class="st">&quot;depth [mm]&quot;</span>)</span></code></pre></div>
-<pre><code>## Warning: Removed 4 rows containing missing values (`geom_line()`).</code></pre>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="principal-component-analysis.html#cb69-1" aria-hidden="true" tabindex="-1"></a>CD166_19_xrf_acomp <span class="sc">%&gt;%</span></span>
+<span id="cb69-2"><a href="principal-component-analysis.html#cb69-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">zeroreplace</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb69-3"><a href="principal-component-analysis.html#cb69-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">princomp</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb69-4"><a href="principal-component-analysis.html#cb69-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">biplot</span>(<span class="at">xlabs =</span> <span class="fu">rep</span>(<span class="st">&quot;.&quot;</span>,<span class="at">times =</span> <span class="fu">nrow</span>(CD166_19_xrf_acomp)))</span></code></pre></div>
 <p><img src="itraxBook_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<p>It is useful to plot components over depth. They can be extracted and plotted as follows:</p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="principal-component-analysis.html#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bind_rows</span>(</span>
+<span id="cb70-2"><a href="principal-component-analysis.html#cb70-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">depth =</span> CD166_19_xrf <span class="sc">%&gt;%</span></span>
+<span id="cb70-3"><a href="principal-component-analysis.html#cb70-3" aria-hidden="true" tabindex="-1"></a>           <span class="fu">filter</span>(qc <span class="sc">==</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb70-4"><a href="principal-component-analysis.html#cb70-4" aria-hidden="true" tabindex="-1"></a>           <span class="fu">pull</span>(<span class="st">&quot;depth&quot;</span>),</span>
+<span id="cb70-5"><a href="principal-component-analysis.html#cb70-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">Comp.1 =</span> <span class="cn">NA</span></span>
+<span id="cb70-6"><a href="principal-component-analysis.html#cb70-6" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb70-7"><a href="principal-component-analysis.html#cb70-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-8"><a href="principal-component-analysis.html#cb70-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(</span>
+<span id="cb70-9"><a href="principal-component-analysis.html#cb70-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">depth =</span> CD166_19_xrf <span class="sc">%&gt;%</span></span>
+<span id="cb70-10"><a href="principal-component-analysis.html#cb70-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(qc <span class="sc">==</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb70-11"><a href="principal-component-analysis.html#cb70-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pull</span>(<span class="st">&quot;depth&quot;</span>),</span>
+<span id="cb70-12"><a href="principal-component-analysis.html#cb70-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">Comp.1 =</span> CD166_19_xrf_acomp <span class="sc">%&gt;%</span></span>
+<span id="cb70-13"><a href="principal-component-analysis.html#cb70-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">zeroreplace</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb70-14"><a href="principal-component-analysis.html#cb70-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">princomp</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb70-15"><a href="principal-component-analysis.html#cb70-15" aria-hidden="true" tabindex="-1"></a>      magrittr<span class="sc">::</span><span class="fu">extract2</span>(<span class="st">&quot;scores&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb70-16"><a href="principal-component-analysis.html#cb70-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb70-17"><a href="principal-component-analysis.html#cb70-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pull</span>(<span class="st">&quot;Comp.1&quot;</span>)</span>
+<span id="cb70-18"><a href="principal-component-analysis.html#cb70-18" aria-hidden="true" tabindex="-1"></a>    )) <span class="sc">%&gt;%</span></span>
+<span id="cb70-19"><a href="principal-component-analysis.html#cb70-19" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb70-20"><a href="principal-component-analysis.html#cb70-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(depth) <span class="sc">%&gt;%</span></span>
+<span id="cb70-21"><a href="principal-component-analysis.html#cb70-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb70-22"><a href="principal-component-analysis.html#cb70-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> depth, <span class="at">y =</span> Comp<span class="fl">.1</span>)) <span class="sc">+</span></span>
+<span id="cb70-23"><a href="principal-component-analysis.html#cb70-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span> </span>
+<span id="cb70-24"><a href="principal-component-analysis.html#cb70-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_reverse</span>(<span class="at">name =</span> <span class="st">&quot;depth [mm]&quot;</span>)</span></code></pre></div>
+<pre><code>## Warning: Removed 4 rows containing missing values (`geom_line()`).</code></pre>
+<p><img src="itraxBook_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
 </div>
             </section>
 
