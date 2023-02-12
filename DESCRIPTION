@@ -20,6 +20,7 @@ Imports:
     compositions,
     ggpmisc,
     tidypaleo,
-    ordr
+    ordr,
+    itraxR
 Remotes:
     tombishop1/itraxR
