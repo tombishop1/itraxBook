@@ -23,14 +23,13 @@ opts_knit$set(root.dir = "CD166_19_(2020)/")
 #  remotes::install_github("tombishop1/itraxR", method = "curl")
 #}
 
-pacman::p_load("kableExtra", "DiagrammeR", 
-               "tidyverse" , "PeriodicTable", 
-               "egg", "errors", 
-               "forecast"  , "slider",
-               "compositions", "ggpmisc",
-               "itraxR", "tidypaleo",
-               "ordr", "knitr",
-               install = FALSE)
+#pacman::p_load("tidyverse" , "PeriodicTable", 
+#               "egg", "errors", 
+#               "forecast"  , "slider",
+#               "compositions", "ggpmisc",
+#              "itraxR", "tidypaleo",
+#              "ordr", "knitr",
+#              install = FALSE)
 ```
 
 # Preface {-}
