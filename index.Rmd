@@ -12,24 +12,15 @@ description: This book is a guide to importing, tidying, manipulating and analys
 ---
 
 ```{r setup, include=FALSE, echo=FALSE}
-require("knitr")
+pacman::p_load("tidyverse" , "PeriodicTable", 
+               "egg", "errors", 
+               "forecast"  , "slider",
+               "compositions", "ggpmisc",
+               "itraxR", "tidypaleo",
+               "ordr", "knitr",
+               install = FALSE)
+               
 opts_knit$set(root.dir = "CD166_19_(2020)/")
-#setwd("CD166_19_(2020)/")
-
-# check if non-CRAN repo's are installed, if not, install
-# install.packages("remotes", repos = "http://cran.uk.r-project.org")
-
-#if (!require("itraxR", character.only = TRUE)) {
-#  remotes::install_github("tombishop1/itraxR", method = "curl")
-#}
-
-#pacman::p_load("tidyverse" , "PeriodicTable", 
-#               "egg", "errors", 
-#               "forecast"  , "slider",
-#               "compositions", "ggpmisc",
-#              "itraxR", "tidypaleo",
-#              "ordr", "knitr",
-#              install = FALSE)
 ```
 
 # Preface {-}
