@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>3.13 Visualising Raw Data | Using Itrax Data in R</title>
+  <title>3.4 High Argon | Using Itrax Data in R</title>
   <meta name="description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
   <meta name="generator" content="bookdown 0.33 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="3.13 Visualising Raw Data | Using Itrax Data in R" />
+  <meta property="og:title" content="3.4 High Argon | Using Itrax Data in R" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="3.13 Visualising Raw Data | Using Itrax Data in R" />
+  <meta name="twitter:title" content="3.4 High Argon | Using Itrax Data in R" />
   
   <meta name="twitter:description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="reversing-data.html"/>
-<link rel="next" href="plotting.html"/>
+<link rel="prev" href="surface-slope.html"/>
+<link rel="next" href="combining-validity-flags.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -252,76 +252,27 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="visualising-raw-data" class="section level2 hasAnchor" number="3.13">
-<h2><span class="header-section-number">3.13</span> Visualising Raw Data<a href="visualising-raw-data.html#visualising-raw-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>A useful tool for investigating areas of high errors or other problems in the scan data is to visualise the raw spectral data. To inspect or read individual spectra, you can plot them from the object returned from <code>itrax_restspectra()</code>.</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="visualising-raw-data.html#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">itrax_spectra</span>(<span class="at">filename =</span> <span class="fu">unz</span>(<span class="at">description =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1/XRF data.zip&quot;</span>,</span>
-<span id="cb40-2"><a href="visualising-raw-data.html#cb40-2" aria-hidden="true" tabindex="-1"></a>                             <span class="at">filename =</span> <span class="st">&quot;XRF data/L000642.spe&quot;</span>),</span>
-<span id="cb40-3"><a href="visualising-raw-data.html#cb40-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">parameters =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1/Results_ settings.dfl&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb40-4"><a href="visualising-raw-data.html#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">invisible</span>()</span></code></pre></div>
-<p><img src="itraxBook_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
-<p>This rarely offers much insight, because we are interested in comparing multiple spectra. The <code>itrax_restspectra()</code> function takes its name from a similar function in the <code>Q-Spec</code> software from Cox Analytical Systems, Sweden. This shows a heat map of the spectra, and can be used to identify areas where particular spectral lines appear and disappear along the core. At its simplest, it can be used to produce a plot of a single scan section.</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="visualising-raw-data.html#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">itrax_restspectra</span>(<span class="at">foldername =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1/XRF data.zip&quot;</span>,</span>
-<span id="cb41-2"><a href="visualising-raw-data.html#cb41-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">parameters =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1/Results_ settings.dfl&quot;</span></span>
-<span id="cb41-3"><a href="visualising-raw-data.html#cb41-3" aria-hidden="true" tabindex="-1"></a>                  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb41-4"><a href="visualising-raw-data.html#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">invisible</span>()</span></code></pre></div>
-<p><img src="itraxBook_files/figure-html/restspectra-1.png" width="672" /></p>
-<p>By combining all of the sections, and joining the raw spectral data with the processed data from the <code>Results.txt</code> (<code>Q-Spec</code>) output file, it can be used as a powerful diagnostic tool.</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="visualising-raw-data.html#cb42-1" aria-hidden="true" tabindex="-1"></a>read_spectra <span class="ot">&lt;-</span> <span class="cf">function</span>(foldername, labeltext){<span class="fu">itrax_restspectra</span>(<span class="at">foldername =</span> foldername,</span>
-<span id="cb42-2"><a href="visualising-raw-data.html#cb42-2" aria-hidden="true" tabindex="-1"></a>                                                                  <span class="at">plot =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb42-3"><a href="visualising-raw-data.html#cb42-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">label =</span> labeltext) <span class="sc">%&gt;%</span></span>
-<span id="cb42-4"><a href="visualising-raw-data.html#cb42-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(label, <span class="fu">everything</span>()) <span class="sc">%&gt;%</span></span>
-<span id="cb42-5"><a href="visualising-raw-data.html#cb42-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">filename =</span> <span class="fu">str_split</span>(filename, <span class="at">pattern =</span> <span class="st">&quot;/&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">sapply</span>(., <span class="st">`</span><span class="at">[</span><span class="st">`</span>, <span class="dv">2</span>))}</span>
-<span id="cb42-6"><a href="visualising-raw-data.html#cb42-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-7"><a href="visualising-raw-data.html#cb42-7" aria-hidden="true" tabindex="-1"></a><span class="co"># import the channel energy information</span></span>
-<span id="cb42-8"><a href="visualising-raw-data.html#cb42-8" aria-hidden="true" tabindex="-1"></a>settings <span class="ot">&lt;-</span> <span class="fu">itrax_qspecsettings</span>(<span class="st">&quot;CD166_19_S1/CD166_19_S1/Results_ settings.dfl&quot;</span>)</span>
-<span id="cb42-9"><a href="visualising-raw-data.html#cb42-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-10"><a href="visualising-raw-data.html#cb42-10" aria-hidden="true" tabindex="-1"></a><span class="co"># import and join them</span></span>
-<span id="cb42-11"><a href="visualising-raw-data.html#cb42-11" aria-hidden="true" tabindex="-1"></a><span class="fu">left_join</span>(CD166_19_xrf <span class="sc">%&gt;%</span></span>
-<span id="cb42-12"><a href="visualising-raw-data.html#cb42-12" aria-hidden="true" tabindex="-1"></a>            <span class="fu">select</span>(depth, validity, filename, label) <span class="sc">%&gt;%</span></span>
-<span id="cb42-13"><a href="visualising-raw-data.html#cb42-13" aria-hidden="true" tabindex="-1"></a>            <span class="fu">mutate</span>(<span class="at">filename =</span> filename <span class="sc">%&gt;%</span></span>
-<span id="cb42-14"><a href="visualising-raw-data.html#cb42-14" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">str_split</span>(<span class="at">pattern =</span> <span class="st">&quot;</span><span class="sc">\\\\</span><span class="st">&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb42-15"><a href="visualising-raw-data.html#cb42-15" aria-hidden="true" tabindex="-1"></a>                     <span class="fu">sapply</span>(., <span class="st">`</span><span class="at">[</span><span class="st">`</span>, <span class="dv">7</span>)), </span>
-<span id="cb42-16"><a href="visualising-raw-data.html#cb42-16" aria-hidden="true" tabindex="-1"></a>          <span class="fu">bind_rows</span>(<span class="fu">read_spectra</span>(<span class="at">foldername =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1/XRF data.zip&quot;</span>, <span class="at">labeltext =</span> <span class="st">&quot;S1&quot;</span>), </span>
-<span id="cb42-17"><a href="visualising-raw-data.html#cb42-17" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">read_spectra</span>(<span class="at">foldername =</span> <span class="st">&quot;CD166_19_S2/CD166_19_S2/XRF data.zip&quot;</span>, <span class="at">labeltext =</span> <span class="st">&quot;S2&quot;</span>),</span>
-<span id="cb42-18"><a href="visualising-raw-data.html#cb42-18" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">read_spectra</span>(<span class="at">foldername =</span> <span class="st">&quot;CD166_19_S3/CD166_19_S3/XRF data.zip&quot;</span>, <span class="at">labeltext =</span> <span class="st">&quot;S3&quot;</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb42-19"><a href="visualising-raw-data.html#cb42-19" aria-hidden="true" tabindex="-1"></a>            <span class="fu">mutate</span>(<span class="at">label =</span> <span class="fu">as.factor</span>(label)), </span>
-<span id="cb42-20"><a href="visualising-raw-data.html#cb42-20" aria-hidden="true" tabindex="-1"></a>          <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;filename&quot;</span>, <span class="st">&quot;label&quot;</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb42-21"><a href="visualising-raw-data.html#cb42-21" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb42-22"><a href="visualising-raw-data.html#cb42-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="sc">-</span><span class="fu">c</span>(depth, validity, filename, label, position),</span>
-<span id="cb42-23"><a href="visualising-raw-data.html#cb42-23" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">&quot;channel&quot;</span>,</span>
-<span id="cb42-24"><a href="visualising-raw-data.html#cb42-24" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">&quot;counts&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb42-25"><a href="visualising-raw-data.html#cb42-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">channel =</span> <span class="fu">as.numeric</span>(channel)) <span class="sc">%&gt;%</span></span>
-<span id="cb42-26"><a href="visualising-raw-data.html#cb42-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(<span class="st">&quot;filename&quot;</span>, <span class="st">&quot;validity&quot;</span>, <span class="st">&quot;position&quot;</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb42-27"><a href="visualising-raw-data.html#cb42-27" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb42-28"><a href="visualising-raw-data.html#cb42-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> channel, <span class="at">y =</span> depth, <span class="at">fill =</span> counts)) <span class="sc">+</span></span>
-<span id="cb42-29"><a href="visualising-raw-data.html#cb42-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>() <span class="sc">+</span></span>
-<span id="cb42-30"><a href="visualising-raw-data.html#cb42-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">name =</span> <span class="st">&quot;value&quot;</span>,</span>
-<span id="cb42-31"><a href="visualising-raw-data.html#cb42-31" aria-hidden="true" tabindex="-1"></a>                      <span class="at">trans =</span> <span class="st">&quot;pseudo_log&quot;</span>,</span>
-<span id="cb42-32"><a href="visualising-raw-data.html#cb42-32" aria-hidden="true" tabindex="-1"></a>                      <span class="at">low =</span> <span class="st">&quot;#132B43&quot;</span>,</span>
-<span id="cb42-33"><a href="visualising-raw-data.html#cb42-33" aria-hidden="true" tabindex="-1"></a>                      <span class="at">high =</span> <span class="st">&quot;#56B1F7&quot;</span>,</span>
-<span id="cb42-34"><a href="visualising-raw-data.html#cb42-34" aria-hidden="true" tabindex="-1"></a>                      <span class="at">labels =</span> round) <span class="sc">+</span></span>
-<span id="cb42-35"><a href="visualising-raw-data.html#cb42-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_reverse</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">0</span>, <span class="at">to =</span> <span class="fu">max</span>(CD166_19_xrf<span class="sc">$</span>depth), <span class="at">by =</span> <span class="dv">500</span>),</span>
-<span id="cb42-36"><a href="visualising-raw-data.html#cb42-36" aria-hidden="true" tabindex="-1"></a>                  <span class="at">name =</span> <span class="st">&quot;depth [mm]&quot;</span>) <span class="sc">+</span></span>
-<span id="cb42-37"><a href="visualising-raw-data.html#cb42-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">name =</span> <span class="st">&quot;channel [n]&quot;</span>,</span>
-<span id="cb42-38"><a href="visualising-raw-data.html#cb42-38" aria-hidden="true" tabindex="-1"></a>                     <span class="at">sec.axis =</span> <span class="fu">sec_axis</span>(<span class="at">trans =</span> <span class="sc">~</span> ((. <span class="sc">*</span> <span class="fu">as.numeric</span>(settings[<span class="dv">1</span>,<span class="dv">2</span>])) <span class="sc">+</span> <span class="fu">as.numeric</span>(settings[<span class="dv">2</span>,<span class="dv">2</span>])),</span>
-<span id="cb42-39"><a href="visualising-raw-data.html#cb42-39" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">name =</span> <span class="st">&quot;energy [k eV]&quot;</span>)) <span class="sc">+</span></span>
-<span id="cb42-40"><a href="visualising-raw-data.html#cb42-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
-<span id="cb42-41"><a href="visualising-raw-data.html#cb42-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="at">rows =</span> <span class="fu">vars</span>(label),</span>
-<span id="cb42-42"><a href="visualising-raw-data.html#cb42-42" aria-hidden="true" tabindex="-1"></a>             <span class="at">scales =</span> <span class="st">&quot;free_y&quot;</span>,</span>
-<span id="cb42-43"><a href="visualising-raw-data.html#cb42-43" aria-hidden="true" tabindex="-1"></a>             <span class="at">space =</span> <span class="st">&quot;free_y&quot;</span>)</span></code></pre></div>
-<p><img src="itraxBook_files/figure-html/spectra2-1.png" width="672" /></p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="visualising-raw-data.html#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(settings, read_spectra)</span></code></pre></div>
-
+<div id="high-argon" class="section level2 hasAnchor" number="3.4">
+<h2><span class="header-section-number">3.4</span> High Argon<a href="high-argon.html#high-argon" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Argon is present in the atmosphere at concentrations of around 1% volume, and therefore is present in our spectra because the instrument operates in air. The amount of Ar that is measured is dependent on the length of the optical path, which should remain relatively constant, and any air present in the sample area. This can vary depending on cracks and voids, and thus high Ar is often an indicator of a potentially problematic measurement. This method differs from the others because it uses the standard deviation to compute the limits - this is because every scan configuration and material will be different. You will need to tune these limits to suit your data.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="high-argon.html#cb25-1" aria-hidden="true" tabindex="-1"></a>CD166_19_xrf <span class="sc">%&gt;%</span></span>
+<span id="cb25-2"><a href="high-argon.html#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">in_Ar_tolerance =</span> <span class="fu">ifelse</span>(Ar <span class="sc">&gt;=</span><span class="fu">mean</span>(Ar, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span><span class="fu">sd</span>(Ar, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">|</span> <span class="fu">is.na</span>(Ar), <span class="cn">FALSE</span>, <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb25-3"><a href="high-argon.html#cb25-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb25-4"><a href="high-argon.html#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> depth,  <span class="at">y =</span> Ar, <span class="at">col =</span> in_Ar_tolerance)) <span class="sc">+</span></span>
+<span id="cb25-5"><a href="high-argon.html#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">group =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb25-6"><a href="high-argon.html#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_reverse</span>() <span class="sc">+</span></span>
+<span id="cb25-7"><a href="high-argon.html#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">mean</span>(CD166_19_xrf<span class="sc">$</span>Ar, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span><span class="fu">sd</span>(CD166_19_xrf<span class="sc">$</span>Ar, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">+</span></span>
+<span id="cb25-8"><a href="high-argon.html#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_rug</span>(<span class="at">sides =</span> <span class="st">&quot;b&quot;</span>, <span class="at">data =</span> . <span class="sc">%&gt;%</span> <span class="fu">filter</span>(in_Ar_tolerance <span class="sc">==</span> <span class="cn">FALSE</span>)) </span></code></pre></div>
+<pre><code>## Warning: Removed 3 rows containing missing values (`geom_line()`).</code></pre>
+<p><img src="itraxBook_files/figure-html/argon-1.png" width="672" /></p>
 </div>
-<!-- </div> -->
             </section>
 
           </div>
         </div>
       </div>
-<a href="reversing-data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="plotting.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="surface-slope.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="combining-validity-flags.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

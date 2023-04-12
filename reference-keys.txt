@@ -22,6 +22,7 @@ tidying-data
 low-count-rates
 model-errors-mse
 surface-slope
+high-argon
 combining-validity-flags
 tube-current
 dead-time
