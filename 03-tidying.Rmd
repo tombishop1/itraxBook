@@ -76,27 +76,64 @@ CD166_19_xrf %>%
   scale_x_reverse()
 ```
 
+## High Argon
+
+Argon is present in the atmosphere at concentrations of around 1% volume, and therefore is present in our spectra because the instrument operates in air. The amount of Ar that is measured is dependent on the length of the optical path, which should remain relatively constant, and any air present in the sample area. This can vary depending on cracks and voids, and thus high Ar is often an indicator of a potentially problematic measurement. This method differs from the others because it uses the standard deviation to compute the limits - this is because every scan configuration and material will be different. You will need to tune these limits to suit your data.
+
+```{r argon}
+CD166_19_xrf %>%
+  mutate(in_Ar_tolerance = ifelse(Ar >=mean(Ar, na.rm = TRUE) + 2*sd(Ar, na.rm = TRUE) | is.na(Ar), FALSE, TRUE)) %>%
+  
+  ggplot(mapping = aes(x = depth,  y = Ar, col = in_Ar_tolerance)) +
+  geom_line(aes(group = 1)) +
+  scale_x_reverse() +
+  geom_hline(yintercept = mean(CD166_19_xrf$Ar, na.rm = TRUE) + 2*sd(CD166_19_xrf$Ar, na.rm = TRUE)) +
+  geom_rug(sides = "b", data = . %>% filter(in_Ar_tolerance == FALSE)) 
+```
+
 ## Combining "Validity" Flags
 
 It is often desirable to combine all deletion criteria into a single binary variable. This means combining multiple binary variables, returning `FALSE` if any of the values are `FALSE`, but only returning `TRUE` if all of the values are `TRUE`. 
 
-```{r combined_validity_checks, warning=FALSE}
+```{r combined_validity_checks, warning=FALSE, include=FALSE}
 CD166_19_xrf <- CD166_19_xrf %>%
+  select(-any_of("qc")) %>%
   mutate(slope = `sample surface` - dplyr::lag(`sample surface`)) %>%
   mutate(in_slope_tolerance = ifelse(slope <=-0.1 | slope >=0.1 | is.na(slope) == TRUE, FALSE, TRUE)) %>%
   select(-slope) %>%
   mutate(in_cps_tolerance = ifelse(cps <=30000 | cps >=60000 | is.na(cps) == TRUE, FALSE, TRUE)) %>%
   mutate(in_mse_tolerance = ifelse(MSE <=2, TRUE, FALSE)) %>%
+  mutate(in_Ar_tolerance = ifelse(Ar >=mean(Ar, na.rm = TRUE) + 2*sd(Ar, na.rm = TRUE) | is.na(Ar), FALSE, TRUE)) %>%
   rowwise() %>%
-  mutate(qc = !any(c(validity, in_slope_tolerance, in_cps_tolerance, in_mse_tolerance) == FALSE)) %>%
+  mutate(qc = !any(c(validity, in_slope_tolerance, in_cps_tolerance, in_mse_tolerance, in_Ar_tolerance) == FALSE)) %>%
   ungroup() %>%
-  select(-c(in_slope_tolerance, in_cps_tolerance, in_mse_tolerance)) #%>%
+  select(-c(in_slope_tolerance, in_cps_tolerance, in_mse_tolerance, in_Ar_tolerance))
+```
+
+```{r combined_valididty_checks_graph}
+CD166_19_xrf %>%
+  select(-any_of("qc")) %>%
+  mutate(slope = `sample surface` - dplyr::lag(`sample surface`)) %>%
+  mutate(in_slope_tolerance = ifelse(slope <=-0.1 | slope >=0.1 | is.na(slope) == TRUE, FALSE, TRUE)) %>%
+  select(-slope) %>%
+  mutate(in_cps_tolerance = ifelse(cps <=30000 | cps >=60000 | is.na(cps) == TRUE, FALSE, TRUE)) %>%
+  mutate(in_mse_tolerance = ifelse(MSE <=2, TRUE, FALSE)) %>%
+  mutate(in_Ar_tolerance = ifelse(Ar >=mean(Ar, na.rm = TRUE) + 2*sd(Ar, na.rm = TRUE) | is.na(Ar), FALSE, TRUE)) %>%
+  rowwise() %>%
+  mutate(qc = !any(c(validity, in_slope_tolerance, in_cps_tolerance, in_mse_tolerance, in_Ar_tolerance) == FALSE)) %>%
+  ungroup() %>%
   
-  ggplot(data = CD166_19_xrf, aes(y = depth, x = `Mo inc`/`Mo coh`, col = qc)) + 
-  geom_lineh(aes(group = 1)) +
-  geom_rug(sides = "l", data = . %>% filter(qc == FALSE)) +
-  scale_color_discrete(name = "pass QC") +
-  scale_y_reverse(name = "depth [mm]")
+  select(c(depth, validity, in_slope_tolerance, in_cps_tolerance, in_mse_tolerance, in_Ar_tolerance, qc)) %>%
+  pivot_longer(!depth) %>%
+  mutate(name = factor(name, levels = c("validity", "in_slope_tolerance", "in_cps_tolerance", "in_mse_tolerance", "in_Ar_tolerance", "qc"))) %>%
+  
+  ggplot() + 
+    geom_tile(aes(x = depth, y = 1, fill = value)) +
+    scale_x_reverse() +
+    facet_wrap(vars(name), ncol = 1) +
+    theme(axis.title.y = element_blank(),
+          axis.text.y = element_blank(),
+          axis.ticks.y = element_blank())
 ```
 
 Bear in mind that this doesn't remove observations considered defective, only marks them has `qc == FALSE`. If they are to be excluded from subsequent analysis, they should be removed using `filter(qc == TRUE)`.
