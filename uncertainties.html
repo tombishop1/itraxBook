@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>3.10 Uncertainties | Using Itrax Data in R</title>
   <meta name="description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
-  <meta name="generator" content="bookdown 0.37 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.39 and GitBook 2.6.7" />
 
   <meta property="og:title" content="3.10 Uncertainties | Using Itrax Data in R" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2023-12-15" />
+<meta name="date" content="2024-05-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -56,7 +56,7 @@
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -128,6 +128,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
+  margin-bottom: 0em;
 }
 .hanging div.csl-entry {
   margin-left:2em;
@@ -259,40 +260,40 @@ div.csl-indent {
 <div id="uncertainties" class="section level2 hasAnchor" number="3.10">
 <h2><span class="header-section-number">3.10</span> Uncertainties<a href="uncertainties.html#uncertainties" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The best way to quantify the uncertainties in the XRF data is in repeat measurements. The example dataset contains short sections of repeat measurements. An example might begin by reading in the repeat scan data, as below for <code>CD166_19_S1</code>.</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="uncertainties.html#cb33-1" aria-hidden="true" tabindex="-1"></a>CD166_19_S1_REP1 <span class="ot">&lt;-</span> <span class="fu">itrax_import</span>(<span class="st">&quot;CD166_19_S1/CD166_19_S1_REP1/Results.txt&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb33-2"><a href="uncertainties.html#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">any_of</span>(<span class="fu">c</span>(elementsList, <span class="st">&quot;position&quot;</span>, <span class="st">&quot;Mo inc&quot;</span>, <span class="st">&quot;Mo coh&quot;</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb33-3"><a href="uncertainties.html#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">scan =</span> <span class="st">&quot;scan1&quot;</span>)</span>
-<span id="cb33-4"><a href="uncertainties.html#cb33-4" aria-hidden="true" tabindex="-1"></a>CD166_19_S1_REP2 <span class="ot">&lt;-</span> <span class="fu">itrax_import</span>(<span class="st">&quot;CD166_19_S1/CD166_19_S1_REP2/Results.txt&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb33-5"><a href="uncertainties.html#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">any_of</span>(<span class="fu">c</span>(elementsList, <span class="st">&quot;position&quot;</span>, <span class="st">&quot;Mo inc&quot;</span>, <span class="st">&quot;Mo coh&quot;</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb33-6"><a href="uncertainties.html#cb33-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">scan =</span> <span class="st">&quot;scan2&quot;</span>)</span>
-<span id="cb33-7"><a href="uncertainties.html#cb33-7" aria-hidden="true" tabindex="-1"></a>CD166_19_S1_REP3 <span class="ot">&lt;-</span> CD166_19_S1<span class="sc">$</span>xrf <span class="sc">%&gt;%</span></span>
-<span id="cb33-8"><a href="uncertainties.html#cb33-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(position <span class="sc">&gt;=</span> <span class="fu">min</span>(<span class="fu">c</span>(CD166_19_S1_REP1<span class="sc">$</span>position, CD166_19_S1_REP2<span class="sc">$</span>position)) <span class="sc">&amp;</span> </span>
-<span id="cb33-9"><a href="uncertainties.html#cb33-9" aria-hidden="true" tabindex="-1"></a>           position <span class="sc">&lt;=</span> <span class="fu">max</span>(<span class="fu">c</span>(CD166_19_S1_REP1<span class="sc">$</span>position, CD166_19_S1_REP2<span class="sc">$</span>position))) <span class="sc">%&gt;%</span></span>
-<span id="cb33-10"><a href="uncertainties.html#cb33-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">any_of</span>(<span class="fu">c</span>(elementsList, <span class="st">&quot;position&quot;</span>, <span class="st">&quot;Mo inc&quot;</span>, <span class="st">&quot;Mo coh&quot;</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb33-11"><a href="uncertainties.html#cb33-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">scan =</span> <span class="st">&quot;scan3&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="uncertainties.html#cb33-1" tabindex="-1"></a>CD166_19_S1_REP1 <span class="ot">&lt;-</span> <span class="fu">itrax_import</span>(<span class="st">&quot;CD166_19_S1/CD166_19_S1_REP1/Results.txt&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb33-2"><a href="uncertainties.html#cb33-2" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">any_of</span>(<span class="fu">c</span>(elementsList, <span class="st">&quot;position&quot;</span>, <span class="st">&quot;Mo inc&quot;</span>, <span class="st">&quot;Mo coh&quot;</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb33-3"><a href="uncertainties.html#cb33-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">scan =</span> <span class="st">&quot;scan1&quot;</span>)</span>
+<span id="cb33-4"><a href="uncertainties.html#cb33-4" tabindex="-1"></a>CD166_19_S1_REP2 <span class="ot">&lt;-</span> <span class="fu">itrax_import</span>(<span class="st">&quot;CD166_19_S1/CD166_19_S1_REP2/Results.txt&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb33-5"><a href="uncertainties.html#cb33-5" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">any_of</span>(<span class="fu">c</span>(elementsList, <span class="st">&quot;position&quot;</span>, <span class="st">&quot;Mo inc&quot;</span>, <span class="st">&quot;Mo coh&quot;</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb33-6"><a href="uncertainties.html#cb33-6" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">scan =</span> <span class="st">&quot;scan2&quot;</span>)</span>
+<span id="cb33-7"><a href="uncertainties.html#cb33-7" tabindex="-1"></a>CD166_19_S1_REP3 <span class="ot">&lt;-</span> CD166_19_S1<span class="sc">$</span>xrf <span class="sc">%&gt;%</span></span>
+<span id="cb33-8"><a href="uncertainties.html#cb33-8" tabindex="-1"></a>  <span class="fu">filter</span>(position <span class="sc">&gt;=</span> <span class="fu">min</span>(<span class="fu">c</span>(CD166_19_S1_REP1<span class="sc">$</span>position, CD166_19_S1_REP2<span class="sc">$</span>position)) <span class="sc">&amp;</span> </span>
+<span id="cb33-9"><a href="uncertainties.html#cb33-9" tabindex="-1"></a>           position <span class="sc">&lt;=</span> <span class="fu">max</span>(<span class="fu">c</span>(CD166_19_S1_REP1<span class="sc">$</span>position, CD166_19_S1_REP2<span class="sc">$</span>position))) <span class="sc">%&gt;%</span></span>
+<span id="cb33-10"><a href="uncertainties.html#cb33-10" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">any_of</span>(<span class="fu">c</span>(elementsList, <span class="st">&quot;position&quot;</span>, <span class="st">&quot;Mo inc&quot;</span>, <span class="st">&quot;Mo coh&quot;</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb33-11"><a href="uncertainties.html#cb33-11" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">scan =</span> <span class="st">&quot;scan3&quot;</span>)</span></code></pre></div>
 <p>It should then be combined into a single dataset, and finally, a function to calculate the uncertainties is called (here we use <code>sd()</code>). The <code>errors</code> package is used to create an output that can combine both the value and the associated uncertainty. It is a really neat way of working with quantities and ensures the uncertainties are correctly propagated throughout the work.</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="uncertainties.html#cb34-1" aria-hidden="true" tabindex="-1"></a>S1_reps <span class="ot">&lt;-</span> <span class="fu">list</span>(CD166_19_S1_REP1, CD166_19_S1_REP2, CD166_19_S1_REP3) <span class="sc">%&gt;%</span></span>
-<span id="cb34-2"><a href="uncertainties.html#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reduce</span>(full_join) <span class="sc">%&gt;%</span></span>
-<span id="cb34-3"><a href="uncertainties.html#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(scan, position, <span class="fu">everything</span>()) <span class="sc">%&gt;%</span></span>
-<span id="cb34-4"><a href="uncertainties.html#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(position) <span class="sc">%&gt;%</span></span>
-<span id="cb34-5"><a href="uncertainties.html#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">any_of</span>(<span class="fu">c</span>(elementsList, <span class="st">&quot;Mo inc&quot;</span>, <span class="st">&quot;Mo coh&quot;</span>)), </span>
-<span id="cb34-6"><a href="uncertainties.html#cb34-6" aria-hidden="true" tabindex="-1"></a>                   <span class="cf">function</span>(x){<span class="fu">set_errors</span>(<span class="at">x =</span> <span class="fu">mean</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
-<span id="cb34-7"><a href="uncertainties.html#cb34-7" aria-hidden="true" tabindex="-1"></a>                                          <span class="at">value =</span> <span class="fu">sd</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))}))</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="uncertainties.html#cb34-1" tabindex="-1"></a>S1_reps <span class="ot">&lt;-</span> <span class="fu">list</span>(CD166_19_S1_REP1, CD166_19_S1_REP2, CD166_19_S1_REP3) <span class="sc">%&gt;%</span></span>
+<span id="cb34-2"><a href="uncertainties.html#cb34-2" tabindex="-1"></a>  <span class="fu">reduce</span>(full_join) <span class="sc">%&gt;%</span></span>
+<span id="cb34-3"><a href="uncertainties.html#cb34-3" tabindex="-1"></a>  <span class="fu">select</span>(scan, position, <span class="fu">everything</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb34-4"><a href="uncertainties.html#cb34-4" tabindex="-1"></a>  <span class="fu">group_by</span>(position) <span class="sc">%&gt;%</span></span>
+<span id="cb34-5"><a href="uncertainties.html#cb34-5" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">any_of</span>(<span class="fu">c</span>(elementsList, <span class="st">&quot;Mo inc&quot;</span>, <span class="st">&quot;Mo coh&quot;</span>)), </span>
+<span id="cb34-6"><a href="uncertainties.html#cb34-6" tabindex="-1"></a>                   <span class="cf">function</span>(x){<span class="fu">set_errors</span>(<span class="at">x =</span> <span class="fu">mean</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb34-7"><a href="uncertainties.html#cb34-7" tabindex="-1"></a>                                          <span class="at">value =</span> <span class="fu">sd</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))}))</span></code></pre></div>
 <p>These can be plotted using the mean and standard deviation instead of a single value using <code>errors::errors_min()</code> and <code>errors::errors_max()</code> really easily. Note that the errors are propagated through any arithmetic - in the example below, where the ratio of coherent Mo and incoherent Mo peak area is calculated.</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="uncertainties.html#cb35-1" aria-hidden="true" tabindex="-1"></a>S1_reps <span class="sc">%&gt;%</span></span>
-<span id="cb35-2"><a href="uncertainties.html#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">coh/inc</span><span class="st">`</span> <span class="ot">=</span> <span class="st">`</span><span class="at">Mo coh</span><span class="st">`</span><span class="sc">/</span><span class="st">`</span><span class="at">Mo inc</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb35-3"><a href="uncertainties.html#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Al, Si, Ti, Fe, Pb, Ca, <span class="st">`</span><span class="at">coh/inc</span><span class="st">`</span>, position) <span class="sc">%&gt;%</span></span>
-<span id="cb35-4"><a href="uncertainties.html#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">!</span><span class="fu">c</span>(<span class="st">&quot;position&quot;</span>), <span class="at">names_to =</span> <span class="st">&quot;elements&quot;</span>, <span class="at">values_to =</span> <span class="st">&quot;peakarea&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb35-5"><a href="uncertainties.html#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb35-6"><a href="uncertainties.html#cb35-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">elements =</span> <span class="fu">factor</span>(elements, <span class="at">levels =</span> <span class="fu">c</span>(elementsList, <span class="st">&quot;coh/inc&quot;</span>))) <span class="sc">%&gt;%</span></span>
-<span id="cb35-7"><a href="uncertainties.html#cb35-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-8"><a href="uncertainties.html#cb35-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> peakarea, <span class="at">y =</span> position)) <span class="sc">+</span></span>
-<span id="cb35-9"><a href="uncertainties.html#cb35-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_reverse</span>() <span class="sc">+</span> </span>
-<span id="cb35-10"><a href="uncertainties.html#cb35-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbonh</span>(<span class="fu">aes</span>(<span class="at">xmin =</span> <span class="fu">errors_min</span>(peakarea), <span class="at">xmax =</span> <span class="fu">errors_max</span>(peakarea)), <span class="at">fill =</span> <span class="st">&quot;grey80&quot;</span>) <span class="sc">+</span></span>
-<span id="cb35-11"><a href="uncertainties.html#cb35-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_lineh</span>() <span class="sc">+</span> </span>
-<span id="cb35-12"><a href="uncertainties.html#cb35-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">n.breaks =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb35-13"><a href="uncertainties.html#cb35-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(elements), <span class="at">scales =</span> <span class="st">&quot;free_x&quot;</span>, <span class="at">nrow =</span> <span class="dv">1</span>) <span class="sc">+</span> </span>
-<span id="cb35-14"><a href="uncertainties.html#cb35-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_paleo</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="uncertainties.html#cb35-1" tabindex="-1"></a>S1_reps <span class="sc">%&gt;%</span></span>
+<span id="cb35-2"><a href="uncertainties.html#cb35-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">coh/inc</span><span class="st">`</span> <span class="ot">=</span> <span class="st">`</span><span class="at">Mo coh</span><span class="st">`</span><span class="sc">/</span><span class="st">`</span><span class="at">Mo inc</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb35-3"><a href="uncertainties.html#cb35-3" tabindex="-1"></a>  <span class="fu">select</span>(Al, Si, Ti, Fe, Pb, Ca, <span class="st">`</span><span class="at">coh/inc</span><span class="st">`</span>, position) <span class="sc">%&gt;%</span></span>
+<span id="cb35-4"><a href="uncertainties.html#cb35-4" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">!</span><span class="fu">c</span>(<span class="st">&quot;position&quot;</span>), <span class="at">names_to =</span> <span class="st">&quot;elements&quot;</span>, <span class="at">values_to =</span> <span class="st">&quot;peakarea&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb35-5"><a href="uncertainties.html#cb35-5" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb35-6"><a href="uncertainties.html#cb35-6" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">elements =</span> <span class="fu">factor</span>(elements, <span class="at">levels =</span> <span class="fu">c</span>(elementsList, <span class="st">&quot;coh/inc&quot;</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb35-7"><a href="uncertainties.html#cb35-7" tabindex="-1"></a></span>
+<span id="cb35-8"><a href="uncertainties.html#cb35-8" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> peakarea, <span class="at">y =</span> position)) <span class="sc">+</span></span>
+<span id="cb35-9"><a href="uncertainties.html#cb35-9" tabindex="-1"></a>  <span class="fu">scale_y_reverse</span>() <span class="sc">+</span> </span>
+<span id="cb35-10"><a href="uncertainties.html#cb35-10" tabindex="-1"></a>  <span class="fu">geom_ribbonh</span>(<span class="fu">aes</span>(<span class="at">xmin =</span> <span class="fu">errors_min</span>(peakarea), <span class="at">xmax =</span> <span class="fu">errors_max</span>(peakarea)), <span class="at">fill =</span> <span class="st">&quot;grey80&quot;</span>) <span class="sc">+</span></span>
+<span id="cb35-11"><a href="uncertainties.html#cb35-11" tabindex="-1"></a>  <span class="fu">geom_lineh</span>() <span class="sc">+</span> </span>
+<span id="cb35-12"><a href="uncertainties.html#cb35-12" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">n.breaks =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb35-13"><a href="uncertainties.html#cb35-13" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(elements), <span class="at">scales =</span> <span class="st">&quot;free_x&quot;</span>, <span class="at">nrow =</span> <span class="dv">1</span>) <span class="sc">+</span> </span>
+<span id="cb35-14"><a href="uncertainties.html#cb35-14" tabindex="-1"></a>  <span class="fu">theme_paleo</span>()</span></code></pre></div>
 <p><img src="itraxBook_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <p>This information can be used to inform decisions about the inclusion and treatment of the remainder of the data - where there are unacceptably high uncertainties that element might be considered for exclusion from further analysis.</p>
 </div>

@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>1.4 Radiographic Images | Using Itrax Data in R</title>
   <meta name="description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
-  <meta name="generator" content="bookdown 0.37 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.39 and GitBook 2.6.7" />
 
   <meta property="og:title" content="1.4 Radiographic Images | Using Itrax Data in R" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2023-12-15" />
+<meta name="date" content="2024-05-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -56,7 +56,7 @@
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -128,6 +128,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
+  margin-bottom: 0em;
 }
 .hanging div.csl-entry {
   margin-left:2em;
@@ -260,10 +261,10 @@ div.csl-indent {
 <h2><span class="header-section-number">1.4</span> Radiographic Images<a href="radiographic-images.html#radiographic-images" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The scanner has an x-radiographic line array capable of producing good-quality x-radiographs of the cores. The scan data can be split into two parts — “raw” and “processed” data. The raw data (usually <code>radiograph.raw</code>) is a tab-delimited text file containing a matrix of greyscale values. Each column represents a single step (measurement interval, often set to between 50 and 200 μm), and each row represents a single pixel on the line array. The pixel spacing is around 20 μm. Note that the raw radiographic data contains pixels at the extremes that are outside of the coverage of the x-ray beam — these are obviously useless and need to be cropped.</p>
 <p>The processed image (<code>radiograph.tif</code>) has a lower resolution than the raw data. This is because the pixels must be square, and so the pixels are down-sampled to fit with the step-size of the scan. Thus, if the step-size was 200 μm, each pixel will be 200 x 200 μm, whereas the raw data will have rectangular pixels with dimensions of 20 x 200 μm. The data at the extremes of the radiograph are always cropped, so the radiograph has a coverage of around 13 mm of the width of the core.</p>
-<p>Like the optical image, the radiograph often requires contrast and brightness adjustments, and these are easiest to perform in <code>imageJ</code>. With the inclusion of a suitable density standard, some relative or, where “u-channels” are used, absolute density calibration can be performed using these data; see <span class="citation">Francus, Kanamaru, and Fortin (<a href="#ref-Francus2015" role="doc-biblioref">2015</a>)</span> for more.</p>
+<p>Like the optical image, the radiograph often requires contrast and brightness adjustments, and these are easiest to perform in <code>imageJ</code>. With the inclusion of a suitable density standard, some relative or, where “u-channels” are used, absolute density calibration can be performed using these data; see <span class="citation">Francus, Kanamaru, and Fortin (<a href="#ref-Francus2015">2015</a>)</span> for more.</p>
 </div>
 <h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-Francus2015" class="csl-entry">
 Francus, P., K. Kanamaru, and D. Fortin. 2015. <span>“<span class="nocase">Standardization and Calibration of X-Radiographs Acquired with the ITRAX Core Scanner</span>.”</span> In <em>Micro-XRF Studies of Sediment Cores, Developments in Paleoenvironmental Research 17</em>, edited by I. W. Croudace and R. G. Rothwell, 491–505. Dordrecht: Springer.
 </div>

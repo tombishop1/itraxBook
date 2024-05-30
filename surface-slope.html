@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>3.3 Surface Slope | Using Itrax Data in R</title>
   <meta name="description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
-  <meta name="generator" content="bookdown 0.37 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.39 and GitBook 2.6.7" />
 
   <meta property="og:title" content="3.3 Surface Slope | Using Itrax Data in R" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2023-12-15" />
+<meta name="date" content="2024-05-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -56,7 +56,7 @@
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -128,6 +128,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
+  margin-bottom: 0em;
 }
 .hanging div.csl-entry {
   margin-left:2em;
@@ -258,21 +259,21 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="surface-slope" class="section level2 hasAnchor" number="3.3">
 <h2><span class="header-section-number">3.3</span> Surface Slope<a href="surface-slope.html#surface-slope" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>There is a relationship between the slope of the surface of the core material and the intensity for most elements. Hence areas with a large slope may produce an increase or decrease in a particular element intensity regardless of any actual change in the abundance of an element. This can be corrected for where the effect can be quantified experimentally, but <span class="citation">Jarvis, Croudace, and Rothwell (<a href="#ref-Jarvis2015" role="doc-biblioref">2015</a>)</span> report results of experiments where the slope varies from -0.3 to +0.3 causing variation of around 120 to 80% of the true value. As such, we might initially seek to exclude areas of the core with a high slope. By default, <code>itraxR::itrax_import()</code> doesn’t import the <code>sample surface</code> variable, so the parameter <code>parameters = "all"</code> should be passed to access it. The computation is simple to perform using <code>dplyr::lag()</code>, and could be used as part of a conditional expression that would mark all measurements with a slope beyond a certain tolerance as having <code>validity == FALSE</code>. For example, the example below marks all values with a slope (in either direction) greater than 0.1 mm/200 μm (1:5) as being invalid. As shown for the core below, the core slope is well within the defined tolerances.</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="surface-slope.html#cb24-1" aria-hidden="true" tabindex="-1"></a>CD166_19_xrf <span class="sc">%&gt;%</span></span>
-<span id="cb24-2"><a href="surface-slope.html#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">slope =</span> <span class="st">`</span><span class="at">sample surface</span><span class="st">`</span> <span class="sc">-</span> dplyr<span class="sc">::</span><span class="fu">lag</span>(<span class="st">`</span><span class="at">sample surface</span><span class="st">`</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb24-3"><a href="surface-slope.html#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">in_tolerance =</span> <span class="fu">ifelse</span>(slope <span class="sc">&lt;=-</span><span class="fl">0.1</span> <span class="sc">|</span> slope <span class="sc">&gt;=</span><span class="fl">0.1</span> <span class="sc">|</span> <span class="fu">is.na</span>(slope) <span class="sc">==</span> <span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb24-4"><a href="surface-slope.html#cb24-4" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb24-5"><a href="surface-slope.html#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> depth, <span class="at">y =</span> slope, <span class="at">col =</span> in_tolerance)) <span class="sc">+</span></span>
-<span id="cb24-6"><a href="surface-slope.html#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.15</span>, <span class="fl">0.15</span>), <span class="at">oob =</span> scales<span class="sc">::</span>squish) <span class="sc">+</span></span>
-<span id="cb24-7"><a href="surface-slope.html#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">group =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb24-8"><a href="surface-slope.html#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.1</span>, <span class="fl">0.1</span>)) <span class="sc">+</span></span>
-<span id="cb24-9"><a href="surface-slope.html#cb24-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_rug</span>(<span class="at">data =</span> . <span class="sc">%&gt;%</span> <span class="fu">filter</span>(validity <span class="sc">==</span> <span class="cn">FALSE</span>)) <span class="sc">+</span></span>
-<span id="cb24-10"><a href="surface-slope.html#cb24-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_reverse</span>()</span></code></pre></div>
+<p>There is a relationship between the slope of the surface of the core material and the intensity for most elements. Hence areas with a large slope may produce an increase or decrease in a particular element intensity regardless of any actual change in the abundance of an element. This can be corrected for where the effect can be quantified experimentally, but <span class="citation">Jarvis, Croudace, and Rothwell (<a href="#ref-Jarvis2015">2015</a>)</span> report results of experiments where the slope varies from -0.3 to +0.3 causing variation of around 120 to 80% of the true value. As such, we might initially seek to exclude areas of the core with a high slope. By default, <code>itraxR::itrax_import()</code> doesn’t import the <code>sample surface</code> variable, so the parameter <code>parameters = "all"</code> should be passed to access it. The computation is simple to perform using <code>dplyr::lag()</code>, and could be used as part of a conditional expression that would mark all measurements with a slope beyond a certain tolerance as having <code>validity == FALSE</code>. For example, the example below marks all values with a slope (in either direction) greater than 0.1 mm/200 μm (1:5) as being invalid. As shown for the core below, the core slope is well within the defined tolerances.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="surface-slope.html#cb24-1" tabindex="-1"></a>CD166_19_xrf <span class="sc">%&gt;%</span></span>
+<span id="cb24-2"><a href="surface-slope.html#cb24-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">slope =</span> <span class="st">`</span><span class="at">sample surface</span><span class="st">`</span> <span class="sc">-</span> dplyr<span class="sc">::</span><span class="fu">lag</span>(<span class="st">`</span><span class="at">sample surface</span><span class="st">`</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb24-3"><a href="surface-slope.html#cb24-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">in_tolerance =</span> <span class="fu">ifelse</span>(slope <span class="sc">&lt;=-</span><span class="fl">0.1</span> <span class="sc">|</span> slope <span class="sc">&gt;=</span><span class="fl">0.1</span> <span class="sc">|</span> <span class="fu">is.na</span>(slope) <span class="sc">==</span> <span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb24-4"><a href="surface-slope.html#cb24-4" tabindex="-1"></a>  </span>
+<span id="cb24-5"><a href="surface-slope.html#cb24-5" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> depth, <span class="at">y =</span> slope, <span class="at">col =</span> in_tolerance)) <span class="sc">+</span></span>
+<span id="cb24-6"><a href="surface-slope.html#cb24-6" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.15</span>, <span class="fl">0.15</span>), <span class="at">oob =</span> scales<span class="sc">::</span>squish) <span class="sc">+</span></span>
+<span id="cb24-7"><a href="surface-slope.html#cb24-7" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">group =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb24-8"><a href="surface-slope.html#cb24-8" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.1</span>, <span class="fl">0.1</span>)) <span class="sc">+</span></span>
+<span id="cb24-9"><a href="surface-slope.html#cb24-9" tabindex="-1"></a>  <span class="fu">geom_rug</span>(<span class="at">data =</span> . <span class="sc">%&gt;%</span> <span class="fu">filter</span>(validity <span class="sc">==</span> <span class="cn">FALSE</span>)) <span class="sc">+</span></span>
+<span id="cb24-10"><a href="surface-slope.html#cb24-10" tabindex="-1"></a>  <span class="fu">scale_x_reverse</span>()</span></code></pre></div>
 <p><img src="itraxBook_files/figure-html/slope-1.png" width="672" /></p>
 </div>
 <h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-Jarvis2015" class="csl-entry">
 Jarvis, S., I. W. Croudace, and R. G. Rothwell. 2015. <span>“<span class="nocase">Parameter Optimisation for the ITRAX Core Scanner</span>.”</span> In <em>Micro-XRF Studies of Sediment Cores, Developments in Paleoenvironmental Research 17</em>, edited by I. W. Croudace and R. G. Rothwell, 535–62. Dordrecht: Springer.
 </div>

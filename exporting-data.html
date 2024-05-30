@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 8 Exporting Data | Using Itrax Data in R</title>
   <meta name="description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
-  <meta name="generator" content="bookdown 0.37 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.39 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 8 Exporting Data | Using Itrax Data in R" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2023-12-15" />
+<meta name="date" content="2024-05-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -56,7 +56,7 @@
 
 <style type="text/css">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -128,6 +128,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
+  margin-bottom: 0em;
 }
 .hanging div.csl-entry {
   margin-left:2em;
@@ -259,10 +260,10 @@ div.csl-indent {
 <div id="exporting-data" class="section level1 hasAnchor" number="8">
 <h1><span class="header-section-number">Chapter 8</span> Exporting Data<a href="exporting-data.html#exporting-data" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>Data is easy to export from <code>R</code>. Tables can be exported by piping to <code>readr::write_csv()</code>. For diagrams created in <code>ggplot2</code>, pipe to <code>ggsave()</code>. Sometimes it is necessary to reduce the resolution of Itrax XRF data, usually to facilitate direct comparison with some other lower resolution data. For example, if calibrating using ICP-MS sub-samples taken at 10 mm intervals, but the Itrax XRF scan is at 0.2 mm, it will be necessary to average 50 Itrax measurements for each ICP-MS measurement. This is facilitated using the <code>itrax_reduce()</code> function. The example below demonstrates calculating the averages for contiguous 20 mm chunks of the XRF data.</p>
-<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="exporting-data.html#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get the data as 20 mm intervals</span></span>
-<span id="cb93-2"><a href="exporting-data.html#cb93-2" aria-hidden="true" tabindex="-1"></a><span class="fu">itrax_reduce</span>(CD166_19_xrf <span class="sc">%&gt;%</span> <span class="fu">drop_na</span>(), <span class="at">by =</span> <span class="dv">20</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb93-3"><a href="exporting-data.html#cb93-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>label) <span class="sc">%&gt;%</span></span>
-<span id="cb93-4"><a href="exporting-data.html#cb93-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="exporting-data.html#cb93-1" tabindex="-1"></a><span class="co"># get the data as 20 mm intervals</span></span>
+<span id="cb93-2"><a href="exporting-data.html#cb93-2" tabindex="-1"></a><span class="fu">itrax_reduce</span>(CD166_19_xrf <span class="sc">%&gt;%</span> <span class="fu">drop_na</span>(), <span class="at">by =</span> <span class="dv">20</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb93-3"><a href="exporting-data.html#cb93-3" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>label) <span class="sc">%&gt;%</span></span>
+<span id="cb93-4"><a href="exporting-data.html#cb93-4" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 6 × 58
 ##   resample_names depth   MSE    cps validity    Al    Si     P     S    Cl    Ar
 ##            &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
