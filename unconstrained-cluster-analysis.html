@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>6.4 Unconstrained Cluster Analysis | Using Itrax Data in R</title>
   <meta name="description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
-  <meta name="generator" content="bookdown 0.39 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.40 and GitBook 2.6.7" />
 
   <meta property="og:title" content="6.4 Unconstrained Cluster Analysis | Using Itrax Data in R" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2024-05-30" />
+<meta name="date" content="2024-09-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -260,23 +260,23 @@ div.csl-indent {
 <div id="unconstrained-cluster-analysis" class="section level2 hasAnchor" number="6.4">
 <h2><span class="header-section-number">6.4</span> Unconstrained Cluster Analysis<a href="unconstrained-cluster-analysis.html#unconstrained-cluster-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Unconstrained cluster analysis will group each measurement by similarity, returning an arbitrary number of groups as defined by the function. This is useful in identifying recurring compositional units, or identifying candidate samples for quantitative analysis.</p>
-<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="unconstrained-cluster-analysis.html#cb75-1" tabindex="-1"></a><span class="fu">left_join</span>(CD166_19_xrf, </span>
-<span id="cb75-2"><a href="unconstrained-cluster-analysis.html#cb75-2" tabindex="-1"></a>          <span class="fu">tibble</span>(<span class="at">uid =</span> CD166_19_xrf_acomp <span class="sc">%&gt;%</span></span>
-<span id="cb75-3"><a href="unconstrained-cluster-analysis.html#cb75-3" tabindex="-1"></a>                   <span class="fu">rownames</span>(),</span>
-<span id="cb75-4"><a href="unconstrained-cluster-analysis.html#cb75-4" tabindex="-1"></a>                 <span class="at">group =</span> <span class="fu">dist</span>(CD166_19_xrf_acomp) <span class="sc">%&gt;%</span></span>
-<span id="cb75-5"><a href="unconstrained-cluster-analysis.html#cb75-5" tabindex="-1"></a>                     <span class="fu">hclust</span>(<span class="at">method =</span> <span class="st">&quot;ward.D2&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb75-6"><a href="unconstrained-cluster-analysis.html#cb75-6" tabindex="-1"></a>                     <span class="fu">cutree</span>(<span class="at">k =</span> <span class="dv">5</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb75-7"><a href="unconstrained-cluster-analysis.html#cb75-7" tabindex="-1"></a>                     <span class="fu">as.factor</span>()</span>
-<span id="cb75-8"><a href="unconstrained-cluster-analysis.html#cb75-8" tabindex="-1"></a>                 ),</span>
-<span id="cb75-9"><a href="unconstrained-cluster-analysis.html#cb75-9" tabindex="-1"></a>          <span class="at">by =</span> <span class="st">&quot;uid&quot;</span></span>
-<span id="cb75-10"><a href="unconstrained-cluster-analysis.html#cb75-10" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
-<span id="cb75-11"><a href="unconstrained-cluster-analysis.html#cb75-11" tabindex="-1"></a>  </span>
-<span id="cb75-12"><a href="unconstrained-cluster-analysis.html#cb75-12" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
-<span id="cb75-13"><a href="unconstrained-cluster-analysis.html#cb75-13" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="fu">aes</span>(<span class="at">x =</span> depth, <span class="at">y =</span> <span class="dv">1</span>, <span class="at">fill =</span> group)) <span class="sc">+</span></span>
-<span id="cb75-14"><a href="unconstrained-cluster-analysis.html#cb75-14" tabindex="-1"></a>  <span class="fu">scale_x_reverse</span>() <span class="sc">+</span></span>
-<span id="cb75-15"><a href="unconstrained-cluster-analysis.html#cb75-15" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title.y =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb75-16"><a href="unconstrained-cluster-analysis.html#cb75-16" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb75-17"><a href="unconstrained-cluster-analysis.html#cb75-17" tabindex="-1"></a>        <span class="at">axis.ticks.y =</span> <span class="fu">element_blank</span>())</span></code></pre></div>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="unconstrained-cluster-analysis.html#cb76-1" tabindex="-1"></a><span class="fu">left_join</span>(CD166_19_xrf, </span>
+<span id="cb76-2"><a href="unconstrained-cluster-analysis.html#cb76-2" tabindex="-1"></a>          <span class="fu">tibble</span>(<span class="at">uid =</span> CD166_19_xrf_acomp <span class="sc">%&gt;%</span></span>
+<span id="cb76-3"><a href="unconstrained-cluster-analysis.html#cb76-3" tabindex="-1"></a>                   <span class="fu">rownames</span>(),</span>
+<span id="cb76-4"><a href="unconstrained-cluster-analysis.html#cb76-4" tabindex="-1"></a>                 <span class="at">group =</span> <span class="fu">dist</span>(CD166_19_xrf_acomp) <span class="sc">%&gt;%</span></span>
+<span id="cb76-5"><a href="unconstrained-cluster-analysis.html#cb76-5" tabindex="-1"></a>                     <span class="fu">hclust</span>(<span class="at">method =</span> <span class="st">&quot;ward.D2&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb76-6"><a href="unconstrained-cluster-analysis.html#cb76-6" tabindex="-1"></a>                     <span class="fu">cutree</span>(<span class="at">k =</span> <span class="dv">5</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb76-7"><a href="unconstrained-cluster-analysis.html#cb76-7" tabindex="-1"></a>                     <span class="fu">as.factor</span>()</span>
+<span id="cb76-8"><a href="unconstrained-cluster-analysis.html#cb76-8" tabindex="-1"></a>                 ),</span>
+<span id="cb76-9"><a href="unconstrained-cluster-analysis.html#cb76-9" tabindex="-1"></a>          <span class="at">by =</span> <span class="st">&quot;uid&quot;</span></span>
+<span id="cb76-10"><a href="unconstrained-cluster-analysis.html#cb76-10" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb76-11"><a href="unconstrained-cluster-analysis.html#cb76-11" tabindex="-1"></a>  </span>
+<span id="cb76-12"><a href="unconstrained-cluster-analysis.html#cb76-12" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb76-13"><a href="unconstrained-cluster-analysis.html#cb76-13" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="fu">aes</span>(<span class="at">x =</span> depth, <span class="at">y =</span> <span class="dv">1</span>, <span class="at">fill =</span> group)) <span class="sc">+</span></span>
+<span id="cb76-14"><a href="unconstrained-cluster-analysis.html#cb76-14" tabindex="-1"></a>  <span class="fu">scale_x_reverse</span>() <span class="sc">+</span></span>
+<span id="cb76-15"><a href="unconstrained-cluster-analysis.html#cb76-15" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb76-16"><a href="unconstrained-cluster-analysis.html#cb76-16" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb76-17"><a href="unconstrained-cluster-analysis.html#cb76-17" tabindex="-1"></a>        <span class="at">axis.ticks.y =</span> <span class="fu">element_blank</span>())</span></code></pre></div>
 <p><img src="itraxBook_files/figure-html/unconstrained_clusters-1.png" width="672" /></p>
 </div>
             </section>

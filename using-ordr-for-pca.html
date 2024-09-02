@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>6.3 Using ordr for PCA | Using Itrax Data in R</title>
   <meta name="description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
-  <meta name="generator" content="bookdown 0.39 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.40 and GitBook 2.6.7" />
 
   <meta property="og:title" content="6.3 Using ordr for PCA | Using Itrax Data in R" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2024-05-30" />
+<meta name="date" content="2024-09-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -272,6 +272,20 @@ div.csl-indent {
 <span id="cb74-10"><a href="using-ordr-for-pca.html#cb74-10" tabindex="-1"></a>  ordr<span class="sc">::</span><span class="fu">geom_cols_text_radiate</span>(<span class="fu">aes</span>(<span class="at">label =</span> name)) <span class="sc">+</span></span>
 <span id="cb74-11"><a href="using-ordr-for-pca.html#cb74-11" tabindex="-1"></a>  <span class="fu">scale_color_continuous</span>(<span class="at">type =</span> <span class="st">&quot;viridis&quot;</span>, <span class="at">trans =</span> <span class="st">&quot;reverse&quot;</span>)</span></code></pre></div>
 <p><img src="itraxBook_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<p>By embedding the depth and label data into the ordination object itself, it makes it easy to do down-core plots without having to rejoin the elemental data with the core depth and label information:</p>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="using-ordr-for-pca.html#cb75-1" tabindex="-1"></a>CD166_19_xrf_acomp_meta <span class="sc">%&gt;%</span></span>
+<span id="cb75-2"><a href="using-ordr-for-pca.html#cb75-2" tabindex="-1"></a>  ordr<span class="sc">::</span><span class="fu">ordinate</span>(., <span class="at">cols =</span> <span class="fu">any_of</span>(myElements),</span>
+<span id="cb75-3"><a href="using-ordr-for-pca.html#cb75-3" tabindex="-1"></a>                 <span class="at">model =</span> <span class="sc">~</span> <span class="fu">princomp</span>(<span class="fu">clr</span>(.)),</span>
+<span id="cb75-4"><a href="using-ordr-for-pca.html#cb75-4" tabindex="-1"></a>                 <span class="at">augment =</span> <span class="fu">any_of</span>(<span class="fu">c</span>(<span class="st">&quot;depth&quot;</span>, <span class="st">&quot;label&quot;</span>))</span>
+<span id="cb75-5"><a href="using-ordr-for-pca.html#cb75-5" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb75-6"><a href="using-ordr-for-pca.html#cb75-6" tabindex="-1"></a>  <span class="fu">fortify</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb75-7"><a href="using-ordr-for-pca.html#cb75-7" tabindex="-1"></a>  <span class="fu">select</span>(depth, label, <span class="st">`</span><span class="at">Comp.1</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb75-8"><a href="using-ordr-for-pca.html#cb75-8" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">drop_na</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb75-9"><a href="using-ordr-for-pca.html#cb75-9" tabindex="-1"></a>  </span>
+<span id="cb75-10"><a href="using-ordr-for-pca.html#cb75-10" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="st">`</span><span class="at">Comp.1</span><span class="st">`</span>, <span class="at">y =</span> depth, <span class="at">colour =</span> label)) <span class="sc">+</span></span>
+<span id="cb75-11"><a href="using-ordr-for-pca.html#cb75-11" tabindex="-1"></a>  <span class="fu">geom_lineh</span>() <span class="sc">+</span></span>
+<span id="cb75-12"><a href="using-ordr-for-pca.html#cb75-12" tabindex="-1"></a>  <span class="fu">scale_y_reverse</span>(<span class="at">name =</span> <span class="st">&quot;Depth [mm]&quot;</span>)</span></code></pre></div>
+<p><img src="itraxBook_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
 </div>
             </section>
 
