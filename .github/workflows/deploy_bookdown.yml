@@ -22,7 +22,7 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v2
       - name: Render Book
         run: Rscript -e 'bookdown::render_book("index.Rmd", encoding = "UTF-8")'
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: _book
           path: _book/
