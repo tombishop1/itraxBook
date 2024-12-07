@@ -157,3 +157,6 @@ calibration <- calibration %>%
               group_by(element) %>%
               group_keys() %>%
               pull(element))
+
+# read xrf data
+load("calibration_samples/CD166_hhxrf.RData")
