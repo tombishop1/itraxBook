@@ -47,3 +47,35 @@ hhxrf <- hhxrf %>%
   select(-water_content)
 
 save(hhxrf, file = "calibration_samples/CD166_hhxrf.RData")
+
+
+
+full_join(
+  hhxrf %>%
+    select(any_of(c(elementsList, "top"))) %>%
+    rename(depth = top) %>%
+    pivot_longer(any_of(elementsList),
+                 values_to = "icp",
+                 names_to = "element"),
+  
+  xrf %>% 
+    select(any_of(c(elementsList, "depth"))) %>%
+    mutate(depth = plyr::round_any(depth, 10, f = floor)) %>%
+    pivot_longer(any_of(elementsList),
+                 values_to = "xrf",
+                 names_to = "element"),
+  
+  by = c("depth", "element")
+) %>%
+  
+  #filter(element %in% myElements) %>%
+  drop_na() %>%
+  
+  ggplot(aes(x = icp, y = xrf)) +
+  geom_point() +
+  ggpmisc::stat_poly_line() +
+  ggpmisc::stat_poly_eq() +
+  facet_wrap(vars(element), 
+             scales = "free") +
+  xlab("Handheld XRF [ppm]") + 
+  ylab("Itrax ED-XRF [peak area]")
