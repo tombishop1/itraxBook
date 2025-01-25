@@ -259,7 +259,7 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="linear-methods" class="section level2 hasAnchor" number="7.4">
 <h2><span class="header-section-number">7.4</span> Linear Methods<a href="linear-methods.html#linear-methods" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>We’ll use our <code>xrf</code> and <code>icp</code> data sets to create linear models of all the variables of interest. They must be combined using <code>pivot_longer()</code>. The plot indicates that some, but not all variables are suitable for calibration.</p>
+<p>We’ll use our <code>xrf</code> and <code>hhxrf</code> data sets to create linear models of all the variables of interest. They must be combined using <code>pivot_longer()</code>. The plot indicates that some, but not all variables are suitable for calibration.</p>
 <div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="linear-methods.html#cb85-1" tabindex="-1"></a><span class="fu">full_join</span>(</span>
 <span id="cb85-2"><a href="linear-methods.html#cb85-2" tabindex="-1"></a>  hhxrf <span class="sc">%&gt;%</span></span>
 <span id="cb85-3"><a href="linear-methods.html#cb85-3" tabindex="-1"></a>    <span class="fu">select</span>(<span class="fu">any_of</span>(<span class="fu">c</span>(elementsList, <span class="st">&quot;SampleID&quot;</span>))) <span class="sc">%&gt;%</span></span>
@@ -288,7 +288,7 @@ div.csl-indent {
 <span id="cb85-26"><a href="linear-methods.html#cb85-26" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;Conventional XRF [ppm]&quot;</span>) <span class="sc">+</span> </span>
 <span id="cb85-27"><a href="linear-methods.html#cb85-27" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">&quot;Itrax ED-XRF [peak area]&quot;</span>)</span></code></pre></div>
 <p><img src="itraxBook_files/figure-html/linear_calib_graph-1.png" width="672" /></p>
-<p>To apply these calibration models to our existing data, we first need to save the models created using <code>lm()</code>. We don’t force the intercept through zero (e.g. <code>icp ~ 0 + xrf</code>) because of background (high baseline) conditions that may be present.</p>
+<p>To apply these calibration models to our existing data, we first need to save the models created using <code>lm()</code>. We don’t force the intercept through zero (e.g. <code>hhxrf ~ 0 + xrf</code>) because of background (high baseline) conditions that may be present.</p>
 <div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="linear-methods.html#cb86-1" tabindex="-1"></a>calibration <span class="ot">&lt;-</span> <span class="fu">full_join</span>(</span>
 <span id="cb86-2"><a href="linear-methods.html#cb86-2" tabindex="-1"></a>  hhxrf <span class="sc">%&gt;%</span></span>
 <span id="cb86-3"><a href="linear-methods.html#cb86-3" tabindex="-1"></a>    <span class="fu">select</span>(<span class="fu">any_of</span>(<span class="fu">c</span>(elementsList, <span class="st">&quot;SampleID&quot;</span>))) <span class="sc">%&gt;%</span></span>
