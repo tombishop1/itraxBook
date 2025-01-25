@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>3.13 Visualising Raw Data | Using Itrax Data in R</title>
   <meta name="description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
-  <meta name="generator" content="bookdown 0.41 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.42 and GitBook 2.6.7" />
 
   <meta property="og:title" content="3.13 Visualising Raw Data | Using Itrax Data in R" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2024-12-09" />
+<meta name="date" content="2025-01-25" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -260,13 +260,13 @@ div.csl-indent {
 <div id="visualising-raw-data" class="section level2 hasAnchor" number="3.13">
 <h2><span class="header-section-number">3.13</span> Visualising Raw Data<a href="visualising-raw-data.html#visualising-raw-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>A useful tool for investigating areas of high errors or other problems in the scan data is to visualise the raw spectral data. To inspect or read individual spectra, you can plot them from the object returned from <code>itrax_restspectra()</code>.</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="visualising-raw-data.html#cb40-1" tabindex="-1"></a><span class="fu">itrax_spectra</span>(<span class="at">filename =</span> <span class="fu">unz</span>(<span class="at">description =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1/XRF data.zip&quot;</span>,</span>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="visualising-raw-data.html#cb40-1" tabindex="-1"></a><span class="fu">itrax_spectra</span>(<span class="at">filename =</span> <span class="fu">unz</span>(<span class="at">description =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1/XRF Data.zip&quot;</span>,</span>
 <span id="cb40-2"><a href="visualising-raw-data.html#cb40-2" tabindex="-1"></a>                             <span class="at">filename =</span> <span class="st">&quot;XRF data/L000642.spe&quot;</span>),</span>
 <span id="cb40-3"><a href="visualising-raw-data.html#cb40-3" tabindex="-1"></a>              <span class="at">parameters =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1/Results_ settings.dfl&quot;</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb40-4"><a href="visualising-raw-data.html#cb40-4" tabindex="-1"></a>  <span class="fu">invisible</span>()</span></code></pre></div>
 <p><img src="itraxBook_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <p>This rarely offers much insight, because we are interested in comparing multiple spectra. The <code>itrax_restspectra()</code> function takes its name from a similar function in the <code>Q-Spec</code> software from Cox Analytical Systems, Sweden. This shows a heat map of the spectra, and can be used to identify areas where particular spectral lines appear and disappear along the core. At its simplest, it can be used to produce a plot of a single scan section.</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="visualising-raw-data.html#cb41-1" tabindex="-1"></a><span class="fu">itrax_restspectra</span>(<span class="at">foldername =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1/XRF data.zip&quot;</span>,</span>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="visualising-raw-data.html#cb41-1" tabindex="-1"></a><span class="fu">itrax_restspectra</span>(<span class="at">foldername =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1/XRF Data.zip&quot;</span>,</span>
 <span id="cb41-2"><a href="visualising-raw-data.html#cb41-2" tabindex="-1"></a>                  <span class="at">parameters =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1/Results_ settings.dfl&quot;</span></span>
 <span id="cb41-3"><a href="visualising-raw-data.html#cb41-3" tabindex="-1"></a>                  ) <span class="sc">%&gt;%</span> </span>
 <span id="cb41-4"><a href="visualising-raw-data.html#cb41-4" tabindex="-1"></a>  <span class="fu">invisible</span>()</span></code></pre></div>
@@ -287,9 +287,9 @@ div.csl-indent {
 <span id="cb42-13"><a href="visualising-raw-data.html#cb42-13" tabindex="-1"></a>            <span class="fu">mutate</span>(<span class="at">filename =</span> filename <span class="sc">%&gt;%</span></span>
 <span id="cb42-14"><a href="visualising-raw-data.html#cb42-14" tabindex="-1"></a>                     <span class="fu">str_split</span>(<span class="at">pattern =</span> <span class="st">&quot;</span><span class="sc">\\\\</span><span class="st">&quot;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb42-15"><a href="visualising-raw-data.html#cb42-15" tabindex="-1"></a>                     <span class="fu">sapply</span>(., <span class="st">`</span><span class="at">[</span><span class="st">`</span>, <span class="dv">7</span>)), </span>
-<span id="cb42-16"><a href="visualising-raw-data.html#cb42-16" tabindex="-1"></a>          <span class="fu">bind_rows</span>(<span class="fu">read_spectra</span>(<span class="at">foldername =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1/XRF data.zip&quot;</span>, <span class="at">labeltext =</span> <span class="st">&quot;S1&quot;</span>), </span>
-<span id="cb42-17"><a href="visualising-raw-data.html#cb42-17" tabindex="-1"></a>                    <span class="fu">read_spectra</span>(<span class="at">foldername =</span> <span class="st">&quot;CD166_19_S2/CD166_19_S2/XRF data.zip&quot;</span>, <span class="at">labeltext =</span> <span class="st">&quot;S2&quot;</span>),</span>
-<span id="cb42-18"><a href="visualising-raw-data.html#cb42-18" tabindex="-1"></a>                    <span class="fu">read_spectra</span>(<span class="at">foldername =</span> <span class="st">&quot;CD166_19_S3/CD166_19_S3/XRF data.zip&quot;</span>, <span class="at">labeltext =</span> <span class="st">&quot;S3&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb42-16"><a href="visualising-raw-data.html#cb42-16" tabindex="-1"></a>          <span class="fu">bind_rows</span>(<span class="fu">read_spectra</span>(<span class="at">foldername =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1/XRF Data.zip&quot;</span>, <span class="at">labeltext =</span> <span class="st">&quot;S1&quot;</span>), </span>
+<span id="cb42-17"><a href="visualising-raw-data.html#cb42-17" tabindex="-1"></a>                    <span class="fu">read_spectra</span>(<span class="at">foldername =</span> <span class="st">&quot;CD166_19_S2/CD166_19_S2/XRF Data.zip&quot;</span>, <span class="at">labeltext =</span> <span class="st">&quot;S2&quot;</span>),</span>
+<span id="cb42-18"><a href="visualising-raw-data.html#cb42-18" tabindex="-1"></a>                    <span class="fu">read_spectra</span>(<span class="at">foldername =</span> <span class="st">&quot;CD166_19_S3/CD166_19_S3/XRF Data.zip&quot;</span>, <span class="at">labeltext =</span> <span class="st">&quot;S3&quot;</span>)) <span class="sc">%&gt;%</span></span>
 <span id="cb42-19"><a href="visualising-raw-data.html#cb42-19" tabindex="-1"></a>            <span class="fu">mutate</span>(<span class="at">label =</span> <span class="fu">as.factor</span>(label)), </span>
 <span id="cb42-20"><a href="visualising-raw-data.html#cb42-20" tabindex="-1"></a>          <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;filename&quot;</span>, <span class="st">&quot;label&quot;</span>)) <span class="sc">%&gt;%</span></span>
 <span id="cb42-21"><a href="visualising-raw-data.html#cb42-21" tabindex="-1"></a>  </span>
