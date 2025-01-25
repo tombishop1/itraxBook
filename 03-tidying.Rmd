@@ -341,7 +341,7 @@ reverse_radio <- function(image = itrax_radiograph()){
 A useful tool for investigating areas of high errors or other problems in the scan data is to visualise the raw spectral data. To inspect or read individual spectra, you can plot them from the object returned from `itrax_restspectra()`. 
 
 ```{r warning=FALSE}
-itrax_spectra(filename = unz(description = "CD166_19_S1/CD166_19_S1/XRF data.zip",
+itrax_spectra(filename = unz(description = "CD166_19_S1/CD166_19_S1/XRF Data.zip",
                              filename = "XRF data/L000642.spe"),
               parameters = "CD166_19_S1/CD166_19_S1/Results_ settings.dfl") %>% 
   invisible()
@@ -350,7 +350,7 @@ itrax_spectra(filename = unz(description = "CD166_19_S1/CD166_19_S1/XRF data.zip
 This rarely offers much insight, because we are interested in comparing multiple spectra. The `itrax_restspectra()` function takes its name from a similar function in the `Q-Spec` software from Cox Analytical Systems, Sweden. This shows a heat map of the spectra, and can be used to identify areas where particular spectral lines appear and disappear along the core. At its simplest, it can be used to produce a plot of a single scan section. 
 
 ```{r restspectra, message=FALSE, warning=FALSE}
-itrax_restspectra(foldername = "CD166_19_S1/CD166_19_S1/XRF data.zip",
+itrax_restspectra(foldername = "CD166_19_S1/CD166_19_S1/XRF Data.zip",
                   parameters = "CD166_19_S1/CD166_19_S1/Results_ settings.dfl"
                   ) %>% 
   invisible()
@@ -374,9 +374,9 @@ left_join(CD166_19_xrf %>%
             mutate(filename = filename %>%
                      str_split(pattern = "\\\\") %>%
                      sapply(., `[`, 7)), 
-          bind_rows(read_spectra(foldername = "CD166_19_S1/CD166_19_S1/XRF data.zip", labeltext = "S1"), 
-                    read_spectra(foldername = "CD166_19_S2/CD166_19_S2/XRF data.zip", labeltext = "S2"),
-                    read_spectra(foldername = "CD166_19_S3/CD166_19_S3/XRF data.zip", labeltext = "S3")) %>%
+          bind_rows(read_spectra(foldername = "CD166_19_S1/CD166_19_S1/XRF Data.zip", labeltext = "S1"), 
+                    read_spectra(foldername = "CD166_19_S2/CD166_19_S2/XRF Data.zip", labeltext = "S2"),
+                    read_spectra(foldername = "CD166_19_S3/CD166_19_S3/XRF Data.zip", labeltext = "S3")) %>%
             mutate(label = as.factor(label)), 
           by = c("filename", "label")) %>%
   

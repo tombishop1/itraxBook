@@ -80,56 +80,41 @@ CD166_19_xrf %>%
 
 ## Preparing Data
 
-In order to perform empirical calibration it is necessary to have some quantitative data that relates directly to the Itrax XRF data. The quantitative data is unlikely to be at the same resolution as the Itrax XRF data. For example, it is typical to scan cores at between 0.2 and 1 mm, but typical to sub-sample for WD-XRF or ICP at between 5 - 10 mm. In addition, where Itrax scans are contiguous, sub-samples may not be, for example a 10 mm sub-sample might be taken every 80 mm. In this example we have sub-sampled and analysed the 60 samples defined in the previous section. Here they have been freeze-dried, digested in aqua regia using microwave digestion (@Roje2010), filtered and analysed using ICP-OES.
+In order to perform empirical calibration it is necessary to have some quantitative data that relates directly to the Itrax XRF data. The quantitative data is unlikely to be at the same resolution as the Itrax XRF data. For example, it is typical to scan cores at between 0.2 and 1 mm, but typical to sub-sample for conventional XRF or ICP at between 5 - 10 mm. In addition, where Itrax scans are contiguous, sub-samples may not be, for example a 10 mm sub-sample might be taken every 80 mm. In this example we have sub-sampled and analysed the 60 samples defined in the previous section. Here they have been freeze-dried, pressed into loose powder pellets and analysed with a Niton XL3t GOLDD+ ED-XRF using the "TestAllGeo" mode. 
 
 ```{r icp_data_import}
-icp <- read_csv("calibration_samples/calibration_data.csv") %>%
-  #select(-`Sample Id`) %>%
-  mutate(water_content = (((wet-tare)-(dry-tare))/(wet-tare))*100) %>%
-  select(-c("wet", "tare", "dry")) %>%
-  # remove negative values
-  mutate(across(any_of(elementsList), function(x){replace(x, which(x<0), NA)})) %>%
-  # adjust for dilution
-  mutate(across(any_of(elementsList), function(x){(x*`Dilution`)/`weight`})) %>%
-  # adjust for water content
-  mutate(across(any_of(elementsList), function(x){x*(1-water_content/100)})) %>%
-  # remove Inf or NaN values
-  mutate(across(any_of(elementsList), function(x){replace(x, is.infinite(x) | is.nan(x), NA)})) %>%
-  select(-c("weight", "Dilution")) %>%
-  filter(!top %in% c("BLANK", "MESS-4")) %>%
-  mutate(top = as.numeric(top), bot = as.numeric(bot))
-
-glimpse(icp)
+load("calibration_samples/CD166_hhxrf.RData")
+glimpse(hhxrf)
 ```
 
-The function `itraxR::itrax_reduce()` can be used to reduce the Itrax data to match the resolution of some other data. The example below uses the same positions of the ICP-OES analyses of the data to summarise it. And here is the use of `itrax_reduce()` to reduce our Itrax XRF data (`CD166_19_xrf`), using the shape of the "icp" data (in `icp`). Note the requirement to remove text based columns (in this case `file` and `label`) from the data before this step is performed - if the reducing function cannot handle a data type (e.g. passing characters to `mean()`), errors will occur. If we wanted to add the standard deviation alongside the mean for each chunk, this can be done my modifying the default reducing function (`mean()`) to `sd()`, for example:
+The function `itraxR::itrax_reduce()` can be used to reduce the Itrax data to match the resolution of some other data. The example below uses the same positions of the conventional XRF analyses of the data to summarise it. And here is the use of `itrax_reduce()` to reduce our Itrax XRF data (`CD166_19_xrf`), using the shape of the conventional XRF data (in `xrf`). Note the requirement to remove text based columns (in this case `file` and `label`) from the data before this step is performed - if the reducing function cannot handle a data type (e.g. passing characters to `mean()`), errors will occur. If we wanted to add the standard deviation alongside the mean for each chunk, this can be done my modifying the default reducing function (`mean()`) to `sd()`, for example:
 
 ```{r message=FALSE, warning=FALSE}
 xrf <- CD166_19_xrf %>%
   filter(qc == TRUE) %>%
   select(-c(label, filename, uid)) %>%
-  itrax_reduce(names = icp$SampleID,
-               breaks_lower = icp$top,
-               breaks_upper = icp$bot) %>%
+  itrax_reduce(names = hhxrf$SampleID,
+               breaks_lower = hhxrf$top,
+               breaks_upper = hhxrf$bot) %>%
   rename(SampleID = resample_names) %>%
-  mutate(top = icp$top, 
-         bot = icp$bot)
+  mutate(top = hhxrf$top, 
+         bot = hhxrf$bot)
 
 glimpse(xrf)
 ```
 
-It is worth reading `?itraxR::itrax_reduce()` as the behaviour can and should be modified depending on your exact use case. For example, in th situation above where none of the samples are contiguous it might be wise to modify the parameters of `itraxR::itrax_reduce()` to include `edges = c(">=", "<=")` so that the "edges" of the sub-samples are captured. This might not be the case for contiguous samples in order to avoid "double-counting".
+It is worth reading `?itraxR::itrax_reduce()` as the behavior can and should be modified depending on your exact use case. For example, in th situation above where none of the samples are contiguous it might be wise to modify the parameters of `itraxR::itrax_reduce()` to include `edges = c(">=", "<=")` so that the "edges" of the sub-samples are captured. This might not be the case for contiguous samples in order to avoid "double-counting".
 
 ## Linear Methods
 
-We'll use our `xrf` and `icp` datasets to create linear models of all the variables of interest. They must be combined using `pivot_longer()`. The plot indicates that some, but not all variables are suitable for calibration.
+We'll use our `xrf` and `icp` data sets to create linear models of all the variables of interest. They must be combined using `pivot_longer()`. The plot indicates that some, but not all variables are suitable for calibration.
 
 ```{r linear_calib_graph}
 full_join(
-  icp %>%
+  hhxrf %>%
     select(any_of(c(elementsList, "SampleID"))) %>%
     pivot_longer(any_of(elementsList),
-                 values_to = "icp",
+                 values_to = "hhxrf",
                  names_to = "element"),
   
   xrf %>% 
@@ -144,13 +129,13 @@ full_join(
   filter(element %in% myElements) %>%
   drop_na() %>%
   
-  ggplot(aes(x = icp, y = xrf)) +
+  ggplot(aes(x = hhxrf, y = xrf)) +
   geom_point() +
   ggpmisc::stat_poly_line() +
   ggpmisc::stat_poly_eq() +
   facet_wrap(vars(element), 
              scales = "free") +
-  xlab("ICP-OES [ppm]") + 
+  xlab("Conventional XRF [ppm]") + 
   ylab("Itrax ED-XRF [peak area]")
 ```
 
@@ -158,10 +143,10 @@ To apply these calibration models to our existing data, we first need to save th
 
 ```{r linear_calibration_model_save}
 calibration <- full_join(
-  icp %>%
+  hhxrf %>%
     select(any_of(c(elementsList, "SampleID"))) %>%
     pivot_longer(any_of(elementsList),
-                 values_to = "icp",
+                 values_to = "hhxrf",
                  names_to = "element"),
   
   xrf %>% 
@@ -178,7 +163,7 @@ calibration <- full_join(
 calibration <- calibration %>%
   group_by(element) %>%
   group_split() %>%
-  lapply(function(x){lm(data = x, icp~xrf)}) %>%
+  lapply(function(x){lm(data = x, hhxrf~xrf)}) %>%
   `names<-`(calibration %>%
               group_by(element) %>%
               group_keys() %>%
