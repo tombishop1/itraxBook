@@ -80,7 +80,7 @@ CD166_19_xrf %>%
 
 ## Preparing Data
 
-In order to perform empirical calibration it is necessary to have some quantitative data that relates directly to the Itrax XRF data. The quantitative data is unlikely to be at the same resolution as the Itrax XRF data. For example, it is typical to scan cores at between 0.2 and 1 mm, but typical to sub-sample for conventional XRF or ICP at between 5 - 10 mm. In addition, where Itrax scans are contiguous, sub-samples may not be, for example a 10 mm sub-sample might be taken every 80 mm. In this example we have sub-sampled and analysed the 60 samples defined in the previous section. Here they have been freeze-dried, pressed into loose powder pellets and analysed with a Niton XL3t GOLDD+ ED-XRF using the "TestAllGeo" mode. 
+In order to perform empirical calibration it is necessary to have some quantitative data that relates directly to the Itrax XRF data. The quantitative data is unlikely to be at the same resolution as the Itrax XRF data. For example, it is typical to scan cores at between 0.2 and 1 mm, but typical to sub-sample for conventional XRF or ICP at between 5 - 10 mm. In addition, where Itrax scans are contiguous, sub-samples may not be, for example a 10 mm sub-sample might be taken every 80 mm. In this example we have sub-sampled and analysed the 60 samples defined in the previous section. Here they have been freeze-dried, lightly milled using agate stoneware, pressed into loose powder pellets and analysed with a Niton XL3t GOLDD+ ED-XRF using the "TestAllGeo" mode. 
 
 ```{r icp_data_import}
 load("calibration_samples/CD166_hhxrf.RData")
@@ -107,7 +107,7 @@ It is worth reading `?itraxR::itrax_reduce()` as the behavior can and should be 
 
 ## Linear Methods
 
-We'll use our `xrf` and `icp` data sets to create linear models of all the variables of interest. They must be combined using `pivot_longer()`. The plot indicates that some, but not all variables are suitable for calibration.
+We'll use our `xrf` and `hhxrf` data sets to create linear models of all the variables of interest. They must be combined using `pivot_longer()`. The plot indicates that some, but not all variables are suitable for calibration.
 
 ```{r linear_calib_graph}
 full_join(
@@ -139,7 +139,7 @@ full_join(
   ylab("Itrax ED-XRF [peak area]")
 ```
 
-To apply these calibration models to our existing data, we first need to save the models created using `lm()`. We don't force the intercept through zero (e.g. `icp ~ 0 + xrf`) because of background (high baseline) conditions that may be present. 
+To apply these calibration models to our existing data, we first need to save the models created using `lm()`. We don't force the intercept through zero (e.g. `hhxrf ~ 0 + xrf`) because of background (high baseline) conditions that may be present. 
 
 ```{r linear_calibration_model_save}
 calibration <- full_join(
