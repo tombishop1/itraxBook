@@ -1,5 +1,7 @@
 # Exporting Data
 
+## Exporting Peak Area Data
+
 Data is easy to export from `R`. Tables can be exported by piping to `readr::write_csv()`. For diagrams created in `ggplot2`, pipe to `ggsave()`. Sometimes it is necessary to reduce the resolution of Itrax XRF data, usually to facilitate direct comparison with some other lower resolution data. For example, if calibrating using ICP-MS sub-samples taken at 10 mm intervals, but the Itrax XRF scan is at 0.2 mm, it will be necessary to average 50 Itrax measurements for each ICP-MS measurement. This is facilitated using the `itrax_reduce()` function. The example below demonstrates calculating the averages for contiguous 20 mm chunks of the XRF data. 
 
 ```{r data_reduction, warning=FALSE}
@@ -7,4 +9,71 @@ Data is easy to export from `R`. Tables can be exported by piping to `readr::wri
 itrax_reduce(CD166_19_xrf %>% drop_na(), by = 20) %>%
   select(-label) %>%
   head()
+```
+
+## Creating Arbitrary `sumspectra.spe` Files
+
+The `sumspectra.spe` file supplied with the data from the `Q-Spec` software is simply all of the individual spectra files (`*.spe`) summed together, with a valid header. It is useful when tuning models in the `Q-Spec` software, but the limitation is that it will always include all the measurements, regardless of whether they contain good data or not. It is useful to recreate this file after quality control so the model can be optimised using only good data. In addition, some quantitative calibration (for example, using the `CloudCal` package) requires spectral data, not peak areas. In this case, it is useful to "average" all of the individual core-scanner measurements that comprise a single quantitative resolution (a bit like `itrax_reduce()`, but for `*.spe` files). 
+
+```{r sumspectra_housekeeping_1, include=FALSE}
+dir.create("sumspectra")
+```
+
+This first snippet takes a single core section (`S1`) and creates a `sumspectra.spe` file using only the measurements that pass our QC tests. 
+
+```{r itrax_sumspectra, message=FALSE, warning=FALSE}
+itrax_sumspectra(sumspectra = "CD166_19_S1/CD166_19_S1/sumspectra.spe",
+                 input_zip_folder = "CD166_19_S1/CD166_19_S1/XRF Data.zip",
+                 input_files = CD166_19_xrf %>%
+                   select(filename, depth, qc, label) %>%
+                   filter(qc == TRUE & label == "S1") %>%
+                   mutate(filename = str_split_i(filename, 
+                                                 pattern = "XRF data\\\\", 
+                                                 i = 2)
+                   ) %>% 
+                   pull(filename),
+                 output_file = "sumspectra/sumspectra_qc.spe",
+                 method = sum)
+```
+
+This second snippet creates a `sumspectra.spe` file for the depth range of each of our sixty calibration samples. 
+
+```{r itrax_sumspectra_2, message=FALSE, warning=FALSE}
+sumspectra <- left_join(hhxrf %>%
+                          select(top, bot, SampleID) %>%
+                          mutate(depth = top),
+                        
+                        CD166_19_xrf %>%
+                          select(depth, label)
+                        ) %>%
+  select(-depth) %>%
+  mutate(label = recode(label, !!!tibble(S1 = "CD166_19_S1/CD166_19_S1/",
+                                         S2 = "CD166_19_S2/CD166_19_S2/",
+                                         S3 = "CD166_19_S3/CD166_19_S3/")
+                        )
+  ) %>%
+  rename(path = label)
+
+lapply(c(1:nrow(sumspectra)), 
+       function(i){
+         itrax_sumspectra(sumspectra = paste0(sumspectra[i, "path"], "sumspectra.spe"),
+                          input_zip_folder = paste0(sumspectra[i, "path"], "XRF Data.zip"),
+                          input_files = CD166_19_xrf %>%
+                            select(filename, depth, qc) %>%
+                            filter(depth >= sumspectra[i, "top"] & depth <= sumspectra[i, "bot"]) %>%
+                            filter(qc == TRUE) %>%
+                            mutate(filename = str_split_i(filename, 
+                                                          pattern = "XRF data\\\\", 
+                                                          i = 2)
+                            ) %>% 
+                            pull(filename),
+                          output_file = paste0("sumspectra/sumspectra_", sumspectra[i, "SampleID"], ".spe"),
+                          method = mean)
+       })
+
+rm(sumspectra)
+```
+
+```{r sumspectra_housekeeping_2, include=FALSE}
+unlink("sumspectra", recursive = TRUE)
 ```

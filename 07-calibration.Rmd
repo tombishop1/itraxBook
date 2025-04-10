@@ -220,3 +220,4 @@ predict(calibration$Ca,
 
 ## Log-Ratio Methods
 
+We often find that log-ratio methods work better. 
