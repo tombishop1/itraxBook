@@ -23,7 +23,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2025-01-25" />
+<meta name="date" content="2025-04-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="log-ratio-methods.html"/>
-<link rel="next" href="references.html"/>
+<link rel="next" href="exporting-peak-area-data.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -235,7 +235,11 @@ div.csl-indent {
 <li class="chapter" data-level="7.4" data-path="linear-methods.html"><a href="linear-methods.html"><i class="fa fa-check"></i><b>7.4</b> Linear Methods</a></li>
 <li class="chapter" data-level="7.5" data-path="log-ratio-methods.html"><a href="log-ratio-methods.html"><i class="fa fa-check"></i><b>7.5</b> Log-Ratio Methods</a></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="exporting-data.html"><a href="exporting-data.html"><i class="fa fa-check"></i><b>8</b> Exporting Data</a></li>
+<li class="chapter" data-level="8" data-path="exporting-data.html"><a href="exporting-data.html"><i class="fa fa-check"></i><b>8</b> Exporting Data</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="exporting-peak-area-data.html"><a href="exporting-peak-area-data.html"><i class="fa fa-check"></i><b>8.1</b> Exporting Peak Area Data</a></li>
+<li class="chapter" data-level="8.2" data-path="creating-arbitrary-sumspectra.spe-files.html"><a href="creating-arbitrary-sumspectra.spe-files.html"><i class="fa fa-check"></i><b>8.2</b> Creating Arbitrary <code>sumspectra.spe</code> Files</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -259,28 +263,6 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="exporting-data" class="section level1 hasAnchor" number="8">
 <h1><span class="header-section-number">Chapter 8</span> Exporting Data<a href="exporting-data.html#exporting-data" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>Data is easy to export from <code>R</code>. Tables can be exported by piping to <code>readr::write_csv()</code>. For diagrams created in <code>ggplot2</code>, pipe to <code>ggsave()</code>. Sometimes it is necessary to reduce the resolution of Itrax XRF data, usually to facilitate direct comparison with some other lower resolution data. For example, if calibrating using ICP-MS sub-samples taken at 10 mm intervals, but the Itrax XRF scan is at 0.2 mm, it will be necessary to average 50 Itrax measurements for each ICP-MS measurement. This is facilitated using the <code>itrax_reduce()</code> function. The example below demonstrates calculating the averages for contiguous 20 mm chunks of the XRF data.</p>
-<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="exporting-data.html#cb95-1" tabindex="-1"></a><span class="co"># get the data as 20 mm intervals</span></span>
-<span id="cb95-2"><a href="exporting-data.html#cb95-2" tabindex="-1"></a><span class="fu">itrax_reduce</span>(CD166_19_xrf <span class="sc">%&gt;%</span> <span class="fu">drop_na</span>(), <span class="at">by =</span> <span class="dv">20</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb95-3"><a href="exporting-data.html#cb95-3" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>label) <span class="sc">%&gt;%</span></span>
-<span id="cb95-4"><a href="exporting-data.html#cb95-4" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div>
-<pre><code>## # A tibble: 6 × 58
-##   resample_names depth   MSE    cps validity    Al    Si     P     S    Cl    Ar
-##            &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1              1   9.5  1.50 39598.        1  63.4  337.     0  23.6 1382.  575 
-## 2              2  29.5  1.65 44454.        1  64.2  272.     0  22.7 1316   627.
-## 3              3  49.5  1.67 46676.        1  71.6  288.     0  12.9 1298   669.
-## 4              4  69.5  1.70 47447.        1  70.2  317.     0  23.6 1486.  677.
-## 5              5  89.5  1.70 47708.        1  73.2  388.     0  23.2 1512.  691.
-## 6              6 110.   1.67 47713.        1  83.6  489.     0  23.2 1510.  655 
-## # ℹ 47 more variables: K &lt;dbl&gt;, Ca &lt;dbl&gt;, Sc &lt;dbl&gt;, Ti &lt;dbl&gt;, V &lt;dbl&gt;,
-## #   Cr &lt;dbl&gt;, Mn &lt;dbl&gt;, Fe &lt;dbl&gt;, Ni &lt;dbl&gt;, Cu &lt;dbl&gt;, Zn &lt;dbl&gt;, Ga &lt;dbl&gt;,
-## #   Ge &lt;dbl&gt;, Br &lt;dbl&gt;, Rb &lt;dbl&gt;, Sr &lt;dbl&gt;, Y &lt;dbl&gt;, Zr &lt;dbl&gt;, Pd &lt;dbl&gt;,
-## #   Cd &lt;dbl&gt;, I &lt;dbl&gt;, Cs &lt;dbl&gt;, Ba &lt;dbl&gt;, Nd &lt;dbl&gt;, Sm &lt;dbl&gt;, Yb &lt;dbl&gt;,
-## #   Ta &lt;dbl&gt;, W &lt;dbl&gt;, Pb &lt;dbl&gt;, Bi &lt;dbl&gt;, `Mo inc` &lt;dbl&gt;, `Mo coh` &lt;dbl&gt;,
-## #   filename &lt;dbl&gt;, position &lt;dbl&gt;, `sample surface` &lt;dbl&gt;, `E-gain` &lt;dbl&gt;,
-## #   `E-offset` &lt;dbl&gt;, `F-slope` &lt;dbl&gt;, `F-offset` &lt;dbl&gt;, `Fe a*2` &lt;dbl&gt;, …</code></pre>
-
 </div>
             </section>
 
@@ -288,7 +270,7 @@ div.csl-indent {
         </div>
       </div>
 <a href="log-ratio-methods.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="exporting-peak-area-data.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -302,42 +284,42 @@ div.csl-indent {
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
-"sharing": {
-"github": false,
-"facebook": true,
-"twitter": true,
-"linkedin": false,
-"weibo": false,
-"instapaper": false,
-"vk": false,
-"whatsapp": false,
-"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
-},
-"fontsettings": {
-"theme": "white",
-"family": "sans",
-"size": 2
-},
-"edit": {
-"link": null,
-"text": null
-},
-"history": {
-"link": null,
-"text": null
-},
-"view": {
-"link": null,
-"text": null
-},
-"download": ["itraxBook.pdf", "itraxBook.epub"],
-"search": {
-"engine": "fuse",
-"options": null
-},
-"toc": {
-"collapse": "subsection"
-}
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": null,
+    "text": null
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": ["itraxBook.pdf", "itraxBook.epub"],
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "subsection"
+  }
 });
 });
 </script>
