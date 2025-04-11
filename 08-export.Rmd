@@ -11,7 +11,7 @@ itrax_reduce(CD166_19_xrf %>% drop_na(), by = 20) %>%
   head()
 ```
 
-## Creating Arbitrary `sumspectra.spe` Files
+## Creating `sumspectra.spe` Files
 
 The `sumspectra.spe` file supplied with the data from the `Q-Spec` software is simply all of the individual spectra files (`*.spe`) summed together, with a valid header. It is useful when tuning models in the `Q-Spec` software, but the limitation is that it will always include all the measurements, regardless of whether they contain good data or not. It is useful to recreate this file after quality control so the model can be optimised using only good data. In addition, some quantitative calibration (for example, using the `CloudCal` package) requires spectral data, not peak areas. In this case, it is useful to "average" all of the individual core-scanner measurements that comprise a single quantitative resolution (a bit like `itrax_reduce()`, but for `*.spe` files). 
 
@@ -38,7 +38,43 @@ itrax_sumspectra(sumspectra = "CD166_19_S1/CD166_19_S1/sumspectra.spe",
 
 This second snippet creates a `sumspectra.spe` file for the depth range of each of our sixty calibration samples. 
 
-```{r itrax_sumspectra_2, message=FALSE, warning=FALSE}
+```{r itrax_sumspectra_2, message=FALSE, warning=FALSE, include=FALSE}
+sumspectra <- left_join(hhxrf %>%
+                          select(top, bot, SampleID) %>%
+                          mutate(depth = top),
+                        
+                        CD166_19_xrf %>%
+                          select(depth, label)
+                        ) %>%
+  select(-depth) %>%
+  mutate(label = recode(label, !!!tibble(S1 = "CD166_19_S1/CD166_19_S1/",
+                                         S2 = "CD166_19_S2/CD166_19_S2/",
+                                         S3 = "CD166_19_S3/CD166_19_S3/")
+                        )
+  ) %>%
+  rename(path = label)
+
+lapply(c(1:nrow(sumspectra)), 
+       function(i){
+         itrax_sumspectra(sumspectra = paste0(sumspectra[i, "path"], "sumspectra.spe"),
+                          input_zip_folder = paste0(sumspectra[i, "path"], "XRF Data.zip"),
+                          input_files = CD166_19_xrf %>%
+                            select(filename, depth, qc) %>%
+                            filter(depth >= sumspectra[i, "top"] & depth <= sumspectra[i, "bot"]) %>%
+                            filter(qc == TRUE) %>%
+                            mutate(filename = str_split_i(filename, 
+                                                          pattern = "XRF data\\\\", 
+                                                          i = 2)
+                            ) %>% 
+                            pull(filename),
+                          output_file = paste0("sumspectra/sumspectra_", sumspectra[i, "SampleID"], ".spe"),
+                          method = mean)
+       })
+
+rm(sumspectra)
+```
+
+```{itrax_sumspectra_3}
 sumspectra <- left_join(hhxrf %>%
                           select(top, bot, SampleID) %>%
                           mutate(depth = top),
