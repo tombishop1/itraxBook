@@ -53,4 +53,4 @@ linear-methods
 log-ratio-methods
 exporting-data
 exporting-peak-area-data
-creating-arbitrary-sumspectra.spe-files
+creating-sumspectra.spe-files

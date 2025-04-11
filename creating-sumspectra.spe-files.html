@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 3 Tidying Data | Using Itrax Data in R</title>
+  <title>8.2 Creating sumspectra.spe Files | Using Itrax Data in R</title>
   <meta name="description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
   <meta name="generator" content="bookdown 0.42 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 3 Tidying Data | Using Itrax Data in R" />
+  <meta property="og:title" content="8.2 Creating sumspectra.spe Files | Using Itrax Data in R" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 3 Tidying Data | Using Itrax Data in R" />
+  <meta name="twitter:title" content="8.2 Creating sumspectra.spe Files | Using Itrax Data in R" />
   
   <meta name="twitter:description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="importing-everything.html"/>
-<link rel="next" href="low-count-rates.html"/>
+<link rel="prev" href="exporting-peak-area-data.html"/>
+<link rel="next" href="references.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -261,24 +261,66 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="tidying-data" class="section level1 hasAnchor" number="3">
-<h1><span class="header-section-number">Chapter 3</span> Tidying Data<a href="tidying-data.html#tidying-data" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<p>In the functionality provided by <code>itraxR</code>, the need for data cleaning is much reduced. However, you may still encounter poor quality data that needs removing from subsequent analysis. This can be broadly defined as:</p>
-<ul>
-<li>Data at the start and end of the the core, where a volume of core material is “missing”.</li>
-<li>Measurements where the optical configuration is out of position (marked as <code>validity == 0</code>), often due to holes or stones in the core.</li>
-<li>Areas of the core with low total counts.</li>
-<li>Individual measurements that are statistical outliers.</li>
-</ul>
-<p>The easiest way to do this is using a <code>tidyverse</code> style sequence of pipes that set the observations of faulty data as <code>NA</code>.</p>
+<div id="creating-sumspectra.spe-files" class="section level2 hasAnchor" number="8.2">
+<h2><span class="header-section-number">8.2</span> Creating <code>sumspectra.spe</code> Files<a href="creating-sumspectra.spe-files.html#creating-sumspectra.spe-files" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The <code>sumspectra.spe</code> file supplied with the data from the <code>Q-Spec</code> software is simply all of the individual spectra files (<code>*.spe</code>) summed together, with a valid header. It is useful when tuning models in the <code>Q-Spec</code> software, but the limitation is that it will always include all the measurements, regardless of whether they contain good data or not. It is useful to recreate this file after quality control so the model can be optimised using only good data. In addition, some quantitative calibration (for example, using the <code>CloudCal</code> package) requires spectral data, not peak areas. In this case, it is useful to “average” all of the individual core-scanner measurements that comprise a single quantitative resolution (a bit like <code>itrax_reduce()</code>, but for <code>*.spe</code> files).</p>
+<p>This first snippet takes a single core section (<code>S1</code>) and creates a <code>sumspectra.spe</code> file using only the measurements that pass our QC tests.</p>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="creating-sumspectra.spe-files.html#cb97-1" tabindex="-1"></a><span class="fu">itrax_sumspectra</span>(<span class="at">sumspectra =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1/sumspectra.spe&quot;</span>,</span>
+<span id="cb97-2"><a href="creating-sumspectra.spe-files.html#cb97-2" tabindex="-1"></a>                 <span class="at">input_zip_folder =</span> <span class="st">&quot;CD166_19_S1/CD166_19_S1/XRF Data.zip&quot;</span>,</span>
+<span id="cb97-3"><a href="creating-sumspectra.spe-files.html#cb97-3" tabindex="-1"></a>                 <span class="at">input_files =</span> CD166_19_xrf <span class="sc">%&gt;%</span></span>
+<span id="cb97-4"><a href="creating-sumspectra.spe-files.html#cb97-4" tabindex="-1"></a>                   <span class="fu">select</span>(filename, depth, qc, label) <span class="sc">%&gt;%</span></span>
+<span id="cb97-5"><a href="creating-sumspectra.spe-files.html#cb97-5" tabindex="-1"></a>                   <span class="fu">filter</span>(qc <span class="sc">==</span> <span class="cn">TRUE</span> <span class="sc">&amp;</span> label <span class="sc">==</span> <span class="st">&quot;S1&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb97-6"><a href="creating-sumspectra.spe-files.html#cb97-6" tabindex="-1"></a>                   <span class="fu">mutate</span>(<span class="at">filename =</span> <span class="fu">str_split_i</span>(filename, </span>
+<span id="cb97-7"><a href="creating-sumspectra.spe-files.html#cb97-7" tabindex="-1"></a>                                                 <span class="at">pattern =</span> <span class="st">&quot;XRF data</span><span class="sc">\\\\</span><span class="st">&quot;</span>, </span>
+<span id="cb97-8"><a href="creating-sumspectra.spe-files.html#cb97-8" tabindex="-1"></a>                                                 <span class="at">i =</span> <span class="dv">2</span>)</span>
+<span id="cb97-9"><a href="creating-sumspectra.spe-files.html#cb97-9" tabindex="-1"></a>                   ) <span class="sc">%&gt;%</span> </span>
+<span id="cb97-10"><a href="creating-sumspectra.spe-files.html#cb97-10" tabindex="-1"></a>                   <span class="fu">pull</span>(filename),</span>
+<span id="cb97-11"><a href="creating-sumspectra.spe-files.html#cb97-11" tabindex="-1"></a>                 <span class="at">output_file =</span> <span class="st">&quot;sumspectra/sumspectra_qc.spe&quot;</span>,</span>
+<span id="cb97-12"><a href="creating-sumspectra.spe-files.html#cb97-12" tabindex="-1"></a>                 <span class="at">method =</span> sum)</span></code></pre></div>
+<p>This second snippet creates a <code>sumspectra.spe</code> file for the depth range of each of our sixty calibration samples.</p>
+<pre class="itrax_sumspectra_3"><code>sumspectra &lt;- left_join(hhxrf %&gt;%
+                          select(top, bot, SampleID) %&gt;%
+                          mutate(depth = top),
+                        
+                        CD166_19_xrf %&gt;%
+                          select(depth, label)
+                        ) %&gt;%
+  select(-depth) %&gt;%
+  mutate(label = recode(label, !!!tibble(S1 = &quot;CD166_19_S1/CD166_19_S1/&quot;,
+                                         S2 = &quot;CD166_19_S2/CD166_19_S2/&quot;,
+                                         S3 = &quot;CD166_19_S3/CD166_19_S3/&quot;)
+                        )
+  ) %&gt;%
+  rename(path = label)
+
+lapply(c(1:nrow(sumspectra)), 
+       function(i){
+         itrax_sumspectra(sumspectra = paste0(sumspectra[i, &quot;path&quot;], &quot;sumspectra.spe&quot;),
+                          input_zip_folder = paste0(sumspectra[i, &quot;path&quot;], &quot;XRF Data.zip&quot;),
+                          input_files = CD166_19_xrf %&gt;%
+                            select(filename, depth, qc) %&gt;%
+                            filter(depth &gt;= sumspectra[i, &quot;top&quot;] &amp; depth &lt;= sumspectra[i, &quot;bot&quot;]) %&gt;%
+                            filter(qc == TRUE) %&gt;%
+                            mutate(filename = str_split_i(filename, 
+                                                          pattern = &quot;XRF data\\\\&quot;, 
+                                                          i = 2)
+                            ) %&gt;% 
+                            pull(filename),
+                          output_file = paste0(&quot;sumspectra/sumspectra_&quot;, sumspectra[i, &quot;SampleID&quot;], &quot;.spe&quot;),
+                          method = mean)
+       })
+
+rm(sumspectra)</code></pre>
+
 </div>
+<!-- </div> -->
             </section>
 
           </div>
         </div>
       </div>
-<a href="importing-everything.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="low-count-rates.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="exporting-peak-area-data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
