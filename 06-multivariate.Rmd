@@ -83,14 +83,13 @@ The `ordr` package can be used to retain metadata (depths, labels, groups etc.) 
 ```{r}
 CD166_19_xrf_acomp_meta %>%
     ordr::ordinate(., cols = any_of(myElements),
-                   model = ~ princomp(clr(.)),
+                   model = ~ prcomp(clr(.)),
                    augment = any_of(c("depth", "label"))
                    ) %>%
   
   ordr::ggbiplot(., sec.axes = "cols", scale.factor = 8) +
   ordr::geom_rows_point(aes(colour = depth, shape = label), alpha = 0.5) +
-  ordr::geom_cols_vector() +
-  ordr::geom_cols_text_radiate(aes(label = name)) +
+  ordr::geom_cols_vector(aes(label = name)) +
   scale_color_continuous(type = "viridis", trans = "reverse")
 ```
 
@@ -99,7 +98,7 @@ By embedding the depth and label data into the ordination object itself, it make
 ```{r}
 CD166_19_xrf_acomp_meta %>%
   ordr::ordinate(., cols = any_of(myElements),
-                 model = ~ princomp(clr(.)),
+                 model = ~ prcomp(clr(.)),
                  augment = any_of(c("depth", "label"))
   ) %>%
   fortify() %>%
