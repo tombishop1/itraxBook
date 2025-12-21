@@ -18,10 +18,11 @@ pacman::p_load("tidyverse" , "PeriodicTable",
                "compositions", "ggpmisc",
                "tidypaleo", "remotes",
                "ordr", "knitr", 
-               "ggpmisc",
+               "ggpmisc", "itraxR",
                install = FALSE)
 
-remotes::install_github("tombishop1/itraxR")
+#remotes::install_github("tombishop1/itraxR")
+#library(itraxR)
                
 opts_knit$set(root.dir = "CD166_19_(2020)/")
 ```
