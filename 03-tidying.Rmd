@@ -7,7 +7,7 @@ In the functionality provided by `itraxR`, the need for data cleaning is much re
 - Areas of the core with low total counts.
 - Individual measurements that are statistical outliers.
 
-The easiest way to do this is using a `tidyverse` style sequence of pipes that set the observations of faulty data as `NA`. 
+The easiest way to do this is using a `tidyverse` style sequence of pipes that set the observations of faulty data as `NA` or create a new column (e.g. `qc`) that flags poor quality data so it can be excluded from some analyses.
 
 ## Low Count Rates
 
@@ -359,8 +359,9 @@ itrax_restspectra(foldername = "CD166_19_S1/CD166_19_S1/XRF Data.zip",
 By combining all of the sections, and joining the raw spectral data with the processed data from the `Results.txt` (`Q-Spec`) output file, it can be used as a powerful diagnostic tool.
 
 ```{r spectra2, message=FALSE, warning=FALSE}
-read_spectra <- function(foldername, labeltext){itrax_restspectra(foldername = foldername,
-                                                                  plot = FALSE) %>%
+read_spectra <- function(foldername, labeltext){
+  itrax_restspectra(foldername = foldername,   
+                    plot = FALSE) %>%
     mutate(label = labeltext) %>%
     select(label, everything()) %>%
     mutate(filename = str_split(filename, pattern = "/") %>% sapply(., `[`, 2))}
@@ -374,9 +375,12 @@ left_join(CD166_19_xrf %>%
             mutate(filename = filename %>%
                      str_split(pattern = "\\\\") %>%
                      sapply(., `[`, 7)), 
-          bind_rows(read_spectra(foldername = "CD166_19_S1/CD166_19_S1/XRF Data.zip", labeltext = "S1"), 
-                    read_spectra(foldername = "CD166_19_S2/CD166_19_S2/XRF Data.zip", labeltext = "S2"),
-                    read_spectra(foldername = "CD166_19_S3/CD166_19_S3/XRF Data.zip", labeltext = "S3")) %>%
+          bind_rows(read_spectra(foldername = "CD166_19_S1/CD166_19_S1/XRF Data.zip", 
+                                 labeltext = "S1"), 
+                    read_spectra(foldername = "CD166_19_S2/CD166_19_S2/XRF Data.zip", 
+                                 labeltext = "S2"),
+                    read_spectra(foldername = "CD166_19_S3/CD166_19_S3/XRF Data.zip", 
+                                 labeltext = "S3")) %>%
             mutate(label = as.factor(label)), 
           by = c("filename", "label")) %>%
   
@@ -402,6 +406,8 @@ left_join(CD166_19_xrf %>%
   facet_grid(rows = vars(label),
              scales = "free_y",
              space = "free_y")
+```
 
+```{r spectra_housekeeping, include=FALSE}
 rm(settings, read_spectra)
 ```

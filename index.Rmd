@@ -14,11 +14,14 @@ description: This book is a guide to importing, tidying, manipulating and analys
 ```{r setup, include=FALSE, echo=FALSE}
 pacman::p_load("tidyverse" , "PeriodicTable", 
                "egg", "errors", 
-               "forecast"  , "slider",
+               "forecast", "slider",
                "compositions", "ggpmisc",
-               "itraxR", "tidypaleo",
-               "ordr", "knitr",
+               "tidypaleo", "remotes",
+               "ordr", "knitr", 
+               "ggpmisc",
                install = FALSE)
+
+remotes::install_github("tombishop1/itraxR")
                
 opts_knit$set(root.dir = "CD166_19_(2020)/")
 ```
@@ -54,7 +57,7 @@ The data can be downloaded from the Github pages that form the source for this d
 
 ## Utility Data
 
-It is often useful to have a list of symbols used to represent elements for various subsetting functions. This can be extracted from the example data included with the package `periodicTable` as follows. The `vector` called `elementslist` will be referred to elsewhere in this book. 
+It is often useful to have a list of symbols used to represent elements for various subsetting functions. This can be extracted from the example data included with the package `periodicTable` as follows. The `vector` called `elementsList` will be referred to elsewhere in this book. 
 
 ```{r tableofelements}
 data(periodicTable)
