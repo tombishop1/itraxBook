@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>4.3 Combining Images with XRF Data | Using Itrax Data in R</title>
   <meta name="description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
-  <meta name="generator" content="bookdown 0.43 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
 
   <meta property="og:title" content="4.3 Combining Images with XRF Data | Using Itrax Data in R" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2025-05-13" />
+<meta name="date" content="2025-12-21" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -264,14 +264,14 @@ div.csl-indent {
 <div id="combining-images-with-xrf-data" class="section level2 hasAnchor" number="4.3">
 <h2><span class="header-section-number">4.3</span> Combining Images with XRF Data<a href="combining-images-with-xrf-data.html#combining-images-with-xrf-data" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>It is possible to combine different plots. For example, it is often desirable to plot the XRF data alongside the core imagery. By not passing <code>coord_fixed(ratio = 1)</code> to the image plot, its relative width can be controlled via <code>widths =</code>, which makes for a visually pleasing plot. Note also that the y-axis labels have been removed from all but one of the plots to avoid duplication.</p>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="combining-images-with-xrf-data.html#cb57-1" tabindex="-1"></a>egg<span class="sc">::</span><span class="fu">ggarrange</span>(imagePlot <span class="sc">+</span> <span class="fu">theme_paleo</span>(), </span>
-<span id="cb57-2"><a href="combining-images-with-xrf-data.html#cb57-2" tabindex="-1"></a>               xrfStrat <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">axis.title.y =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb57-3"><a href="combining-images-with-xrf-data.html#cb57-3" tabindex="-1"></a>                                <span class="at">axis.text.y  =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb57-4"><a href="combining-images-with-xrf-data.html#cb57-4" tabindex="-1"></a>                                <span class="at">axis.ticks.y =</span> <span class="fu">element_blank</span>()), </span>
-<span id="cb57-5"><a href="combining-images-with-xrf-data.html#cb57-5" tabindex="-1"></a>               <span class="at">ncol =</span> <span class="dv">2</span>, </span>
-<span id="cb57-6"><a href="combining-images-with-xrf-data.html#cb57-6" tabindex="-1"></a>               <span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>) <span class="co"># these are relative. For c(1, 5), the first plot will be 1/5th the width of the second.</span></span>
-<span id="cb57-7"><a href="combining-images-with-xrf-data.html#cb57-7" tabindex="-1"></a>               )</span></code></pre></div>
-<p><img src="itraxBook_files/figure-html/combining_images-1.png" width="672" /></p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="combining-images-with-xrf-data.html#cb56-1" tabindex="-1"></a>egg<span class="sc">::</span><span class="fu">ggarrange</span>(imagePlot <span class="sc">+</span> <span class="fu">theme_paleo</span>(), </span>
+<span id="cb56-2"><a href="combining-images-with-xrf-data.html#cb56-2" tabindex="-1"></a>               xrfStrat <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">axis.title.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb56-3"><a href="combining-images-with-xrf-data.html#cb56-3" tabindex="-1"></a>                                <span class="at">axis.text.y  =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb56-4"><a href="combining-images-with-xrf-data.html#cb56-4" tabindex="-1"></a>                                <span class="at">axis.ticks.y =</span> <span class="fu">element_blank</span>()), </span>
+<span id="cb56-5"><a href="combining-images-with-xrf-data.html#cb56-5" tabindex="-1"></a>               <span class="at">ncol =</span> <span class="dv">2</span>, </span>
+<span id="cb56-6"><a href="combining-images-with-xrf-data.html#cb56-6" tabindex="-1"></a>               <span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>) <span class="co"># these are relative. For c(1, 5), the first plot will be 1/5th the width of the second.</span></span>
+<span id="cb56-7"><a href="combining-images-with-xrf-data.html#cb56-7" tabindex="-1"></a>               )</span></code></pre></div>
+<p><img src="itraxBook_files/figure-html/combining_images-1.png" alt="" width="672" /></p>
 
 </div>
 <!-- </div> -->

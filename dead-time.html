@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>3.7 Dead Time | Using Itrax Data in R</title>
   <meta name="description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
-  <meta name="generator" content="bookdown 0.43 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
 
   <meta property="og:title" content="3.7 Dead Time | Using Itrax Data in R" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2025-05-13" />
+<meta name="date" content="2025-12-21" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -269,7 +269,7 @@ div.csl-indent {
 <span id="cb30-3"><a href="dead-time.html#cb30-3" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">sec.axis =</span> <span class="fu">sec_axis</span>( <span class="at">trans=</span><span class="sc">~</span>(.<span class="sc">+</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">mean</span>(CD166_19_xrf<span class="sc">$</span>Dt, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))), <span class="at">name=</span><span class="st">&quot;Correction Factor&quot;</span>)) <span class="sc">+</span></span>
 <span id="cb30-4"><a href="dead-time.html#cb30-4" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
 <span id="cb30-5"><a href="dead-time.html#cb30-5" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">mean</span>(CD166_19_xrf<span class="sc">$</span>Dt, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">linetype =</span> <span class="st">&quot;dotted&quot;</span>)</span></code></pre></div>
-<p><img src="itraxBook_files/figure-html/deadtime-1.png" width="672" /></p>
+<p><img src="itraxBook_files/figure-html/deadtime-1.png" alt="" width="672" /></p>
 <div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="dead-time.html#cb31-1" tabindex="-1"></a>CD166_19_xrf <span class="sc">%&gt;%</span></span>
 <span id="cb31-2"><a href="dead-time.html#cb31-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">newDt =</span> Dt<span class="sc">+</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">mean</span>(CD166_19_xrf<span class="sc">$</span>Dt, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))) <span class="sc">%&gt;%</span> </span>
 <span id="cb31-3"><a href="dead-time.html#cb31-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">any_of</span>(elementsList)) <span class="sc">*</span> newDt) <span class="sc">%&gt;%</span></span>

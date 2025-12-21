@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>3.1 Low Count Rates | Using Itrax Data in R</title>
   <meta name="description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
-  <meta name="generator" content="bookdown 0.43 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
 
   <meta property="og:title" content="3.1 Low Count Rates | Using Itrax Data in R" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2025-05-13" />
+<meta name="date" content="2025-12-21" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -266,7 +266,7 @@ div.csl-indent {
 <p>The count rate (“cps”, or counts-per-second) is the rate of energy event detection at the detector, and is a function of both the excitation beam condition (tube type, voltage and current) and the matrix. Because the tube type and voltage are often chosen based on other considerations, the operator usually only adjusts the tube current to optimise the count rate. The higher the total counts for each measurement, the better the measurement will be in terms of detection limits and uncertainties. Higher count rates allow for shorter dwell times, but this must be balanced against the need to minimise harmonics in the spectra. Harmonics can occur where the photon flux is so high that the detector cannot differentiate between two photons, and so registers the sum energy instead. For example, a particularly common phenomenon is the detection of two Fe Kα photons (energy 6.4 keV) as a single photon with the energy 12.8 keV. The graph below shows that for these cores there is the expected positive correlation between the count rate and the Fe Kα * 2 sum peak. To some extent the Q-Spec software will accommodate these harmonics, but operators commonly aim for a count rate of between 30-50 kcps.</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="low-count-rates.html#cb20-1" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> CD166_19_xrf, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> cps, <span class="at">y =</span> <span class="st">`</span><span class="at">Fe a*2</span><span class="st">`</span>)) <span class="sc">+</span> </span>
 <span id="cb20-2"><a href="low-count-rates.html#cb20-2" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.1</span>) </span></code></pre></div>
-<p><img src="itraxBook_files/figure-html/cps-1.png" width="672" /></p>
+<p><img src="itraxBook_files/figure-html/cps-1.png" alt="" width="672" /></p>
 <p>Deletion criteria can be on the basis of count rates (excluding very low and high values), selected harmonics (e.g. Fe a*2), or both. An example is shown below.</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="low-count-rates.html#cb21-1" tabindex="-1"></a>CD166_19_xrf <span class="sc">%&gt;%</span></span>
 <span id="cb21-2"><a href="low-count-rates.html#cb21-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">in_cps_tolerance =</span> <span class="fu">ifelse</span>(cps <span class="sc">&lt;=</span><span class="dv">30000</span> <span class="sc">|</span> cps <span class="sc">&gt;=</span><span class="dv">60000</span> <span class="sc">|</span> <span class="fu">is.na</span>(cps) <span class="sc">==</span> <span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
@@ -276,7 +276,7 @@ div.csl-indent {
 <span id="cb21-6"><a href="low-count-rates.html#cb21-6" tabindex="-1"></a>  <span class="fu">scale_x_reverse</span>() <span class="sc">+</span></span>
 <span id="cb21-7"><a href="low-count-rates.html#cb21-7" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="dv">30000</span>, <span class="dv">60000</span>)) <span class="sc">+</span></span>
 <span id="cb21-8"><a href="low-count-rates.html#cb21-8" tabindex="-1"></a>  <span class="fu">geom_rug</span>(<span class="at">sides =</span> <span class="st">&quot;b&quot;</span>, <span class="at">data =</span> . <span class="sc">%&gt;%</span> <span class="fu">filter</span>(in_cps_tolerance <span class="sc">==</span> <span class="cn">FALSE</span>)) </span></code></pre></div>
-<p><img src="itraxBook_files/figure-html/cps_deletion-1.png" width="672" /></p>
+<p><img src="itraxBook_files/figure-html/cps_deletion-1.png" alt="" width="672" /></p>
 <p>It is possible, and sometimes preferable, to use some statistic to define the limits, rather than using arbitrary limits. For example, using the standard deviation (or even a confidence interval) to identify outlier data. For example:</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="low-count-rates.html#cb22-1" tabindex="-1"></a>CD166_19_xrf <span class="sc">%&gt;%</span></span>
 <span id="cb22-2"><a href="low-count-rates.html#cb22-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">in_cps_tolerance =</span> <span class="fu">ifelse</span>(cps <span class="sc">&lt;=</span> <span class="fu">mean</span>(cps)<span class="sc">-</span>(<span class="dv">3</span><span class="sc">*</span><span class="fu">sd</span>(cps)) <span class="sc">|</span> cps <span class="sc">&gt;=</span><span class="fu">mean</span>(cps)<span class="sc">+</span>(<span class="dv">3</span><span class="sc">*</span><span class="fu">sd</span>(cps)) <span class="sc">|</span> <span class="fu">is.na</span>(cps) <span class="sc">==</span> <span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
@@ -286,7 +286,7 @@ div.csl-indent {
 <span id="cb22-6"><a href="low-count-rates.html#cb22-6" tabindex="-1"></a>  <span class="fu">scale_x_reverse</span>() <span class="sc">+</span></span>
 <span id="cb22-7"><a href="low-count-rates.html#cb22-7" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="fu">mean</span>(CD166_19_xrf<span class="sc">$</span>cps)<span class="sc">-</span>(<span class="dv">3</span><span class="sc">*</span><span class="fu">sd</span>(CD166_19_xrf<span class="sc">$</span>cps)), <span class="fu">mean</span>(CD166_19_xrf<span class="sc">$</span>cps)<span class="sc">+</span>(<span class="dv">3</span><span class="sc">*</span><span class="fu">sd</span>(CD166_19_xrf<span class="sc">$</span>cps)))) <span class="sc">+</span></span>
 <span id="cb22-8"><a href="low-count-rates.html#cb22-8" tabindex="-1"></a>  <span class="fu">geom_rug</span>(<span class="at">sides =</span> <span class="st">&quot;b&quot;</span>, <span class="at">data =</span> . <span class="sc">%&gt;%</span> <span class="fu">filter</span>(in_cps_tolerance <span class="sc">==</span> <span class="cn">FALSE</span>)) </span></code></pre></div>
-<p><img src="itraxBook_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><img src="itraxBook_files/figure-html/unnamed-chunk-4-1.png" alt="" width="672" /></p>
 </div>
             </section>
 

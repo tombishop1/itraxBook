@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>3.11 Noisy Data | Using Itrax Data in R</title>
   <meta name="description" content="This book is a guide to importing, tidying, manipulating and analysing Itrax core scanner data in R." />
-  <meta name="generator" content="bookdown 0.43 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.46 and GitBook 2.6.7" />
 
   <meta property="og:title" content="3.11 Noisy Data | Using Itrax Data in R" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2025-05-13" />
+<meta name="date" content="2025-12-21" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -272,7 +272,7 @@ div.csl-indent {
 <span id="cb36-5"><a href="noisy-data.html#cb36-5" tabindex="-1"></a>  <span class="fu">ggAcf</span>(CD166_19_xrf<span class="sc">$</span>Pb) <span class="sc">+</span> </span>
 <span id="cb36-6"><a href="noisy-data.html#cb36-6" tabindex="-1"></a>    <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="cn">NA</span>,<span class="dv">1</span>)),</span>
 <span id="cb36-7"><a href="noisy-data.html#cb36-7" tabindex="-1"></a>  <span class="at">nrow =</span> <span class="dv">1</span>)</span></code></pre></div>
-<p><img src="itraxBook_files/figure-html/unnamed-chunk-10-1.png" width="672" />
+<p><img src="itraxBook_files/figure-html/unnamed-chunk-10-1.png" alt="" width="672" />
 Now we might move on to making calculations for the entirety of the data. In the example below we apply the <code>Acf()</code> function to each of the elements. We might then explore the data by sorting for an arbitrary lag, or by plotting the results together for inspection. In this case, the elements have been sorted by the autocorrelation value at a lag of 5. Although the visualisation is a bit messy with all the elements plotting over one another, it is clear that some elements exhibit very low autocorrelation (e.g. I, Pb, Sc, Ge, Cs, P) and could be possible candidates for exclusion.</p>
 <div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="noisy-data.html#cb37-1" tabindex="-1"></a><span class="fu">apply</span>(CD166_19_xrf <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">any_of</span>(elementsList)), <span class="dv">2</span>, <span class="at">FUN =</span> <span class="cf">function</span>(x){<span class="fu">round</span>(<span class="fu">Acf</span>(x, <span class="at">plot =</span> F)<span class="sc">$</span>acf, <span class="dv">3</span>)}) <span class="sc">%&gt;%</span></span>
 <span id="cb37-2"><a href="noisy-data.html#cb37-2" tabindex="-1"></a>  <span class="fu">as_tibble</span>(<span class="at">rownames =</span> <span class="st">&quot;lag&quot;</span>) <span class="sc">%&gt;%</span></span>
@@ -282,7 +282,7 @@ Now we might move on to making calculations for the entirety of the data. In the
 <span id="cb37-6"><a href="noisy-data.html#cb37-6" tabindex="-1"></a>  <span class="fu">group_by</span>(elements) <span class="sc">%&gt;%</span></span>
 <span id="cb37-7"><a href="noisy-data.html#cb37-7" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> lag, <span class="at">y =</span> value, <span class="at">col =</span> elements)) <span class="sc">+</span></span>
 <span id="cb37-8"><a href="noisy-data.html#cb37-8" tabindex="-1"></a>  <span class="fu">geom_line</span>()</span></code></pre></div>
-<p><img src="itraxBook_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><img src="itraxBook_files/figure-html/unnamed-chunk-11-1.png" alt="" width="672" /></p>
 <p>It is worth noting that this analysis has been performed on the entirety of the data, but there is no reason why the data could be problematic for some facies and acceptable for others. It may be necessary to perform some facies analysis and perform these analyses per facies.</p>
 <p>Putting all the selection criteria together could look something like the example below.</p>
 <div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="noisy-data.html#cb38-1" tabindex="-1"></a><span class="co"># identify acceptable variables</span></span>
@@ -315,7 +315,7 @@ Now we might move on to making calculations for the entirety of the data. In the
 <span id="cb38-28"><a href="noisy-data.html#cb38-28" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;peak area&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Depth [mm]&quot;</span>) <span class="sc">+</span></span>
 <span id="cb38-29"><a href="noisy-data.html#cb38-29" tabindex="-1"></a>    tidypaleo<span class="sc">::</span><span class="fu">theme_paleo</span>() <span class="sc">+</span></span>
 <span id="cb38-30"><a href="noisy-data.html#cb38-30" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>)</span></code></pre></div>
-<p><img src="itraxBook_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p><img src="itraxBook_files/figure-html/unnamed-chunk-12-1.png" alt="" width="672" /></p>
 </div>
             </section>
 
