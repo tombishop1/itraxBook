@@ -74,7 +74,7 @@ lapply(c(1:nrow(sumspectra)),
 rm(sumspectra)
 ```
 
-```{r itrax_sumspectra_3}
+```{r itrax_sumspectra_3, eval=FALSE}
 sumspectra <- left_join(hhxrf %>%
                           select(top, bot, SampleID) %>%
                           mutate(depth = top),
