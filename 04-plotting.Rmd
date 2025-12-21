@@ -77,16 +77,16 @@ ggplot() +
   annotation_custom(rasterGrob(myImage$image,
                                width = unit(1, "npc"),
                                height = unit(1, "npc")),
-                    ymax = max(as.numeric(row.names(myImage$image)))/-1,
-                    ymin = min(as.numeric(row.names(myImage$image)))/-1,
+                    ymax = max(as.numeric(row.names(myImage$image))),
+                    ymin = min(as.numeric(row.names(myImage$image))),
                     xmin = min(as.numeric(colnames(myImage$image))),
                     xmax = max(as.numeric(colnames(myImage$image)))
   ) +
   annotation_custom(rasterGrob(myRadio$image,
                                width = unit(1, "npc"),
                                height = unit(1, "npc")),
-                    ymax = max(as.numeric(row.names(myRadio$image)))/-1,
-                    ymin = min(as.numeric(row.names(myRadio$image)))/-1,
+                    ymax = max(as.numeric(row.names(myRadio$image))),
+                    ymin = min(as.numeric(row.names(myRadio$image))),
                     xmin = mean(as.numeric(colnames(myImage$image))) - mean(as.numeric(colnames(myRadio$image))),
                     xmax = mean(as.numeric(colnames(myImage$image))) + mean(as.numeric(colnames(myRadio$image)))
   ) +
@@ -109,24 +109,24 @@ ggplot() +
   annotation_custom(rasterGrob(CD166_19_S1$image$image,
                                width = unit(1, "npc"),
                                height = unit(1, "npc")),
-                    ymax = max(CD166_19_S1$xrf$depth)/-1,
-                    ymin = min(CD166_19_S1$xrf$depth)/-1,
+                    ymax = max(CD166_19_S1$xrf$depth),
+                    ymin = min(CD166_19_S1$xrf$depth),
                     xmin = min(as.numeric(colnames(CD166_19_S1$image$image))),
                     xmax = max(as.numeric(colnames(CD166_19_S1$image$image)))
   ) +
   annotation_custom(rasterGrob(CD166_19_S2$image$image,
                                width = unit(1, "npc"),
                                height = unit(1, "npc")),
-                    ymax = max(CD166_19_S2$xrf$depth)/-1,
-                    ymin = min(CD166_19_S2$xrf$depth)/-1,
+                    ymax = max(CD166_19_S2$xrf$depth),
+                    ymin = min(CD166_19_S2$xrf$depth),
                     xmin = min(as.numeric(colnames(CD166_19_S2$image$image))),
                     xmax = max(as.numeric(colnames(CD166_19_S2$image$image)))
   ) +
   annotation_custom(rasterGrob(CD166_19_S3$image$image,
                                width = unit(1, "npc"),
                                height = unit(1, "npc")),
-                    ymax = max(CD166_19_S3$xrf$depth)/-1,
-                    ymin = min(CD166_19_S3$xrf$depth)/-1,
+                    ymax = max(CD166_19_S3$xrf$depth),
+                    ymin = min(CD166_19_S3$xrf$depth),
                     xmin = min(as.numeric(colnames(CD166_19_S3$image$image))),
                     xmax = max(as.numeric(colnames(CD166_19_S3$image$image)))
   )
@@ -144,24 +144,24 @@ ggplot() +
   annotation_custom(rasterGrob(CD166_19_S1$image$image,
                                width = unit(1, "npc"),
                                height = unit(1, "npc")),
-                    ymax = max(CD166_19_S1$xrf$depth)/-1,
-                    ymin = min(CD166_19_S1$xrf$depth)/-1,
+                    ymax = max(CD166_19_S1$xrf$depth),
+                    ymin = min(CD166_19_S1$xrf$depth),
                     xmin = min(as.numeric(colnames(CD166_19_S1$image$image))),
                     xmax = max(as.numeric(colnames(CD166_19_S1$image$image)))
   ) +
   annotation_custom(rasterGrob(CD166_19_S2$image$image,
                                width = unit(1, "npc"),
                                height = unit(1, "npc")),
-                    ymax = max(CD166_19_S2$xrf$depth)/-1,
-                    ymin = min(CD166_19_S2$xrf$depth)/-1,
+                    ymax = max(CD166_19_S2$xrf$depth),
+                    ymin = min(CD166_19_S2$xrf$depth),
                     xmin = max(as.numeric(colnames(CD166_19_S2$image$image))),
                     xmax = max(as.numeric(colnames(CD166_19_S2$image$image)))*2
   ) +
   annotation_custom(rasterGrob(CD166_19_S3$image$image,
                                width = unit(1, "npc"),
                                height = unit(1, "npc")),
-                    ymax = max(CD166_19_S3$xrf$depth)/-1,
-                    ymin = min(CD166_19_S3$xrf$depth)/-1,
+                    ymax = max(CD166_19_S3$xrf$depth),
+                    ymin = min(CD166_19_S3$xrf$depth),
                     xmin = min(as.numeric(colnames(CD166_19_S3$image$image))),
                     xmax = max(as.numeric(colnames(CD166_19_S3$image$image)))
   )
@@ -179,24 +179,24 @@ ggplot() +
   annotation_custom(rasterGrob(CD166_19_S1$image$image,
                                width = unit(1, "npc"),
                                height = unit(1, "npc")),
-                    ymax = max(CD166_19_S1$xrf$depth)/-1,
-                    ymin = min(CD166_19_S1$xrf$depth)/-1,
+                    ymax = max(CD166_19_S1$xrf$depth),
+                    ymin = min(CD166_19_S1$xrf$depth),
                     xmin = min(as.numeric(colnames(CD166_19_S1$image$image))),
                     xmax = max(as.numeric(colnames(CD166_19_S1$image$image)))
   ) +
   annotation_custom(rasterGrob(CD166_19_S2$image$image,
                                width = unit(1, "npc"),
                                height = unit(1, "npc")),
-                    ymax = max(CD166_19_S2$xrf$depth)/-1,
-                    ymin = min(CD166_19_S2$xrf$depth)/-1,
+                    ymax = max(CD166_19_S2$xrf$depth),
+                    ymin = min(CD166_19_S2$xrf$depth),
                     xmin = max(as.numeric(colnames(CD166_19_S2$image$image))),
                     xmax = max(as.numeric(colnames(CD166_19_S2$image$image)))*2
   ) +
   annotation_custom(rasterGrob(CD166_19_S3$image$image,
                                width = unit(1, "npc"),
                                height = unit(1, "npc")),
-                    ymax = max(CD166_19_S3$xrf$depth)/-1,
-                    ymin = min(CD166_19_S3$xrf$depth)/-1,
+                    ymax = max(CD166_19_S3$xrf$depth),
+                    ymin = min(CD166_19_S3$xrf$depth),
                     xmin = min(as.numeric(colnames(CD166_19_S3$image$image))),
                     xmax = max(as.numeric(colnames(CD166_19_S3$image$image)))
   )
@@ -211,16 +211,16 @@ ggItraxImage <- function(section, xposition){
   annotation_custom(rasterGrob(section$image$image,
                                width = unit(1, "npc"),
                                height = unit(1, "npc")),
-                    ymax = max(section$xrf$depth)/-1,
-                    ymin = min(section$xrf$depth)/-1,
+                    ymax = max(section$xrf$depth),
+                    ymin = min(section$xrf$depth),
                     xmin = min(as.numeric(colnames(section$image$image))),
                     xmax = max(as.numeric(colnames(section$image$image)))
   )} else if(xposition == "r"){
     annotation_custom(rasterGrob(section$image$image,
                                  width = unit(1, "npc"),
                                  height = unit(1, "npc")),
-                      ymax = max(section$xrf$depth)/-1,
-                      ymin = min(section$xrf$depth)/-1,
+                      ymax = max(section$xrf$depth),
+                      ymin = min(section$xrf$depth),
                       xmin = max(as.numeric(colnames(section$image$image))),
                       xmax = max(as.numeric(colnames(section$image$image)))*2)
   } else{stop("Specify `l`eft or `r`ight for the image.")}
@@ -232,8 +232,8 @@ ggItraxRadio <- function(section, xposition){
     annotation_custom(rasterGrob(section$radiograph$image,
                                  width = unit(1, "npc"),
                                  height = unit(1, "npc")),
-                      ymin = min(section$xrf$depth)/-1,
-                      ymax = max(section$xrf$depth)/-1,
+                      ymin = min(section$xrf$depth),
+                      ymax = max(section$xrf$depth),
                       xmin = mean(as.numeric(colnames(section$image$image))) -
                         mean(as.numeric(colnames(section$radiograph$image))),
                       xmax = mean(as.numeric(colnames(section$image$image))) +
@@ -243,8 +243,8 @@ ggItraxRadio <- function(section, xposition){
     annotation_custom(rasterGrob(section$radiograph$image,
                                  width = unit(1, "npc"),
                                  height = unit(1, "npc")),
-                      ymin = min(section$xrf$depth)/-1,
-                      ymax = max(section$xrf$depth)/-1,
+                      ymin = min(section$xrf$depth),
+                      ymax = max(section$xrf$depth),
                       xmin = max(as.numeric(colnames(section$image$image))) +
                         mean(as.numeric(colnames(section$image$image))) -
                         mean(as.numeric(colnames(section$radiograph$image))),
@@ -297,16 +297,16 @@ ggplot() +
   annotation_custom(rasterGrob(mySidewaysImage,
                                width = unit(1, "npc"),
                                height = unit(1, "npc")),
-                    xmax = max(as.numeric(colnames(mySidewaysImage)))/-1,
-                    xmin = min(as.numeric(colnames(mySidewaysImage)))/-1,
+                    xmax = max(as.numeric(colnames(mySidewaysImage))),
+                    xmin = min(as.numeric(colnames(mySidewaysImage))),
                     ymin = min(as.numeric(row.names(mySidewaysImage))),
                     ymax = max(as.numeric(row.names(mySidewaysImage)))
   ) +
   annotation_custom(rasterGrob(mySidewaysRadio,
                                width = unit(1, "npc"),
                                height = unit(1, "npc")),
-                    xmax = max(as.numeric(colnames(mySidewaysRadio)))/-1,
-                    xmin = min(as.numeric(colnames(mySidewaysRadio)))/-1,
+                    xmax = max(as.numeric(colnames(mySidewaysRadio))),
+                    xmin = min(as.numeric(colnames(mySidewaysRadio))),
                     ymin = mean(as.numeric(row.names(mySidewaysImage))) - mean(as.numeric(row.names(mySidewaysRadio))),
                     ymax = mean(as.numeric(row.names(mySidewaysImage))) + mean(as.numeric(row.names(mySidewaysRadio)))
   ) +

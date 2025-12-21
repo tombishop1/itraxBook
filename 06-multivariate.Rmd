@@ -102,10 +102,10 @@ CD166_19_xrf_acomp_meta %>%
                  augment = any_of(c("depth", "label"))
   ) %>%
   fortify() %>%
-  select(depth, label, `Comp.1`) %>%
+  select(depth, label, `PC1`) %>%
   tidyr::drop_na() %>%
   
-  ggplot(aes(x = `Comp.1`, y = depth, colour = label)) +
+  ggplot(aes(x = `PC1`, y = depth, colour = label)) +
   geom_lineh() +
   scale_y_reverse(name = "Depth [mm]")
 ```
