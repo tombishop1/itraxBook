@@ -16,7 +16,7 @@ pacman::p_load("tidyverse" , "PeriodicTable",
                "egg", "errors", 
                "forecast", "slider",
                "compositions", "ggpmisc",
-               "tidypaleo", "remotes",
+               "tidypaleo",
                "ordr", "knitr", 
                "ggpmisc", "itraxR",
                install = FALSE)
