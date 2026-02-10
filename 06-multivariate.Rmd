@@ -17,7 +17,7 @@ TRUE %in% CD166_19_xrf$uid %>% duplicated()
 ```{r message=FALSE, warning=FALSE}
 CD166_19_xrf_acomp <- CD166_19_xrf %>%
   filter(qc == TRUE) %>%
-  select(any_of(c(elementsList, "uid"))) %>%
+  select(any_of(c(myElements, "uid"))) %>%
   column_to_rownames("uid") %>%
   mutate(across(everything(), function(x){ifelse(x == 0, -1, x)})) %>%
   acomp()
@@ -38,12 +38,12 @@ CD166_19_xrf_acomp_meta <- left_join(CD166_19_xrf_acomp %>%
 
 ## Principal Component Analysis
 
-Principal component analysis (PCA) is a common method for exploring multivariate data. Note the use of `zeroreplace()` - this is because the `princomp()` method defined for th `acomp` class uses a centred-log-ratio (`clr()`) transformation that is intolerant to zero-values. 
+Principal component analysis (PCA) is a common method for exploring multivariate data. Note the use of `zeroreplace()` - this is because the `princomp()` method defined for the `acomp` class uses a centered-log-ratio (`clr()`) transformation that is intolerant to zero-values.
 
 ```{r}
 CD166_19_xrf_acomp %>%
   zeroreplace() %>%
-  princomp() %>%
+  princomp(., cor= FALSE) %>%
   biplot(xlabs = rep(".",times = nrow(CD166_19_xrf_acomp)))
 ```
 
@@ -63,7 +63,7 @@ bind_rows(
       pull("depth"),
     Comp.1 = CD166_19_xrf_acomp %>%
       zeroreplace() %>%
-      princomp() %>%
+      princomp(., cor= FALSE) %>%
       magrittr::extract2("scores") %>%
       as_tibble() %>%
       pull("Comp.1")
@@ -78,12 +78,12 @@ bind_rows(
 
 ## Using `ordr` for PCA
 
-The `ordr` package can be used to retain metadata (depths, labels, groups etc.) along with the PCA object. This is particularly useful for complex biplots using `ggplot2`. The following example uses the `CD166_19_xrf_acomp_meta` from the previous section; note that `myElements` is a vector of elements to include in the ordination, in this case generated in the section [Noisy Data]. 
+The `ordr` package can be used to retain metadata (depths, labels, groups etc.) along with the PCA object. This is particularly useful for complex biplots using `ggplot2`. The following example uses the `CD166_19_xrf_acomp_meta` from the previous section; note that `myElements` is a vector of elements to include in the ordination, in this case generated in the section [Noisy Data]. Note the use of `clr()` in the `prcomp()` function alongside the `scale. = FALSE` argument. This ensures the correct scaling is applied to the data.  
 
 ```{r}
 CD166_19_xrf_acomp_meta %>%
     ordr::ordinate(., cols = any_of(myElements),
-                   model = ~ prcomp(clr(.), scale. = TRUE),
+                   model = ~ prcomp(clr(.), scale. = FALSE),
                    augment = any_of(c("depth", "label"))
                    ) %>%
   

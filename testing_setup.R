@@ -87,12 +87,12 @@ CD166_19_xrf <- CD166_19_xrf %>%
 # do compositional transforms
 CD166_19_xrf_acomp <- CD166_19_xrf %>%
   filter(qc == TRUE) %>%
-  select(any_of(c(elementsList, "uid"))) %>%
+  select(any_of(c(as.character(myElements), "uid"))) %>%
   column_to_rownames("uid") %>%
   mutate(across(everything(), function(x){ifelse(x == 0, -1, x)})) %>%
   acomp()
 
-CD166_19_xrf_acomp_meta <- full_join(CD166_19_xrf_acomp %>% 
+CD166_19_xrf_acomp_meta <- left_join(CD166_19_xrf_acomp %>% 
                                        as.data.frame() %>%
                                        rownames_to_column("uid"),
                                      CD166_19_xrf %>%
