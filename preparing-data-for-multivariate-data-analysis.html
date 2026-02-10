@@ -23,7 +23,7 @@
 <meta name="author" content="Thomas Bishop" />
 
 
-<meta name="date" content="2025-12-21" />
+<meta name="date" content="2026-02-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -337,7 +337,7 @@ div.csl-indent {
 ## attr(,&quot;class&quot;)
 ## [1] &quot;acomp&quot;</code></pre>
 <p>Where it is necessary to keep some (or all) of the other information, this can be re-joined to the <code>acomp()</code> object, but only if its <code>acomp</code> class is removed. For example:</p>
-<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="preparing-data-for-multivariate-data-analysis.html#cb69-1" tabindex="-1"></a>CD166_19_xrf_acomp_meta <span class="ot">&lt;-</span> <span class="fu">full_join</span>(CD166_19_xrf_acomp <span class="sc">%&gt;%</span> </span>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="preparing-data-for-multivariate-data-analysis.html#cb69-1" tabindex="-1"></a>CD166_19_xrf_acomp_meta <span class="ot">&lt;-</span> <span class="fu">left_join</span>(CD166_19_xrf_acomp <span class="sc">%&gt;%</span> </span>
 <span id="cb69-2"><a href="preparing-data-for-multivariate-data-analysis.html#cb69-2" tabindex="-1"></a>                                       <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb69-3"><a href="preparing-data-for-multivariate-data-analysis.html#cb69-3" tabindex="-1"></a>                                       <span class="fu">rownames_to_column</span>(<span class="st">&quot;uid&quot;</span>),</span>
 <span id="cb69-4"><a href="preparing-data-for-multivariate-data-analysis.html#cb69-4" tabindex="-1"></a>                                     CD166_19_xrf <span class="sc">%&gt;%</span></span>
