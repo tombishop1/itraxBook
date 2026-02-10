@@ -276,7 +276,7 @@ Putting all the selection criteria together could look something like the exampl
 
 ```{r warning=FALSE}
 # identify acceptable variables
-apply(CD166_19_xrf %>% select(any_of(elementsList)), 2, FUN = function(x){round(Acf(x, plot = F)$acf, 3)}) %>%
+myElements <- apply(CD166_19_xrf %>% select(any_of(elementsList)), 2, FUN = function(x){round(Acf(x, plot = F)$acf, 3)}) %>%
   as_tibble(rownames = "lag") %>%
   pivot_longer(!c("lag"), names_to = "elements", values_to = "value") %>%
   mutate(lag = as.numeric(lag),
@@ -285,7 +285,7 @@ apply(CD166_19_xrf %>% select(any_of(elementsList)), 2, FUN = function(x){round(
   filter(lag == 5) %>%
   filter(value >= 0.8) %>%
   pull(elements) %>% 
-  ordered() -> myElements
+  ordered()
 
 # get acceptable observations
 CD166_19_xrf %>% 
@@ -349,7 +349,7 @@ itrax_spectra(filename = unz(description = "CD166_19_S1/CD166_19_S1/XRF Data.zip
 
 This rarely offers much insight, because we are interested in comparing multiple spectra. The `itrax_restspectra()` function takes its name from a similar function in the `Q-Spec` software from Cox Analytical Systems, Sweden. This shows a heat map of the spectra, and can be used to identify areas where particular spectral lines appear and disappear along the core. At its simplest, it can be used to produce a plot of a single scan section. 
 
-```{r restspectra, message=FALSE, warning=FALSE}
+```{r restspectra, message=FALSE, warning=FALSE} 
 itrax_restspectra(foldername = "CD166_19_S1/CD166_19_S1/XRF Data.zip",
                   parameters = "CD166_19_S1/CD166_19_S1/Results_ settings.dfl"
                   ) %>% 
@@ -358,7 +358,7 @@ itrax_restspectra(foldername = "CD166_19_S1/CD166_19_S1/XRF Data.zip",
 
 By combining all of the sections, and joining the raw spectral data with the processed data from the `Results.txt` (`Q-Spec`) output file, it can be used as a powerful diagnostic tool.
 
-```{r spectra2, message=FALSE, warning=FALSE}
+```{r spectra2, message=FALSE, warning=FALSE} 
 read_spectra <- function(foldername, labeltext){
   itrax_restspectra(foldername = foldername,   
                     plot = FALSE) %>%

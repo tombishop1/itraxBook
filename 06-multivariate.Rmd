@@ -17,7 +17,7 @@ TRUE %in% CD166_19_xrf$uid %>% duplicated()
 ```{r message=FALSE, warning=FALSE}
 CD166_19_xrf_acomp <- CD166_19_xrf %>%
   filter(qc == TRUE) %>%
-  select(any_of(c(myElements, "uid"))) %>%
+  select(any_of(c(as.character(myElements), "uid"))) %>%
   column_to_rownames("uid") %>%
   mutate(across(everything(), function(x){ifelse(x == 0, -1, x)})) %>%
   acomp()
