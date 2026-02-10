@@ -263,10 +263,10 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="principal-component-analysis" class="section level2 hasAnchor" number="6.2">
 <h2><span class="header-section-number">6.2</span> Principal Component Analysis<a href="principal-component-analysis.html#principal-component-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>Principal component analysis (PCA) is a common method for exploring multivariate data. Note the use of <code>zeroreplace()</code> - this is because the <code>princomp()</code> method defined for th <code>acomp</code> class uses a centred-log-ratio (<code>clr()</code>) transformation that is intolerant to zero-values.</p>
+<p>Principal component analysis (PCA) is a common method for exploring multivariate data. Note the use of <code>zeroreplace()</code> - this is because the <code>princomp()</code> method defined for the <code>acomp</code> class uses a centered-log-ratio (<code>clr()</code>) transformation that is intolerant to zero-values.</p>
 <div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="principal-component-analysis.html#cb70-1" tabindex="-1"></a>CD166_19_xrf_acomp <span class="sc">%&gt;%</span></span>
 <span id="cb70-2"><a href="principal-component-analysis.html#cb70-2" tabindex="-1"></a>  <span class="fu">zeroreplace</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb70-3"><a href="principal-component-analysis.html#cb70-3" tabindex="-1"></a>  <span class="fu">princomp</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb70-3"><a href="principal-component-analysis.html#cb70-3" tabindex="-1"></a>  <span class="fu">princomp</span>(., <span class="at">cor=</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb70-4"><a href="principal-component-analysis.html#cb70-4" tabindex="-1"></a>  <span class="fu">biplot</span>(<span class="at">xlabs =</span> <span class="fu">rep</span>(<span class="st">&quot;.&quot;</span>,<span class="at">times =</span> <span class="fu">nrow</span>(CD166_19_xrf_acomp)))</span></code></pre></div>
 <p><img src="itraxBook_files/figure-html/unnamed-chunk-22-1.png" alt="" width="672" /></p>
 <p>It is useful to plot components over depth. They can be extracted and plotted as follows:</p>
@@ -283,7 +283,7 @@ div.csl-indent {
 <span id="cb71-11"><a href="principal-component-analysis.html#cb71-11" tabindex="-1"></a>      <span class="fu">pull</span>(<span class="st">&quot;depth&quot;</span>),</span>
 <span id="cb71-12"><a href="principal-component-analysis.html#cb71-12" tabindex="-1"></a>    <span class="at">Comp.1 =</span> CD166_19_xrf_acomp <span class="sc">%&gt;%</span></span>
 <span id="cb71-13"><a href="principal-component-analysis.html#cb71-13" tabindex="-1"></a>      <span class="fu">zeroreplace</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb71-14"><a href="principal-component-analysis.html#cb71-14" tabindex="-1"></a>      <span class="fu">princomp</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb71-14"><a href="principal-component-analysis.html#cb71-14" tabindex="-1"></a>      <span class="fu">princomp</span>(., <span class="at">cor=</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb71-15"><a href="principal-component-analysis.html#cb71-15" tabindex="-1"></a>      magrittr<span class="sc">::</span><span class="fu">extract2</span>(<span class="st">&quot;scores&quot;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb71-16"><a href="principal-component-analysis.html#cb71-16" tabindex="-1"></a>      <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb71-17"><a href="principal-component-analysis.html#cb71-17" tabindex="-1"></a>      <span class="fu">pull</span>(<span class="st">&quot;Comp.1&quot;</span>)</span>

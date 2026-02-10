@@ -273,67 +273,32 @@ div.csl-indent {
 <pre><code>## [1] FALSE</code></pre>
 <div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="preparing-data-for-multivariate-data-analysis.html#cb67-1" tabindex="-1"></a>CD166_19_xrf_acomp <span class="ot">&lt;-</span> CD166_19_xrf <span class="sc">%&gt;%</span></span>
 <span id="cb67-2"><a href="preparing-data-for-multivariate-data-analysis.html#cb67-2" tabindex="-1"></a>  <span class="fu">filter</span>(qc <span class="sc">==</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb67-3"><a href="preparing-data-for-multivariate-data-analysis.html#cb67-3" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">any_of</span>(<span class="fu">c</span>(elementsList, <span class="st">&quot;uid&quot;</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb67-3"><a href="preparing-data-for-multivariate-data-analysis.html#cb67-3" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">any_of</span>(<span class="fu">c</span>(<span class="fu">as.character</span>(myElements), <span class="st">&quot;uid&quot;</span>))) <span class="sc">%&gt;%</span></span>
 <span id="cb67-4"><a href="preparing-data-for-multivariate-data-analysis.html#cb67-4" tabindex="-1"></a>  <span class="fu">column_to_rownames</span>(<span class="st">&quot;uid&quot;</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb67-5"><a href="preparing-data-for-multivariate-data-analysis.html#cb67-5" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="cf">function</span>(x){<span class="fu">ifelse</span>(x <span class="sc">==</span> <span class="dv">0</span>, <span class="sc">-</span><span class="dv">1</span>, x)})) <span class="sc">%&gt;%</span></span>
 <span id="cb67-6"><a href="preparing-data-for-multivariate-data-analysis.html#cb67-6" tabindex="-1"></a>  <span class="fu">acomp</span>()</span>
 <span id="cb67-7"><a href="preparing-data-for-multivariate-data-analysis.html#cb67-7" tabindex="-1"></a><span class="fu">head</span>(CD166_19_xrf_acomp)</span></code></pre></div>
-<pre><code>##      Al             Si            P               S               Cl           
-## S1_1 &quot;0.0004510065&quot; &quot;0.001631931&quot; &quot;&lt;5.934295e-06&quot; &quot; 5.934295e-05&quot; &quot;0.007821401&quot;
-## S1_2 &quot;0.0002804828&quot; &quot;0.001505750&quot; &quot;&lt;4.920751e-06&quot; &quot;&lt;4.920751e-06&quot; &quot;0.007445097&quot;
-## S1_3 &quot;0.0003343092&quot; &quot;0.001490838&quot; &quot;&lt;4.517691e-06&quot; &quot; 1.445661e-04&quot; &quot;0.006641006&quot;
-## S1_4 &quot;0.0001227370&quot; &quot;0.000972455&quot; &quot;&lt;4.720655e-06&quot; &quot; 9.913376e-05&quot; &quot;0.006193500&quot;
-## S1_5 &quot;0.0002582984&quot; &quot;0.001135538&quot; &quot;&lt;4.873556e-06&quot; &quot; 1.803216e-04&quot; &quot;0.008479987&quot;
-## S1_6 &quot;0.0001333485&quot; &quot;0.001713775&quot; &quot;&lt;4.938833e-06&quot; &quot; 1.382873e-04&quot; &quot;0.007783600&quot;
-##      Ar            K            Ca          Sc              Ti           
-## S1_1 &quot;0.003584314&quot; &quot;0.01522147&quot; &quot;0.6689969&quot; &quot;&lt;5.934295e-06&quot; &quot;0.009856865&quot;
-## S1_2 &quot;0.002927847&quot; &quot;0.01293173&quot; &quot;0.7100004&quot; &quot; 6.889052e-05&quot; &quot;0.008886877&quot;
-## S1_3 &quot;0.002285952&quot; &quot;0.01074307&quot; &quot;0.7361036&quot; &quot;&lt;4.517691e-06&quot; &quot;0.009582023&quot;
-## S1_4 &quot;0.002619964&quot; &quot;0.01069228&quot; &quot;0.7231761&quot; &quot;&lt;4.720655e-06&quot; &quot;0.009587651&quot;
-## S1_5 &quot;0.002880271&quot; &quot;0.01436237&quot; &quot;0.6622139&quot; &quot; 5.165969e-04&quot; &quot;0.008899113&quot;
-## S1_6 &quot;0.002489172&quot; &quot;0.01570055&quot; &quot;0.6528297&quot; &quot; 6.914366e-05&quot; &quot;0.009497375&quot;
-##      V              Cr            Mn            Fe          Ni            
-## S1_1 &quot;3.026491e-04&quot; &quot;0.001531048&quot; &quot;0.003014622&quot; &quot;0.2086973&quot; &quot;0.0007299183&quot;
-## S1_2 &quot;4.330261e-04&quot; &quot;0.001604165&quot; &quot;0.002750700&quot; &quot;0.1795779&quot; &quot;0.0005117581&quot;
-## S1_3 &quot;9.938921e-05&quot; &quot;0.001359825&quot; &quot;0.002182045&quot; &quot;0.1624200&quot; &quot;0.0006053706&quot;
-## S1_4 &quot;3.540491e-04&quot; &quot;0.001444520&quot; &quot;0.002289518&quot; &quot;0.1676399&quot; &quot;0.0006797744&quot;
-## S1_5 &quot;4.337464e-04&quot; &quot;0.002144364&quot; &quot;0.003596684&quot; &quot;0.2159131&quot; &quot;0.0008090102&quot;
-## S1_6 &quot;5.284551e-04&quot; &quot;0.001980472&quot; &quot;0.003911555&quot; &quot;0.2236452&quot; &quot;0.0007457637&quot;
-##      Cu             Zn            Ga              Ge              Br           
-## S1_1 &quot;0.0016437998&quot; &quot;0.001216531&quot; &quot; 2.373718e-05&quot; &quot;&lt;5.934295e-06&quot; &quot;0.002913739&quot;
-## S1_2 &quot;0.0011317728&quot; &quot;0.001318761&quot; &quot; 2.361961e-04&quot; &quot; 1.968301e-04&quot; &quot;0.002977055&quot;
-## S1_3 &quot;0.0006776537&quot; &quot;0.000555676&quot; &quot;&lt;4.517691e-06&quot; &quot; 1.942607e-04&quot; &quot;0.002484730&quot;
-## S1_4 &quot;0.0009724550&quot; &quot;0.001128237&quot; &quot;&lt;4.720655e-06&quot; &quot;&lt;4.720655e-06&quot; &quot;0.002874879&quot;
-## S1_5 &quot;0.0013451013&quot; &quot;0.001169653&quot; &quot;&lt;4.873556e-06&quot; &quot;&lt;4.873556e-06&quot; &quot;0.003211673&quot;
-## S1_6 &quot;0.0012347081&quot; &quot;0.001452017&quot; &quot; 1.975533e-04&quot; &quot; 2.370640e-04&quot; &quot;0.003501632&quot;
-##      Rb             Sr           Y              Zr             Pd            
-## S1_1 &quot;0.0019523832&quot; &quot;0.04929026&quot; &quot;8.901443e-05&quot; &quot;0.0015132453&quot; &quot;0.0001839632&quot;
-## S1_2 &quot;0.0003739771&quot; &quot;0.04517742&quot; &quot;6.889052e-04&quot; &quot;0.0015844819&quot; &quot;0.0003838186&quot;
-## S1_3 &quot;0.0013327189&quot; &quot;0.04356861&quot; &quot;5.376053e-04&quot; &quot;0.0012649536&quot; &quot;0.0003388268&quot;
-## S1_4 &quot;0.0014775651&quot; &quot;0.04692331&quot; &quot;5.051101e-04&quot; &quot;0.0022423112&quot; &quot;0.0003115632&quot;
-## S1_5 &quot;0.0014815609&quot; &quot;0.05013427&quot; &quot;8.772400e-04&quot; &quot;0.0007797689&quot; &quot;0.0001510802&quot;
-## S1_6 &quot;0.0015705488&quot; &quot;0.04897840&quot; &quot;5.235163e-04&quot; &quot;0.0015409158&quot; &quot;0.0003555959&quot;
-##      Cd             I              Cs              Ba            
-## S1_1 &quot;7.714584e-05&quot; &quot;0.0002255032&quot; &quot;&lt;5.934295e-06&quot; &quot;0.0003738606&quot;
-## S1_2 &quot;1.673055e-04&quot; &quot;0.0002361961&quot; &quot;&lt;4.920751e-06&quot; &quot;0.0002361961&quot;
-## S1_3 &quot;2.484730e-04&quot; &quot;0.0003614153&quot; &quot;&lt;4.517691e-06&quot; &quot;0.0001129423&quot;
-## S1_4 &quot;1.132957e-04&quot; &quot;0.0003162839&quot; &quot;&lt;4.720655e-06&quot; &quot;0.0002832393&quot;
-## S1_5 &quot;1.657009e-04&quot; &quot;0.0001120918&quot; &quot;&lt;4.873556e-06&quot; &quot;0.0006433093&quot;
-## S1_6 &quot;1.382873e-04&quot; &quot;0.0002864523&quot; &quot;&lt;4.938833e-06&quot; &quot;0.0004593114&quot;
-##      Nd             Sm             Yb             Ta            W            
-## S1_1 &quot;0.0001008830&quot; &quot;2.551747e-04&quot; &quot;0.0008545385&quot; &quot;0.004682159&quot; &quot;0.011821117&quot;
-## S1_2 &quot;0.0003296903&quot; &quot;2.263546e-04&quot; &quot;0.0013876519&quot; &quot;0.003818503&quot; &quot;0.009934997&quot;
-## S1_3 &quot;0.0001987784&quot; &quot;1.761900e-04&quot; &quot;0.0007137952&quot; &quot;0.003175937&quot; &quot;0.009107666&quot;
-## S1_4 &quot;0.0003540491&quot; &quot;3.021219e-04&quot; &quot;0.0010291028&quot; &quot;0.003748200&quot; &quot;0.010196615&quot;
-## S1_5 &quot;0.0002046893&quot; &quot;1.754480e-04&quot; &quot;0.0007943896&quot; &quot;0.004478798&quot; &quot;0.011423614&quot;
-## S1_6 &quot;0.0004790668&quot; &quot;5.926599e-05&quot; &quot;0.0009087452&quot; &quot;0.004207885&quot; &quot;0.011537113&quot;
-##      Pb              Bi            
-## S1_1 &quot; 4.569408e-04&quot; &quot;0.0004272693&quot;
-## S1_2 &quot;&lt;4.920751e-06&quot; &quot;0.0006692222&quot;
-## S1_3 &quot; 5.872999e-05&quot; &quot;0.0008990206&quot;
-## S1_4 &quot; 7.175396e-04&quot; &quot;0.0006325678&quot;
-## S1_5 &quot; 2.631720e-04&quot; &quot;0.0007651482&quot;
-## S1_6 &quot; 2.666970e-04&quot; &quot;0.0008988675&quot;
+<pre><code>##      Si            K            Ca          Ti            V             
+## S1_1 &quot;0.001697688&quot; &quot;0.01583480&quot; &quot;0.6959533&quot; &quot;0.010254036&quot; &quot;0.0003148440&quot;
+## S1_2 &quot;0.001562516&quot; &quot;0.01341925&quot; &quot;0.7367671&quot; &quot;0.009221908&quot; &quot;0.0004493510&quot;
+## S1_3 &quot;0.001538641&quot; &quot;0.01108754&quot; &quot;0.7597063&quot; &quot;0.009889264&quot; &quot;0.0001025761&quot;
+## S1_4 &quot;0.001006611&quot; &quot;0.01106784&quot; &quot;0.7485768&quot; &quot;0.009924406&quot; &quot;0.0003664847&quot;
+## S1_5 &quot;0.001183270&quot; &quot;0.01496608&quot; &quot;0.6900494&quot; &quot;0.009273178&quot; &quot;0.0004519785&quot;
+## S1_6 &quot;0.001785668&quot; &quot;0.01635919&quot; &quot;0.6802161&quot; &quot;0.009895793&quot; &quot;0.0005506240&quot;
+##      Cr            Fe          Cu             Rb             Sr          
+## S1_1 &quot;0.001592740&quot; &quot;0.2171065&quot; &quot;0.0017100349&quot; &quot;0.0020310523&quot; &quot;0.05127635&quot;
+## S1_2 &quot;0.001664641&quot; &quot;0.1863479&quot; &quot;0.0011744401&quot; &quot;0.0003880759&quot; &quot;0.04688058&quot;
+## S1_3 &quot;0.001403427&quot; &quot;0.1676279&quot; &quot;0.0006993822&quot; &quot;0.0013754517&quot; &quot;0.04496561&quot;
+## S1_4 &quot;0.001495258&quot; &quot;0.1735281&quot; &quot;0.0010066114&quot; &quot;0.0015294629&quot; &quot;0.04857144&quot;
+## S1_5 &quot;0.002234501&quot; &quot;0.2249888&quot; &quot;0.0014016413&quot; &quot;0.0015438368&quot; &quot;0.05224161&quot;
+## S1_6 &quot;0.002063553&quot; &quot;0.2330271&quot; &quot;0.0012865046&quot; &quot;0.0016364338&quot; &quot;0.05103306&quot;
+##      Zr             Ba             Sm            
+## S1_1 &quot;0.0015742198&quot; &quot;0.0003889249&quot; &quot;2.654567e-04&quot;
+## S1_2 &quot;0.0016442161&quot; &quot;0.0002451005&quot; &quot;2.348880e-04&quot;
+## S1_3 &quot;0.0013055135&quot; &quot;0.0001165637&quot; &quot;1.818394e-04&quot;
+## S1_4 &quot;0.0023210699&quot; &quot;0.0002931878&quot; &quot;3.127336e-04&quot;
+## S1_5 &quot;0.0008125457&quot; &quot;0.0006703502&quot; &quot;1.828228e-04&quot;
+## S1_6 &quot;0.0016055577&quot; &quot;0.0004785797&quot; &quot;6.175222e-05&quot;
 ## attr(,&quot;class&quot;)
 ## [1] &quot;acomp&quot;</code></pre>
 <p>Where it is necessary to keep some (or all) of the other information, this can be re-joined to the <code>acomp()</code> object, but only if its <code>acomp</code> class is removed. For example:</p>
