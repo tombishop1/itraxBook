@@ -6,3 +6,4 @@ _book/*
 .docs/
 _bookdown_files/*
 itraxBook_files/*
+itraxBook.Rmd
